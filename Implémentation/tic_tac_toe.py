@@ -117,6 +117,10 @@ def generate_all_boards(player = X_PLAYER, first_player_played = X_PLAYER):
 	return game_score
 
 def generate_all_boards_rec(player, game_score, board, empty_squares, current_player):
+	board_in_string = convert_board_to_string(board)
+	if board_in_string in game_score:
+		return game_score[board_in_string]
+
 	score = [0] * 3
 
 	winning_player = check_end_party(board)
@@ -137,7 +141,7 @@ def generate_all_boards_rec(player, game_score, board, empty_squares, current_pl
 	else: # Lose
 		score[1] += 1
 
-	game_score[convert_board_to_string(board)] = score
+	game_score[board_in_string] = score
 
 	return score
 
