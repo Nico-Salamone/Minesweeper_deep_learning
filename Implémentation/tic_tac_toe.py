@@ -17,10 +17,9 @@ def play_random_ai(player, board, empty_squares):
 	if not empty_squares:
 		return False
 
-	pos = random.randint(0, len(empty_squares) - 1)
-	square_to_play = empty_squares.pop(pos)
+	num_square = random.randint(0, len(empty_squares) - 1)
 
-	board[square_to_play[0]][square_to_play[1]] = player
+	board[(num_square // SIZE)][(num_square % SIZE)] = player
 
 	return True
 
@@ -78,7 +77,8 @@ def end_party(board):
 # "–": empty box
 players = alternate_players()
 board = [["-" for i in range(SIZE)] for i in range(SIZE)]
-empty_squares = [(i, j) for i in range(SIZE) for j in range(SIZE)]
+#empty_squares = [(i, j) for i in range(SIZE) for j in range(SIZE)]
+empty_squares = [i for i in range((SIZE * SIZE))]
 
 continue_game = True
 print_board(board)
