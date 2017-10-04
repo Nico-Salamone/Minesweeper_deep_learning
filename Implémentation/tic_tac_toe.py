@@ -1,5 +1,7 @@
 import random
 import copy
+import pickle
+import os
 
 X_PLAYER = "x"
 O_PLAYER = "o"
@@ -22,8 +24,25 @@ def print_board(board):
 			print(board[i][j], end = "")
 		print("")
 
+def initiate_empty_board():
+	return [[EMPTY_SQUARE for i in range(SIZE)] for i in range(SIZE)]
+
 def get_position_from_num_square(num_square):
 	return (num_square // SIZE, num_square % SIZE)
+
+def convert_board_to_string(board):
+	return "".join(str(square) for row in board for square in row)
+
+def convert_string_to_board(string):
+	if len(string) != (SIZE * SIZE):
+		return None
+
+	board = initiate_empty_board()
+	for i in range((SIZE * SIZE)):
+		pos = get_position_from_num_square(i)
+		board[pos[0]][pos[1]] = string[i]
+
+	return board
 
 def play_random_ai(player, board, empty_squares):
 	if not empty_squares:
@@ -85,17 +104,19 @@ def check_end_party(board):
 
 	return NONE_PLAYER
 
-def generate_all_board(player = X_PLAYER):
+def generate_all_boards(player = X_PLAYER, first_player_played = X_PLAYER):
 	# Score determinated by player
 	# score = [w, l, d], where 'w' is the number of victories, 'l' is the number of defeats and 'd' is the numbers of draws of 'player'
-	board = [[EMPTY_SQUARE for i in range(SIZE)] for i in range(SIZE)]
+	game_score = {}
+
+	board = initiate_empty_board()
 	empty_squares = [i for i in range((SIZE * SIZE))]
 
-	current_player = X_PLAYER
+	generate_all_boards_rec(player, game_score, board, empty_squares, first_player_played)
 
-	generate_all_board_rec(player, board, empty_squares, current_player)
+	return game_score
 
-def generate_all_board_rec(player, board, empty_squares, current_player):
+def generate_all_boards_rec(player, game_score, board, empty_squares, current_player):
 	score = [0] * 3
 
 	winning_player = check_end_party(board)
@@ -107,7 +128,7 @@ def generate_all_board_rec(player, board, empty_squares, current_player):
 			pos = get_position_from_num_square(empty_squares_temp.pop(i))
 			board_temp[pos[0]][pos[1]] = current_player
 
-			score_temp = generate_all_board_rec(player, board_temp, empty_squares_temp, alternate_players(current_player))
+			score_temp = generate_all_boards_rec(player, game_score, board_temp, empty_squares_temp, alternate_players(current_player))
 			score = [(score[i] + score_temp[i]) for i in range(len(score))]
 	elif(winning_player == NONE_PLAYER): # Draw
 		score[2] += 1
@@ -116,17 +137,23 @@ def generate_all_board_rec(player, board, empty_squares, current_player):
 	else: # Lose
 		score[1] += 1
 
-	print_board(board)
-	print(score)
-	print()
+	game_score[convert_board_to_string(board)] = score
 
 	return score
 
 if __name__ == "__main__":
-	generate_all_board()
+	game_score_file_name = "game_score.bin"
+	
+	if os.path.isfile(game_score_file_name):
+		game_score = pickle.load(open(game_score_file_name, "rb"))
+	else:
+		game_score = generate_all_boards()
+		pickle.dump(game_score, open(game_score_file_name, "wb"))
+
+	print(game_score)
 
 	"""
-	board = [["-" for i in range(SIZE)] for i in range(SIZE)]
+	board = initiate_empty_board()
 	empty_squares = [i for i in range((SIZE * SIZE))]
 
 	current_player = X_PLAYER
