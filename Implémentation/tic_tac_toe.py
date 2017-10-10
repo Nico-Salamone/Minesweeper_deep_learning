@@ -1,7 +1,8 @@
 import random
 import copy
-import pickle
 import os
+import pickle
+import csv
 
 X_PLAYER = "x"
 O_PLAYER = "o"
@@ -145,7 +146,7 @@ def generate_all_boards_rec(player, game_score, board, empty_squares, current_pl
 
 	return score
 
-if __name__ == "__main__":
+def get_game_score():
 	game_score_file_name = "game_score.bin"
 	
 	if os.path.isfile(game_score_file_name):
@@ -154,7 +155,59 @@ if __name__ == "__main__":
 		game_score = generate_all_boards()
 		pickle.dump(game_score, open(game_score_file_name, "wb"))
 
-	print(game_score)
+	return game_score
+
+def generate_data_set(data_set_size, game_score = get_game_score()):
+	all_boards = game_score.keys()
+
+	boards_selected = random.sample(all_boards, data_set_size)
+	data_set = [0] * data_set_size
+
+	i = 0
+	for board in boards_selected:
+		score = game_score[board]
+		data_set[i] = (board, (score[0] - score[1]))
+
+		i += 1
+
+	return data_set
+
+def read_data_set(data_set_file_name = "data_set.csv"):
+	data_set = []
+	with open(data_set_file_name, newline = '') as data_set_file:
+		csv_reader = csv.reader(data_set_file, delimiter = ';', quotechar = '\"')
+
+		i = 0
+		for row in csv_reader:
+			data_set.append((row[0], int(row[1])))
+
+			i += 1
+
+	return data_set
+
+def write_data_set(data_set, data_set_file_name = "data_set.csv"):
+	with open(data_set_file_name, 'w', newline = '') as data_set_file:
+		csv_writer = csv.writer(data_set_file, delimiter = ';', quotechar = '\"', quoting = csv.QUOTE_MINIMAL)
+
+		for data in data_set:
+			csv_writer.writerow([data[0], data[1]])
+
+def get_data_set(data_set_size, data_set_file_name = "data_set.csv"):
+	data_set = []
+	if os.path.isfile(data_set_file_name):
+		data_set = read_data_set(data_set_file_name)
+
+	if not os.path.isfile(data_set_file_name) or (len(data_set) != data_set_size):
+		data_set = generate_data_set(data_set_size)
+		write_data_set(data_set, data_set_file_name)
+
+	return data_set
+
+if __name__ == "__main__":
+	data_set = get_data_set(1000)
+
+	print(data_set)
+	
 
 	"""
 	board = initiate_empty_board()
