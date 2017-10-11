@@ -138,7 +138,7 @@ if __name__ == "__main__":
 		scores = model.evaluate(x, y)
 		print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
 
-		model.save(model_file_name)
+		#model.save(model_file_name)
 	else:
 		model = load_model(model_file_name)
 
