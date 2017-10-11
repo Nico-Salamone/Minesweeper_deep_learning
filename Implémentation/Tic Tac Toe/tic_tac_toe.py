@@ -122,6 +122,19 @@ def check_end_party(board):
 	return NONE_PLAYER
 
 if __name__ == "__main__":
+	board = initiate_empty_board()
+
+	board[0][2] = X_PLAYER
+	board[1][0] = O_PLAYER
+	board[1][1] = O_PLAYER
+	board[1][2] = O_PLAYER
+	board[2][1] = X_PLAYER
+	board[2][2] = X_PLAYER
+
+	print_board(board)
+	print(check_end_party(board))
+
+
 	"""
 	board = initiate_empty_board()
 	empty_squares = [i for i in range((SIZE * SIZE))]

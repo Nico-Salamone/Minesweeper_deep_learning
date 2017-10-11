@@ -9,7 +9,7 @@ from keras.models import load_model
 
 import tic_tac_toe as ttt
 
-def generate_all_boards(player = ttt.X_PLAYER, first_player_played = ttt.X_PLAYER):
+def generate_all_boards(first_player_played = ttt.X_PLAYER):
 	# Score determinated by player
 	# score = [w, l, d], where 'w' is the number of victories, 'l' is the number of defeats and 'd' is the numbers of draws of 'player'
 	game_score = {}
@@ -17,11 +17,11 @@ def generate_all_boards(player = ttt.X_PLAYER, first_player_played = ttt.X_PLAYE
 	board = ttt.initiate_empty_board()
 	empty_squares = [i for i in range((ttt.SIZE * ttt.SIZE))]
 
-	generate_all_boards_rec(player, game_score, board, empty_squares, first_player_played)
+	generate_all_boards_rec(game_score, board, empty_squares, first_player_played)
 
 	return game_score
 
-def generate_all_boards_rec(player, game_score, board, empty_squares, current_player):
+def generate_all_boards_rec(game_score, board, empty_squares, current_player):
 	board_in_string = ttt.convert_board_to_string(board)
 	if board_in_string in game_score:
 		return game_score[board_in_string]
@@ -37,11 +37,13 @@ def generate_all_boards_rec(player, game_score, board, empty_squares, current_pl
 			pos = ttt.get_position_from_num_square(empty_squares_temp.pop(i))
 			board_temp[pos[0]][pos[1]] = current_player
 
-			score_temp = generate_all_boards_rec(player, game_score, board_temp, empty_squares_temp, ttt.alternate_players(current_player))
-			score = [(score[i] + score_temp[i]) for i in range(len(score))]
+			score_temp = generate_all_boards_rec(game_score, board_temp, empty_squares_temp, ttt.alternate_players(current_player))
+			score[0] += score_temp[1]
+			score[1] += score_temp[0]
+			score[2] += score_temp[2]
 	elif(winning_player == ttt.NONE_PLAYER): # Draw
 		score[2] += 1
-	elif(winning_player == player): # Win
+	elif(winning_player == ttt.alternate_players(current_player)): # Win
 		score[0] += 1
 	else: # Lose
 		score[1] += 1
