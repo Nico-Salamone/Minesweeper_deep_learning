@@ -3,6 +3,9 @@ import copy
 import os
 import pickle
 import csv
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.models import load_model
 
 import tic_tac_toe as ttt
 
@@ -108,3 +111,46 @@ if __name__ == "__main__":
 	data_set = get_data_set(1000)
 
 	#print(data_set)
+	
+	x = [0] * len(data_set)
+	y = [0] * len(data_set)
+	i = 0
+	for data in data_set:
+		x[i] = [ttt.convert_player_to_id(p) for p in list(data[0])]
+		y[i] = data[1]
+
+		i += 1
+
+	#print(x)
+	#print(y)
+
+	model_file_name = "model.h5"
+	if not os.path.isfile(model_file_name):
+		model = Sequential()
+		model.add(Dense(10, input_dim = 9))
+		model.add(Dense(29))
+		model.add(Dense(1))
+
+		model.compile(loss = 'mean_squared_error', optimizer = 'adam', metrics = ['accuracy'])
+
+		model.fit(x, y, epochs = 100, batch_size = 10)
+
+		scores = model.evaluate(x, y)
+		print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1] * 100))
+
+		model.save(model_file_name)
+	else:
+		model = load_model(model_file_name)
+
+	predictions = model.predict(x)
+
+	for i in range(len(x)):
+		print("%s: %d %d" % ([ttt.convert_id_to_player(id) for id in x[i]], y[i], predictions[i]))
+
+
+
+
+
+
+
+

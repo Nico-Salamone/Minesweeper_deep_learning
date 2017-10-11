@@ -7,10 +7,30 @@ EMPTY_SQUARE = "-"
 
 SIZE = 3
 
+def convert_player_to_id(player):
+	if player == X_PLAYER:
+		return 1
+	elif player == EMPTY_SQUARE:
+		return 2
+	elif player == O_PLAYER:
+		return 3
+
+	return None
+
+def convert_id_to_player(id):
+	if id == 1:
+		return X_PLAYER
+	elif id == 2:
+		return EMPTY_SQUARE
+	elif id == 3:
+		return O_PLAYER
+
+	return None
+
 def alternate_players(player):
 	if player == X_PLAYER:
 		return O_PLAYER
-	if player == O_PLAYER:
+	elif player == O_PLAYER:
 		return X_PLAYER
 
 	return None
