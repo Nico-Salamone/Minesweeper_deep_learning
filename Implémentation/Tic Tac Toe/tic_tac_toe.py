@@ -80,7 +80,7 @@ def play_random_ai(player, board, empty_squares):
 
 	return True
 
-def check_end_party(board):
+def check_end_game(board):
 	# Columns
 	for j in range(SIZE):
 		player = board[0][j]
@@ -141,7 +141,7 @@ if __name__ == "__main__":
 	board[2][2] = X_PLAYER
 
 	print_board(board)
-	print(check_end_party(board))
+	print(check_end_game(board))
 
 
 	"""
@@ -156,6 +156,6 @@ if __name__ == "__main__":
 		play_random_ai(current_player, board, empty_squares)
 		current_player = alternate_players(current_player)
 		print_board(board)
-		if check_end_party(board):
+		if check_end_game(board):
 			continue_game = False
 	"""

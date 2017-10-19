@@ -4,76 +4,91 @@ import os
 import pickle
 import csv
 from scipy.stats.stats import pearsonr
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.models import load_model
+#from keras.models import Sequential
+#from keras.layers import Dense
+#from keras.models import load_model
 
 import tic_tac_toe as ttt
 
-def generate_all_boards(player = ttt.X_PLAYER, first_player_played = ttt.X_PLAYER):
+def get_end_game_evalution(board, numWins, numLosses, numDraws):
+	return 1
+
+def get_during_game_evalution(board, numWins, numLosses, numDraws):
+	total_remaining_games = numWins + numLosses + numDraws
+
+	return numWins / total_remaining_games
+
+def calculate_evaluation_function(during_game_evalution_func = get_during_game_evalution, end_game_evalution_func = get_end_game_evalution, player = ttt.X_PLAYER, first_player_played = ttt.X_PLAYER):
 	# Score determinated by player
 	# score = [w, l, d], where 'w' is the number of victories, 'l' is the number of defeats and 'd' is the numbers of draws of 'player'
 	game_score = {}
 
+	evaluation_function = {}
+
 	board = ttt.initiate_empty_board()
 	empty_squares = [i for i in range((ttt.SIZE * ttt.SIZE))]
 
-	generate_all_boards_rec(player, game_score, board, empty_squares, first_player_played)
+	calculate_evaluation_function_rec(during_game_evalution_func, end_game_evalution_func, player, evaluation_function, game_score, first_player_played, board, empty_squares)
 
-	return game_score
+	return evaluation_function
 
-def generate_all_boards_rec(player, game_score, board, empty_squares, current_player):
-	board_in_string = ttt.convert_board_to_string(board)
-	if board_in_string in game_score:
-		return game_score[board_in_string]
+def calculate_evaluation_function_rec(during_game_evalution_func, end_game_evalution_func, player, evaluation_function, game_score, current_player, board, empty_squares):
+	board_string = ttt.convert_board_to_string(board)
+	if board_string in game_score:
+		return game_score[board_string]
 
 	score = [0] * 3
 
 	winning_player = ttt.check_end_game(board)
 	if(not winning_player):
 		for i in range(len(empty_squares)):
-			board_temp = copy.deepcopy(board)
-			empty_squares_temp = copy.copy(empty_squares)
+			board_copy = copy.deepcopy(board)
+			empty_squares_copy = copy.copy(empty_squares)
 
-			pos = ttt.get_position_from_num_square(empty_squares_temp.pop(i))
-			board_temp[pos[0]][pos[1]] = current_player
+			pos = ttt.get_position_from_num_square(empty_squares_copy.pop(i))
+			board_copy[pos[0]][pos[1]] = current_player
 
-			score_temp = generate_all_boards_rec(player, game_score, board_temp, empty_squares_temp, ttt.alternate_players(current_player))
+			score_temp = calculate_evaluation_function_rec(during_game_evalution_func, end_game_evalution_func, player, evaluation_function, game_score, ttt.alternate_players(current_player), board_copy, empty_squares_copy)
 			score[0] += score_temp[0]
 			score[1] += score_temp[1]
 			score[2] += score_temp[2]
-	elif(winning_player == ttt.NONE_PLAYER): # Draw
-		score[2] += 1
-	elif(winning_player == player): # Win
-		score[0] += 1
-	else: # Lose
-		score[1] += 1
 
-	game_score[board_in_string] = score
+		evaluation = during_game_evalution_func(board, score[0], score[1], score[2])
+	else: # End game
+		if(winning_player == ttt.NONE_PLAYER): # Draw
+			score[2] += 1
+		elif(winning_player == player): # Win
+			score[0] += 1
+		else: # Lose
+			score[1] += 1
+
+		evaluation = end_game_evalution_func(board, score[0], score[1], score[2])
+
+	game_score[board_string] = score
+	evaluation_function[board_string] = evaluation
 
 	return score
 
-def get_game_score():
-	game_score_file_name = "game_score.bin"
+def get_evaluation_function():
+	evaluation_function_file_name = "evaluation_function.bin"
 	
-	if os.path.isfile(game_score_file_name):
-		game_score = pickle.load(open(game_score_file_name, "rb"))
+	if os.path.isfile(evaluation_function_file_name):
+		evaluation_function = pickle.load(open(evaluation_function_file_name, "rb"))
 	else:
-		game_score = generate_all_boards()
-		pickle.dump(game_score, open(game_score_file_name, "wb"))
+		evaluation_function = calculate_evaluation_function()
+		pickle.dump(evaluation_function, open(evaluation_function_file_name, "wb"))
 
-	return game_score
+	return evaluation_function
 
-def generate_data_set(data_set_size, game_score = get_game_score()):
-	all_boards = game_score.keys()
+def generate_data_set(data_set_size, evaluation_function = get_evaluation_function()):
+	boards = evaluation_function.keys()
 
-	boards_selected = random.sample(all_boards, data_set_size)
+	boards_selected = random.sample(boards, data_set_size)
 	data_set = [0] * data_set_size
 
 	i = 0
 	for board in boards_selected:
-		score = game_score[board]
-		data_set[i] = (board, (score[0] - score[1]))
+		data_set[i] = (board, evaluation_function[board])
 
 		i += 1
 
@@ -86,7 +101,7 @@ def read_data_set(data_set_file_name = "data_set.csv"):
 
 		i = 0
 		for row in csv_reader:
-			data_set.append((row[0], int(row[1])))
+			data_set.append((row[0], float(row[1])))
 
 			i += 1
 
@@ -111,6 +126,14 @@ def get_data_set(data_set_size, data_set_file_name = "data_set.csv"):
 	return data_set
 
 if __name__ == "__main__":
+	evaluation_function = calculate_evaluation_function()
+
+	for board, evaluation in evaluation_function.items():
+		print(board)
+		print(evaluation, "\n")
+
+	"""
+
 	data_set = get_data_set(1000)
 
 	#print(data_set)
@@ -154,7 +177,7 @@ if __name__ == "__main__":
 		#print("{}: {} {}".format([ttt.convert_id_to_player(id) for id in x[i]], y[i], predictions[i]))
 		#print("%s: %d %d" % ([ttt.convert_id_to_player(id) for id in x[i]], y[i], predictions[i]))
 
-
+	"""
 
 
 
