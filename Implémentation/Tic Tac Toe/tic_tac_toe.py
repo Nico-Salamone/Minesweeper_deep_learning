@@ -1,4 +1,5 @@
 import random
+from enum import Enum
 
 X_PLAYER = "x"
 O_PLAYER = "o"
@@ -6,6 +7,14 @@ NONE_PLAYER = "." # If draw
 EMPTY_SQUARE = "-"
 
 SIZE = 3
+
+class PlayerId(Enum):
+	X_PLAYER = 1
+	EMPTY_SQUARE = 2
+	Y_PLAYER = 3
+
+	#ttt.PlayerId.p.value
+	#eval("ttt." + PlayerId(id).name)
 
 def convert_player_to_id(player):
 	if player == X_PLAYER:
