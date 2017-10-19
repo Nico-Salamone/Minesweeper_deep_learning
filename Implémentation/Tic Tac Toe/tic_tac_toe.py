@@ -81,6 +81,8 @@ def play_random_ai(player, board, empty_squares):
 	return True
 
 def check_end_game(board):
+	winning_player = set() 
+
 	# Columns
 	for j in range(SIZE):
 		player = board[0][j]
@@ -89,7 +91,7 @@ def check_end_game(board):
 			while (i < SIZE) and (board[i][j] == player):
 				i += 1
 			if i == SIZE:
-				return player
+				winning_player.add(player)
 
 	# Rows
 	for i in range(SIZE):
@@ -99,7 +101,7 @@ def check_end_game(board):
 			while (j < SIZE) and (board[i][j] == player):
 				j += 1
 			if j == SIZE:
-				return player
+				winning_player.add(player)
 
 	# Diagonals
 	player = board[0][0]
@@ -110,7 +112,7 @@ def check_end_game(board):
 			i += 1
 			j += 1
 		if (i == SIZE) and (j == SIZE):
-			return player
+			winning_player.add(player)
 
 	# Anti-diagonals
 	player = board[SIZE - 1][0]
@@ -121,7 +123,10 @@ def check_end_game(board):
 			i -= 1
 			j += 1
 		if (i == -1) and (j == SIZE):
-			return player
+			winning_player.add(player)
+
+	if len(winning_player) > 0:
+		return winning_player
 
 	for i in range(SIZE):
 		for j in range(SIZE):
