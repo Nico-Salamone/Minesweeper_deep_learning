@@ -1,14 +1,14 @@
 import random
+import time
 import copy
 import os
-import pickle
 import csv
 from scipy.stats.stats import pearsonr
-"""
+#"""
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.models import load_model
-"""
+#"""
 
 import tic_tac_toe as ttt
 
@@ -86,93 +86,64 @@ def calculate_score_function_rec(during_game_score_func, end_game_score_func, pl
 			counters[2] += counters_temp[2]
 
 	game_counters[board_string] = counters
-	if (len(empty_squares) >= 2) and \
+	if (len(empty_squares) >= 1) and \
 			(current_player == ttt.Player.alternate_players_id(player)) and \
 			((not previous_end_game) or (now_end_game)):
 		score_function[board_string] = game_score_func(board, counters[0], counters[1], counters[2])
 
 	return counters
 
-def get_score_function():
-	score_function_file_name = "score_function.bin"
-	
-	if os.path.isfile(score_function_file_name):
-		score_function = pickle.load(open(score_function_file_name, "rb"))
-	else:
-		score_function = calculate_score_function()
-		pickle.dump(score_function, open(score_function_file_name, "wb"))
+def write_data_set(data_set, data_set_file_name = "data_set.csv"):
+	with open(data_set_file_name, 'w', newline = '') as data_set_file:
+		csv_writer = csv.writer(data_set_file, delimiter = ';', quotechar = '\"', quoting = csv.QUOTE_MINIMAL)
 
-	return score_function
-
-def generate_data_set(data_set_size, score_function = None):
-	if score_function == None:
-		score_function = get_score_function()
-
-	boards = score_function.keys()
-
-	# Mettre un seed
-	boards_selected = random.sample(boards, data_set_size)
-	data_set = [0] * data_set_size
-
-	i = 0
-	for board in boards_selected:
-		data_set[i] = (board, score_function[board])
-
-		i += 1
-
-	return data_set
+		for board, score in data_set.items():
+			csv_writer.writerow([board, score])
 
 def read_data_set(data_set_file_name = "data_set.csv"):
-	data_set = []
+	data_set = {}
 	with open(data_set_file_name, newline = '') as data_set_file:
 		csv_reader = csv.reader(data_set_file, delimiter = ';', quotechar = '\"')
 
 		i = 0
 		for row in csv_reader:
-			data_set.append((row[0], float(row[1])))
+			data_set[row[0]] = float(row[1])
 
 			i += 1
 
 	return data_set
 
-def write_data_set(data_set, data_set_file_name = "data_set.csv"):
-	with open(data_set_file_name, 'w', newline = '') as data_set_file:
-		csv_writer = csv.writer(data_set_file, delimiter = ';', quotechar = '\"', quoting = csv.QUOTE_MINIMAL)
+def sample_data_set(data_set, num_samples, seed = time.time()):
+	random.seed(seed)
 
-		for data in data_set:
-			csv_writer.writerow([data[0], data[1]])
+	sample = {}
 
-def get_data_set(data_set_size, data_set_file_name = "data_set.csv"):
-	data_set = []
-	if os.path.isfile(data_set_file_name):
-		data_set = read_data_set(data_set_file_name)
+	boards_selected = random.sample(data_set.keys(), num_samples)
 
-	if not os.path.isfile(data_set_file_name) or (len(data_set) != data_set_size):
-		data_set = generate_data_set(data_set_size)
-		write_data_set(data_set, data_set_file_name)
+	for board in boards_selected:
+		sample[board] = data_set[board]
 
-	return data_set
+	return sample
 
 if __name__ == "__main__":
-	#"""
 	score_function = calculate_score_function()
+	write_data_set(score_function)
 
-	for board, score in score_function.items():
-		ttt.print_board(ttt.convert_string_to_board(board))
-		print(score, "\n")
-	#"""
+	sample = sample_data_set(score_function, 1000, 867342)
 
 	"""
-	data_set = get_data_set(len(get_score_function()))
+	for board, score in sample.items():
+		ttt.print_board(ttt.convert_string_to_board(board))
+		print(score, "\n")
+	"""
 
-	#print(data_set)
-	
-	x = [0] * len(data_set)
-	y = [0] * len(data_set)
+	#"""
+	x = [0] * len(sample)
+	y = [0] * len(sample)
 	i = 0
-	for data in data_set:
-		x[i] = [ttt.convert_player_to_id(p) for p in list(data[0])]
-		y[i] = data[1]
+	for board, score in sample.items():
+		x[i] = list(map(int, board.split(' ')))
+		y[i] = score
 
 		i += 1
 
@@ -182,12 +153,11 @@ if __name__ == "__main__":
 	model_file_name = "model.h5"
 	if not os.path.isfile(model_file_name):
 		model = Sequential()
-		model.add(Dense(10, input_dim = 9))
+		model.add(Dense(15, input_dim = 9))
 		model.add(Dense(29))
 		model.add(Dense(1))
 
-		#model.compile(loss = 'mean_squared_error', optimizer = 'adam', metrics = ['mean_squared_error'])
-		model.compile(loss = 'meRe: Réseaux IIan_squared_error', optimizer = 'sgd', metrics = ['mean_squared_error'])
+		model.compile(loss = 'mean_squared_error', optimizer = 'sgd', metrics = ['mean_squared_error'])
 
 		#model.fit(x, y, epochs = 100, batch_size = 10)
 		model.fit(x, y, epochs = 10, batch_size = 100)
@@ -203,6 +173,5 @@ if __name__ == "__main__":
 	print(pearsonr(y, predictions.flatten()))
 
 	for i in range(len(x)):
-		print("%s: %.2f %.2f" % ([ttt.convert_id_to_player(id) for id in x[i]], y[i], predictions[i]))
-		print("{}: {:.2f} {:.2f}".format([ttt.convert_id_to_player(id) for id in x[i]], y[i], predictions[i][0]))
-	"""
+		print("{}: {:.2f} {:.2f}".format([ttt.Player.get_symbol_from_id(player_id) for player_id in x[i]], y[i], predictions[i][0]))
+	#"""
