@@ -126,10 +126,10 @@ def sample_data_set(data_set, num_samples, seed = time.time()):
 	return sample
 
 if __name__ == "__main__":
-	score_function = calculate_score_function()
-	write_data_set(score_function)
+	data_set = calculate_score_function()
+	write_data_set(data_set)
 
-	sample = sample_data_set(score_function, 1000, 867342)
+	training_set = sample_data_set(data_set, 1000, 867342)
 
 	"""
 	for board, score in sample.items():
@@ -138,10 +138,10 @@ if __name__ == "__main__":
 	"""
 
 	#"""
-	x = [0] * len(sample)
-	y = [0] * len(sample)
+	x = [0] * len(training_set)
+	y = [0] * len(training_set)
 	i = 0
-	for board, score in sample.items():
+	for board, score in training_set.items():
 		x[i] = list(map(int, board.split(' ')))
 		y[i] = score
 
