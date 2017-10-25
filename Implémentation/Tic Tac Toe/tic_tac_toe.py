@@ -47,7 +47,8 @@ class Player(Enum):
 		else:
 			return None
 
-	def alternate_players(player):
+	@classmethod
+	def alternate_players(cls, player):
 		if player == Player.X_PLAYER:
 			return Player.O_PLAYER
 		elif player == Player.O_PLAYER:
@@ -55,7 +56,8 @@ class Player(Enum):
 
 		return None
 
-	def alternate_players_id(player_id):
+	@classmethod
+	def alternate_players_id(cls, player_id):
 		player = Player.alternate_players(Player.get_player_from_id(player_id))
 
 		if player:
@@ -63,7 +65,8 @@ class Player(Enum):
 		else:
 			return None
 
-	def alternate_players_symbol(player_symbol):
+	@classmethod
+	def alternate_players_symbol(cls, player_symbol):
 		player = Player.alternate_players(Player.get_player_from_symbol(player_symbol))
 
 		if player:
