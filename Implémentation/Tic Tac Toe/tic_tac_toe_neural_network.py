@@ -15,9 +15,6 @@ from keras.models import load_model
 import tic_tac_toe as ttt
 
 def get_end_game_score(board, numWins, numLosses, numDraws):
-	if (numWins == 0) and (numLosses == 0):
-		return 0.5
-
 	score = get_during_game_score(board, numWins, numLosses, numDraws)
 
 	if numLosses == 0:
@@ -131,7 +128,7 @@ def error_bins(errors, num_bins = 10, value_range = None):
 	if value_range == None:
 		value_range = (min(errors), max(errors))
 
-	counts, bins = np.histogram(np.array(errors), bins = num_bins, range = value_range)
+	counts, bins = np.histogram(np.array(copy.copy(errors)), bins = num_bins, range = value_range)
 	counts = counts.astype(float)
 
 	n = len(errors)
@@ -139,6 +136,20 @@ def error_bins(errors, num_bins = 10, value_range = None):
 		counts[i] /= n # Percentage.
 
 	return (counts, bins)
+
+def get_board_index_in_error_range(boards, errors, value_range):
+	# Get board and error index whose the error lies in the range.
+	# Each board corresponds to an error.
+
+	min_value = value_range[0]
+	max_value = value_range[1]
+
+	boards_selected = []
+	for i in range(len(errors)):
+		if min_value <= errors[i] <= max_value:
+			boards_selected.append(i)
+
+	return boards_selected
 
 if __name__ == "__main__":
 	data_set = calculate_score_function()
@@ -172,9 +183,9 @@ if __name__ == "__main__":
 		model.add(Dense(29))
 		model.add(Dense(1))
 
-		model.compile(loss = 'mean_squared_error', optimizer = 'sgd', metrics = ['mean_squared_error'])
+		model.compile(loss = 'mean_squared_error', optimizer = 'sgd', metrics = ['mean_squared_error', 'mean_absolute_error'])
 
-		#model.fit(x, y_true, epochs = 100, batch_size = 1)
+		#model.fit(x, y_true, epochs = 100, batch_size = 10)
 		model.fit(x, y_true, epochs = 10, batch_size = 100)
 
 		scores = model.evaluate(x, y_true)
@@ -189,19 +200,39 @@ if __name__ == "__main__":
 	print("\n\n{}:".format(model.metrics_names[1]))
 	print("{:.2%}".format(scores[1]))
 
+	# Mean absolute error
+	print("\n{}:".format(model.metrics_names[2]))
+	print("{:.2%}".format(scores[2]))
+
 	# Correlation coefficient and p-value
 	print("\nCorrelation coefficient and p-value:")
 	print(pearsonr(y_true, y_pred.flatten()))
 
 	# Error bins
 	print("\nError bins:")
-	errors = list(map(lambda t, p: abs(t - p), y_true, y_pred))
+	errors = list(map(lambda t, p: abs(t - p), y_true, y_pred.flatten().tolist()))
 	percentages, bins = error_bins(errors, 10, (0.0, 1.0))
 	for i in range(len(percentages)):
 		print("[{:.2f}-{:.2f}]: {:.3%}".format(bins[i], bins[i+1], percentages[i]))
 
 	# All results (display for each 'x' y_true and y_pred)
-	#print("\nAll results (display for each 'x' y_true and y_pred):")
-	#for i in range(len(x)):
-	#	print("{}: {:.2f} {:.2f}".format([ttt.Player.get_symbol_from_id(player_id) for player_id in x[i]], y_true[i], y_pred[i][0]))
+	"""
+	print("\nAll results (display for each 'x' y_true and y_pred):")
+	for i in range(len(x)):
+		print()
+		ttt.print_board(ttt.convert_string_to_board(' '.join(map(str, x[i]))))
+		print("Error: {:.2f}".format(errors[i]))
+		print("y_true: {:.2f}".format(y_true[i]))
+		print("y_pred: {:.2f}".format(y_pred[i][0]))
+	"""
+
+	# Boards with a bad prediction
+	print("\nBoards with a bad prediction:")
+	boards_with_bad_prediction = get_board_index_in_error_range(x, errors, (0.5, 1.0))
+	for i in boards_with_bad_prediction:
+		print()
+		ttt.print_board(ttt.convert_string_to_board(' '.join(map(str, x[i]))))
+		print("Error: {:.2f}".format(errors[i]))
+		print("y_true: {:.2f}".format(y_true[i]))
+		print("y_pred: {:.2f}".format(y_pred[i][0]))
 	#"""
