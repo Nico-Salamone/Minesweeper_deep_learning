@@ -3,11 +3,13 @@ import time
 import copy
 import os
 import csv
+import numpy as np
 from scipy.stats.stats import pearsonr
 #"""
 from keras.models import Sequential
 from keras.layers import Dense
 from keras.models import load_model
+#from keras import backend as K
 #"""
 
 import tic_tac_toe as ttt
@@ -123,13 +125,26 @@ def sample_data_set(data_set, num_samples, seed = time.time()):
 	for board in boards_selected:
 		sample[board] = data_set[board]
 
-	return sample
+	return (sample, seed)
+
+def error_bins(errors, num_bins = 10, value_range = None):
+	if value_range == None:
+		value_range = (min(errors), max(errors))
+
+	counts, bins = np.histogram(np.array(errors), bins = num_bins, range = value_range)
+	counts = counts.astype(float)
+
+	n = len(errors)
+	for i in range(len(counts)):
+		counts[i] /= n # Percentage.
+
+	return (counts, bins)
 
 if __name__ == "__main__":
 	data_set = calculate_score_function()
 	write_data_set(data_set)
 
-	training_set = sample_data_set(data_set, 1000, 867342)
+	training_set, _ = sample_data_set(data_set, 1000, 867342)
 
 	"""
 	for board, score in sample.items():
@@ -139,11 +154,11 @@ if __name__ == "__main__":
 
 	#"""
 	x = [0] * len(training_set)
-	y = [0] * len(training_set)
+	y_true = [0] * len(training_set)
 	i = 0
 	for board, score in training_set.items():
 		x[i] = list(map(int, board.split(' ')))
-		y[i] = score
+		y_true[i] = score
 
 		i += 1
 
@@ -159,19 +174,34 @@ if __name__ == "__main__":
 
 		model.compile(loss = 'mean_squared_error', optimizer = 'sgd', metrics = ['mean_squared_error'])
 
-		#model.fit(x, y, epochs = 100, batch_size = 10)
-		model.fit(x, y, epochs = 10, batch_size = 100)
+		#model.fit(x, y_true, epochs = 100, batch_size = 1)
+		model.fit(x, y_true, epochs = 10, batch_size = 100)
 
-		scores = model.evaluate(x, y)
-		print("\n{}: {:.2%}".format(model.metrics_names[1], scores[1]))
+		scores = model.evaluate(x, y_true)
 
 		#model.save(model_file_name)
 	else:
 		model = load_model(model_file_name)
 
-	predictions = model.predict(x)
-	print(pearsonr(y, predictions.flatten()))
+	y_pred = model.predict(x)
 
-	for i in range(len(x)):
-		print("{}: {:.2f} {:.2f}".format([ttt.Player.get_symbol_from_id(player_id) for player_id in x[i]], y[i], predictions[i][0]))
+	# Mean squared error
+	print("\n\n{}:".format(model.metrics_names[1]))
+	print("{:.2%}".format(scores[1]))
+
+	# Correlation coefficient and p-value
+	print("\nCorrelation coefficient and p-value:")
+	print(pearsonr(y_true, y_pred.flatten()))
+
+	# Error bins
+	print("\nError bins:")
+	errors = list(map(lambda t, p: abs(t - p), y_true, y_pred))
+	percentages, bins = error_bins(errors, 10, (0.0, 1.0))
+	for i in range(len(percentages)):
+		print("[{:.2f}-{:.2f}]: {:.3%}".format(bins[i], bins[i+1], percentages[i]))
+
+	# All results (display for each 'x' y_true and y_pred)
+	#print("\nAll results (display for each 'x' y_true and y_pred):")
+	#for i in range(len(x)):
+	#	print("{}: {:.2f} {:.2f}".format([ttt.Player.get_symbol_from_id(player_id) for player_id in x[i]], y_true[i], y_pred[i][0]))
 	#"""
