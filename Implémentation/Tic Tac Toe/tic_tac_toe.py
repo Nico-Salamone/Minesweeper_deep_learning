@@ -163,7 +163,7 @@ def check_end_game(board):
 	for i in range(SIZE):
 		for j in range(SIZE):
 			if board[i][j] == Player.EMPTY_SQUARE.id:
-				return False
+				return None
 
 	winning_player.add(Player.NONE_PLAYER)
 
