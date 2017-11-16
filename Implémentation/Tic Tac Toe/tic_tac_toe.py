@@ -1,199 +1,192 @@
-import random
+import math
 from enum import Enum
 
-SIZE = 3
+SIZE = 9
 
 class Player(Enum):
-	X_PLAYER = (1, 'x')
-	EMPTY_SQUARE = (0, '-')
-	O_PLAYER = (-1, 'o')
-	NONE_PLAYER = (2, '.') # If draw
+	X = 1
+	O = -1
 
-	def __init__(self, player_id, player_symbol):
-		self.id = player_id
-		self.symbol = player_symbol
-
-	@classmethod
-	def get_player_from_symbol(cls, player_symbol):
-		for player in cls.__members__.values():
-			if player.symbol == player_symbol:
-				return player
+	def __str__(self):
+		if self == Player.X:
+			return 'x'
+		elif self == Player.O:
+			return 'o'
 
 		return None
 
 	@classmethod
-	def get_id_from_symbol(cls, player_symbol):
-		player = Player.get_player_from_symbol(player_symbol)
-
-		if player:
-			return player.id
-		else:
-			return None
-
-	@classmethod
-	def get_player_from_id(cls, player_id):
-		for player in cls.__members__.values():
-			if player.id == player_id:
-				return player
+	def get_other_player(cls, player):
+		if player == Player.X:
+			return Player.O
+		elif player == Player.O:
+			return Player.X
 
 		return None
 
 	@classmethod
-	def get_symbol_from_id(cls, player_id):
-		player = Player.get_player_from_id(player_id)
+	def get_player_who_starts_game(cls):
+		# X is player who starts the game.
+		return Player.X
 
-		if player:
-			return player.symbol
-		else:
-			return None
+class Tile(Enum):
+	X = 1
+	O = -1
+	EMPTY = 0
 
-	@classmethod
-	def alternate_players(cls, player):
-		if player == Player.X_PLAYER:
-			return Player.O_PLAYER
-		elif player == Player.O_PLAYER:
-			return Player.X_PLAYER
+	def __str__(self):
+		if self == Tile.X:
+			return 'x'
+		elif self == Tile.O:
+			return 'o'
+		elif self == Tile.EMPTY:
+			return '-'
 
 		return None
 
 	@classmethod
-	def alternate_players_id(cls, player_id):
-		player = Player.alternate_players(Player.get_player_from_id(player_id))
+	def get_player_from_tile(cls, tile):
+		if tile == Tile.X:
+			return Player.X
+		elif tile == Tile.O:
+			return Player.O
 
-		if player:
-			return player.id
-		else:
-			return None
-
-	@classmethod
-	def alternate_players_symbol(cls, player_symbol):
-		player = Player.alternate_players(Player.get_player_from_symbol(player_symbol))
-
-		if player:
-			return player.symbol
-		else:
-			return None
-
-def print_board(board):
-	for i in range(len(board)):
-		for j in range(len(board)):
-			print(Player.get_symbol_from_id(board[i][j]), end = "")
-		print("")
-
-def convert_board_to_string(board):
-	return ' '.join(str(square) for row in board for square in row)
-
-def convert_string_to_board(string):
-	array = string.split(' ')
-
-	if len(array) != (SIZE * SIZE):
 		return None
 
-	board = initiate_empty_board()
-	for i in range((SIZE * SIZE)):
-		pos = get_position_from_num_square(i)
-		board[pos[0]][pos[1]] = int(array[i])
+class State(Enum):
+	# The state is determined according to X's point of view.
+	WIN = Player.X
+	LOSE = Player.O
+	DRAW = 0
+	CONTINUE = 2
 
-	return board
+	@classmethod
+	def get_state_from_winner(cls, winner):
+		if winner == Player.X:
+			return State.WIN
+		elif winner == Player.O:
+			return State.LOSE
 
-def initiate_empty_board():
-	return [[Player.EMPTY_SQUARE.id for i in range(SIZE)] for i in range(SIZE)]
+		return None
 
-def get_position_from_num_square(num_square):
-	return (num_square // SIZE, num_square % SIZE)
+def initialize_empty_grid():
+	return (Tile.EMPTY, ) * SIZE
 
-def play_random_ai(player, board, empty_squares):
-	if not empty_squares:
-		return False
+def print_grid(grid):
+	row_column_size = math.sqrt(SIZE)
 
-	num_square = random.randint(0, len(empty_squares) - 1)
-	pos = get_position_from_num_square(empty_squares.pop(num_square))
-	board[pos[0]][pos[1]] = player.id
+	for i in range(SIZE):
+		end_print = ""
+		if (i % row_column_size) == (row_column_size - 1): # End row.
+			end_print = "\n"
 
-	return True
+		print(grid[i], end = end_print)
 
-def check_end_game(board):
-	winning_player = set() 
+def get_player_who_must_play_now(grid):
+	num_x = grid.count(Tile.X)
+	num_o = grid.count(Tile.O)
 
-	# Columns
-	for j in range(SIZE):
-		player = board[0][j]
-		if player != Player.EMPTY_SQUARE.id:
-			i = 1
-			while (i < SIZE) and (board[i][j] == player):
-				i += 1
-			if i == SIZE:
-				winning_player.add(Player.get_player_from_id(player))
+	first_player_starts = Player.get_player_who_starts_game()
+
+	if num_x == num_o:
+		if first_player_starts == Player.X:
+			return Player.X
+		else:
+			return Player.O
+
+	if first_player_starts == Player.X:
+		return Player.O
+
+	return Player.X
+
+def get_empty_tile_indexes(grid):
+	empty_tile_indexes = []
+	for i in range(len(grid)):
+		if grid[i] == Tile.EMPTY:
+			empty_tile_indexes.append(i)
+
+	return empty_tile_indexes
+
+def play_turn(grid, player, tile_index):
+	grid_list = list(grid)
+
+	tile = Tile.X
+	if player == Player.O:
+		tile = Tile.O
+
+	grid_list[tile_index] = tile
+
+	return tuple(grid_list)
+
+def get_grid_state(grid):
+	state = State.CONTINUE
+	row_column_size =round(math.sqrt(SIZE))
 
 	# Rows
+	for row_index in range(row_column_size):
+		i = row_index * row_column_size
+
+		possible_winner = grid[i]
+		if possible_winner != Tile.EMPTY:
+			for k in range(1, row_column_size):
+				j = i + k
+				if grid[j] == possible_winner:
+					if j == (i + row_column_size - 1): # Last tile of this row (row_index).
+						return State.get_state_from_winner(Tile.get_player_from_tile(possible_winner))
+				else:
+					break
+
+	# Columns
+	for column_index in range(row_column_size):
+		j = column_index
+
+		possible_winner = grid[j]
+		if possible_winner != Tile.EMPTY:
+			for k in range(1, row_column_size):
+				i = j + (k * row_column_size)
+				if grid[i] == possible_winner:
+					if i == (j + (row_column_size * (row_column_size - 1))): # Last tile of this column (column_index).
+						return State.get_state_from_winner(Tile.get_player_from_tile(possible_winner))
+				else:
+					break
+
+	# Diagonal
+	possible_winner = grid[0]
+	if possible_winner != Tile.EMPTY:
+		for i in range(1, row_column_size):
+			j = i * (row_column_size + 1)
+
+			if grid[j] == possible_winner:
+				if j == (SIZE - 1):
+					return State.get_state_from_winner(Tile.get_player_from_tile(possible_winner))
+			else:
+				break
+
+	# Anti-diagonal
+	possible_winner = grid[(row_column_size - 1)]
+	if possible_winner != Tile.EMPTY:
+		for i in range(1, row_column_size):
+			j = (row_column_size - 1) + (i * (row_column_size - 1))
+
+			if grid[j] == possible_winner:
+				if j == (SIZE - row_column_size):
+					return State.get_state_from_winner(Tile.get_player_from_tile(possible_winner))
+			else:
+				break
+
 	for i in range(SIZE):
-		player = board[i][0]
-		if player != Player.EMPTY_SQUARE.id:
-			j = 1
-			while (j < SIZE) and (board[i][j] == player):
-				j += 1
-			if j == SIZE:
-				winning_player.add(Player.get_player_from_id(player))
+		if grid[i] == Tile.EMPTY:
+			return State.CONTINUE
 
-	# Diagonals
-	player = board[0][0]
-	if player != Player.EMPTY_SQUARE.id:
-		i = 1
-		j = 1
-		while (i < SIZE) and (j < SIZE) and (board[i][j] == player):
-			i += 1
-			j += 1
-		if (i == SIZE) and (j == SIZE):
-			winning_player.add(Player.get_player_from_id(player))
-
-	# Anti-diagonals
-	player = board[SIZE - 1][0]
-	if player != Player.EMPTY_SQUARE.id:
-		i = SIZE - 2
-		j = 1
-		while (i >= 0) and (j < SIZE) and (board[i][j] == player):
-			i -= 1
-			j += 1
-		if (i == -1) and (j == SIZE):
-			winning_player.add(Player.get_player_from_id(player))
-
-	if len(winning_player) > 0:
-		return winning_player
-
-	for i in range(SIZE):
-		for j in range(SIZE):
-			if board[i][j] == Player.EMPTY_SQUARE.id:
-				return None
-
-	winning_player.add(Player.NONE_PLAYER)
-
-	return winning_player
+	return State.DRAW
 
 if __name__ == "__main__":
-	board = initiate_empty_board()
+	grid = initialize_empty_grid()
 
-	board[0][2] = Player.X_PLAYER.id
-	board[1][0] = Player.O_PLAYER.id
-	board[1][1] = Player.O_PLAYER.id
-	board[1][2] = Player.O_PLAYER.id
-	board[2][1] = Player.X_PLAYER.id
-	board[2][2] = Player.X_PLAYER.id
+	grid = play_turn(grid, Player.X, 0)
+	grid = play_turn(grid, Player.O, 2)
+	grid = play_turn(grid, Player.X, 1)
+	grid = play_turn(grid, Player.O, 4)
+	grid = play_turn(grid, Player.X, 8)
 
-	print_board(board)
-	print(check_end_game(board))
-
-	"""
-	board = initiate_empty_board()
-	empty_squares = [i for i in range((SIZE * SIZE))]
-
-	current_player = Player.X_PLAYER
-	continue_game = True
-	print_board(board)
-	while continue_game:
-		input("")
-		play_random_ai(current_player, board, empty_squares)
-		current_player = Player.alternate_players(current_player)
-		print_board(board)
-		if check_end_game(board):
-			continue_game = False
-	"""
+	print_grid(grid)
