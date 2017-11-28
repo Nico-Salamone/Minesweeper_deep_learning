@@ -72,15 +72,21 @@ class State(Enum):
 def initialize_empty_grid():
 	return (Tile.EMPTY, ) * SIZE
 
-def print_grid(grid):
+def to_string(grid):
 	row_column_size = math.sqrt(SIZE)
 
+	grid_str = ""
 	for i in range(SIZE):
-		end_print = ""
-		if (i % row_column_size) == (row_column_size - 1): # End row.
-			end_print = "\n"
+		end = ""
+		if ((i % row_column_size) == (row_column_size - 1)) and (i != SIZE - 1): # End row and not last square.
+			end = "\n"
 
-		print(grid[i], end = end_print)
+		grid_str += grid[i].__str__() + end
+
+	return grid_str
+
+def print_grid(grid):
+	print(to_string(grid))
 
 def get_player_who_must_play_now(grid):
 	num_x = grid.count(Tile.X)

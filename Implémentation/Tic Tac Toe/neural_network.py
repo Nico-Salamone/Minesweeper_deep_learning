@@ -49,13 +49,30 @@ def create_fit_model(x, y_true, output_size = None, model_file_name = None):
 
 	return model
 
+def get_win_ratio(grid, scores):
+	num_wins = scores[0]
+	num_losses = scores[1]
+	num_draws = scores[2]
+
+	total_games = num_wins + num_losses + num_draws
+
+	return num_wins / total_games
+
+def get_win_loss_draw_ratio(grid, scores):
+	num_wins = scores[0]
+	num_losses = scores[1]
+	num_draws = scores[2]
+
+	total_games = num_wins + num_losses + num_draws
+
+	return ((num_wins / total_games), (num_losses / total_games), (num_draws / total_games))
+
 def compute_errors(model, x, y_true, y_pred, error_function_list):
 	# y_true_components and y_pred_components are two-dimensuinal matrix. The first dimension represents the components of one y_true element and the second dimension the grid. 
 	# error_function_list contain a list of function computing an error from all y_true and all y_pred.
 	# The objets returned is a three-dimensional matrix. The first dimension represents the error, the second the y component and the third the grid.
 
-	y_true, y_pred, y_size, y_is_primitive = format_y_true_pred(y_true, y_pred)
-	
+	y_size = get_y_size(y_true)
 	y_true_components = sort_by_y_components(y_true)
 	y_pred_components = sort_by_y_components(y_pred)
 
@@ -96,6 +113,17 @@ def compute_errors(model, x, y_true, y_pred, error_function_list, y_is_primitive
 	return errors
 """
 
+def mean_standard_deviation_errors(errors):
+	num_errors = len(errors)
+	y_size = get_y_size_from_errors(errors)
+
+	mean_std = [[0] * y_size] * num_errors
+	for i in range(num_errors):
+		for j in range(y_size):
+			mean_std[i][j] = (np.mean(errors[i][j]), np.std(errors[i][j]))
+
+	return mean_std
+
 def error_bins_data_percentage(errors, num_bins = 10, error_range = None):
 	# For each bin 'b', get the percentage of data which are in 'b'.
 	# Only for a type of error.
@@ -119,7 +147,7 @@ def mutiple_error_bins_data_percentage(errors, num_bins = 10, error_ranges = Non
 	if error_ranges == None:
 		error_ranges = [None] * num_errors
 
-	y_size = len(errors[0])
+	y_size = get_y_size_from_errors(errors)
 
 	data_percentages_bins = [[0] * y_size] * num_errors
 	for i in range(num_errors):
@@ -129,8 +157,8 @@ def mutiple_error_bins_data_percentage(errors, num_bins = 10, error_ranges = Non
 
 	return data_percentages_bins
 
-def get_grid_in_error_range(grids, scores_true, scores_pred, errors, error_range):
-	# Get grid, score_true, score_pred and error when error lies in the range.
+def get_grid_in_error_range(grids, y_true, y_pred, errors, error_range):
+	# Get grid, y_true, y_pred and error when error lies in the range.
 
 	min_value = error_range[0]
 	max_value = error_range[1]
@@ -138,7 +166,7 @@ def get_grid_in_error_range(grids, scores_true, scores_pred, errors, error_range
 	grids_in_range = []
 	for i in range(len(errors)):
 		if min_value <= errors[i] <= max_value:
-			grids_in_range.append((grids[i], scores_true[i], scores_pred[i], errors[i]))
+			grids_in_range.append((grids[i], y_true[i], y_pred[i], errors[i]))
 
 	return grids_in_range
 
@@ -170,7 +198,7 @@ def mutiple_mean_standard_deviation_error_by_num_empty_squares(grids, errors):
 	# The errors variable is a list of the errors.
 	
 	num_errors = len(errors)
-	y_size = len(errors[0])
+	y_size = get_y_size_from_errors(errors)
 
 	mean_std_error = [[0] * y_size] * num_errors
 	for i in range(num_errors):
@@ -179,22 +207,22 @@ def mutiple_mean_standard_deviation_error_by_num_empty_squares(grids, errors):
 
 	return mean_std_error
 
-def format_y_true_pred(y_true, y_pred):
-	if hasattr(y_true[0], "__len__"):
-		y_is_primitive = False
-
-		y_size = len(y_true[0])
-	else:
-		y_is_primitive = True
-
+def get_y_size(y):
+	if hasattr(y[0], "__len__"):
+		y_size = len(y[0])
+	else: # y is primitive.
 		y_size = 1
-		y_true = [[y_t] for y_t in y_true]
-		y_pred = [[y_p] for y_p in y_pred.flatten().tolist()]
 
-	return y_true, y_pred, y_size, y_is_primitive
+	return y_size
+
+def get_y_size_from_errors(errors):
+	return len(errors[0])
 		
 def sort_by_y_components(y):
 	# The output of this function is a two-dimensuinal matrix. The first dimension represents the components of one y element and the second dimension the grid.
+
+	if not hasattr(y[0], "__len__"): # y is primitive.
+		y = [[e] for e in y]
 
 	return np.transpose(y).tolist()
 
@@ -207,23 +235,43 @@ def print_loss_metric_functions(model, x, y_true):
 		print("{}: {:.3f}".format(model.metrics_names[i], data_evaluation[i]))
 
 def print_correlation_coefficient_p_value(y_true, y_pred, y_names = None):
-	y_true, y_pred, y_size, y_is_primitive = format_y_true_pred(y_true, y_pred)
+	y_size = get_y_size(y_true)
 
 	if y_names == None:
 		y_names = ["Output #{}".format(i + 1) for i in range(y_size)]
 
-	# Sort y_true and y_pred by components.
 	y_true_components = sort_by_y_components(y_true)
 	y_pred_components = sort_by_y_components(y_pred)
 
 	print("Correlation coefficient and p-value:")
 	for i in range(y_size):
-		print("{}: {}".format(y_names[i], pearsonr(y_true_components[i], y_pred_components[i])))
+		print("\t{}: {}".format(y_names[i], pearsonr(y_true_components[i], y_pred_components[i])))
 
-def print_mutiple_error_bins_data_percentage(y_true, y_pred, errors, y_names = None, error_ranges = None, error_names = None, num_bins = 10):
+def print_mean_standard_deviation_errors(errors, y_names = None, error_names = None):
 	num_errors = len(errors)
+	y_size = get_y_size_from_errors(errors)
 
-	y_true, y_pred, y_size, y_is_primitive = format_y_true_pred(y_true, y_pred)
+	if error_names == None:
+		error_names = ["Error #{}".format(i + 1) for i in range(num_errors)]
+
+	if y_names == None:
+		y_names = ["Output #{}".format(i + 1) for i in range(y_size)]
+
+	mean_std = mean_standard_deviation_errors(errors)
+
+	print("Mean and standard deviation for each error:")
+	for i in range(num_errors):
+		print("\t{}:".format(error_names[i]))
+
+		for j in range(y_size):
+			msd = mean_std[i][j]
+			print("\t\t{}: mean error of {:.3f} and standard deviation error of {:.3f}".format(y_names[j], msd[0], msd[1]))
+
+		print()
+
+def print_mutiple_error_bins_data_percentage(errors, y_names = None, error_ranges = None, error_names = None, num_bins = 10):
+	num_errors = len(errors)
+	y_size = get_y_size_from_errors(errors)
 
 	if error_names == None:
 		error_names = ["Error #{}".format(i + 1) for i in range(num_errors)]
@@ -233,23 +281,22 @@ def print_mutiple_error_bins_data_percentage(y_true, y_pred, errors, y_names = N
 
 	data_percentages_bins = mutiple_error_bins_data_percentage(errors, num_bins, error_ranges)
 
-	print("The percentage of data which are in the follow bins:")
+	print("Percentage of data which are in the follow bins:")
 	for i in range(num_errors):
-		print("{}:".format(error_names[i]))
+		print("\t{}:".format(error_names[i]))
 
 		for j in range(y_size):
-			print("{}:".format(y_names[j]))
+			print("\t\t{}:".format(y_names[j]))
 
 			data_percentages, bins = data_percentages_bins[i][j]
-			for i in range(len(data_percentages)):
-				print("[{:.2f}-{:.2f}]: {:.3%}".format(bins[i], bins[i+1], data_percentages[i]))
+			for k in range(len(data_percentages)):
+				print("\t\t\t[{:.2f}-{:.2f}]: {:.3%}".format(bins[k], bins[k+1], data_percentages[k]))
 
 		print()
 
 def print_all_grids_with_result(x, y_true, y_pred, errors, y_names = None, error_names = None):
 	num_errors = len(errors)
-
-	y_true, y_pred, y_size, y_is_primitive = format_y_true_pred(y_true, y_pred)
+	y_size = get_y_size(y_true)
 
 	if error_names == None:
 		error_names = ["Error #{}".format(i + 1) for i in range(num_errors)]
@@ -264,21 +311,20 @@ def print_all_grids_with_result(x, y_true, y_pred, errors, y_names = None, error
 	for i in range(len(x)):
 		grid = tuple(ttt.Tile(tile) for tile in x[i])
 
-		ttt.print_grid(grid)
+		print('\t' + '\n\t'.join(ttt.to_string(grid).split('\n'))) # Print the grid with tabulation.
 		for j in range(y_size):
-			print("{}:".format(y_names[j]))
+			print("\t{}:".format(y_names[j]))
 
-			print("y_true: {:.2f}".format(y_true_components[j][i]))
-			print("y_pred: {:.2f}".format(y_pred_components[j][i]))
+			print("\t\ty_true: {:.2f}".format(y_true_components[j][i]))
+			print("\t\ty_pred: {:.2f}".format(y_pred_components[j][i]))
 			for k in range(num_errors):
-				print("{}: {:.2f}".format(error_names[k], errors[k][j][i]))
+				print("\t\t{}: {:.2f}".format(error_names[k], errors[k][j][i]))
 
 		print()
 
 def print_grid_in_error_range(x, y_true, y_pred, errors, error_range, y_names = None, error_names = None):
 	num_errors = len(errors)
-
-	y_true, y_pred, y_size, y_is_primitive = format_y_true_pred(y_true, y_pred)
+	y_size = get_y_size(y_true)
 
 	if error_names == None:
 		error_names = ["Error #{}".format(i + 1) for i in range(num_errors)]
@@ -291,26 +337,25 @@ def print_grid_in_error_range(x, y_true, y_pred, errors, error_range, y_names = 
 
 	print("Grids whose the error lies in [{}, {}]:".format(*error_range))
 	for i in range(num_errors):
-		print("{}:".format(error_names[i]))
+		print("\t{}:".format(error_names[i]))
 
 		for j in range(y_size):
-			print("{}:".format(y_names[j]))
+			print("\t\t{}:".format(y_names[j]))
 
 			grids_in_error_range = get_grid_in_error_range(x, y_true_components[j], y_pred_components[j], errors[i][j], error_range)
 			for x_gr, y_t, y_p, err in grids_in_error_range:
 				grid = tuple(ttt.Tile(tile) for tile in x_gr)
 
-				ttt.print_grid(grid)
-				print("y_true: {:.2f}".format(y_t))
-				print("y_pred: {:.2f}".format(y_p))
-				print("{}: {:.2f}".format(y_names[j], err))
+				print('\t\t\t' + '\n\t\t\t'.join(ttt.to_string(grid).split('\n'))) # Print the grid with tabulation.
+				print("\t\t\ty_true: {:.2f}".format(y_t))
+				print("\t\t\ty_pred: {:.2f}".format(y_p))
+				print("\t\t\t{}: {:.2f}".format(y_names[j], err))
 
 				print()
 
-def print_mutiple_mean_standard_deviation_error_by_num_empty_squares(grids, y_true, y_pred, errors, y_names = None, error_names = None):
+def print_mutiple_mean_standard_deviation_error_by_num_empty_squares(grids, errors, y_names = None, error_names = None):
 	num_errors = len(errors)
-
-	y_true, y_pred, y_size, y_is_primitive = format_y_true_pred(y_true, y_pred)
+	y_size = get_y_size_from_errors(errors)
 
 	if error_names == None:
 		error_names = ["Error #{}".format(i + 1) for i in range(num_errors)]
@@ -322,25 +367,16 @@ def print_mutiple_mean_standard_deviation_error_by_num_empty_squares(grids, y_tr
 
 	print("Mean and standard deviation error by number of empty squares:")
 	for i in range(num_errors):
-		print("{}:".format(error_names[i]))
+		print("\t{}:".format(error_names[i]))
 
 		for j in range(y_size):
-			print("{}:".format(y_names[j]))
+			print("\t\t{}:".format(y_names[j]))
 
 			msd = mean_std_error[i][j]
-			for i in range(len(msd)):
-				print("{} empty squares: mean error of {:.3f} and standard deviation error of {:.3f}".format(i, msd[i][0], msd[i][1]))
+			for k in range(len(msd)):
+				print("\t\t\t{} empty squares: mean error of {:.3f} and standard deviation error of {:.3f}".format(k, msd[k][0], msd[k][1]))
 
 		print()
-
-def get_win_ratio(grid, scores):
-	num_wins = scores[0]
-	num_losses = scores[1]
-	num_draws = scores[2]
-
-	total_games = num_wins + num_losses + num_draws
-
-	return num_wins / total_games
 
 if __name__ == "__main__":
 	seed = 867342
@@ -355,23 +391,27 @@ if __name__ == "__main__":
 	data_set = ds.read_data_set(data_set_file_name)
 	#training_set = random.sample(data_set, num_samples)
 	training_set = data_set
-	x, y_true = get_data_for_neural_network(training_set, get_win_ratio)
+	#x, y_true = get_data_for_neural_network(training_set, get_win_ratio)
+	x, y_true = get_data_for_neural_network(training_set, get_win_loss_draw_ratio)
 	model = create_fit_model(x, y_true)
 	y_pred = model.predict(x, batch_size = 1)
 
 	# Results
 	error_function_list = [lambda y_t, y_p: list(map(lambda t, p: abs(t - p), y_t, y_p))]
-	error_ranges = [(0.0, 1.0)]
-	y_names = ["Victory ratio"]
+	#error_ranges = [(0.0, 1.0)]
+	#y_names = ["Win ratio"]
+	error_ranges = [(0.0, 1.0)] * 3
+	y_names = ["Win ratio", "Loss ratio", "Draw ratio"]
 	error_names = ["Absolute error"]
 
 	errors = compute_errors(model, x, y_true, y_pred, error_function_list)
-	
+
 	print_loss_metric_functions(model, x, y_true)
 	print()
 	print_correlation_coefficient_p_value(y_true, y_pred, y_names = y_names)
 	print()
-	print_mutiple_error_bins_data_percentage(y_true, y_pred, errors, error_ranges = error_ranges, y_names = y_names, error_names = error_names)
-	#print_all_grids_with_result(x, y_true, y_pred, errors, y_names = y_names, error_names = error_names)
+	print_mean_standard_deviation_errors(errors, y_names = y_names, error_names = error_names)
+	print_mutiple_error_bins_data_percentage(errors, error_ranges = error_ranges, y_names = y_names, error_names = error_names)
+	print_all_grids_with_result(x, y_true, y_pred, errors, y_names = y_names, error_names = error_names)
 	print_grid_in_error_range(x, y_true, y_pred, errors, (0.5, 1.0), y_names = y_names, error_names = error_names)
-	print_mutiple_mean_standard_deviation_error_by_num_empty_squares(x, y_true, y_pred, errors, y_names = y_names, error_names = error_names)
+	print_mutiple_mean_standard_deviation_error_by_num_empty_squares(x, errors, y_names = y_names, error_names = error_names)
