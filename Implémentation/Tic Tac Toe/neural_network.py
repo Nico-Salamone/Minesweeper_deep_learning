@@ -85,34 +85,6 @@ def compute_errors(model, x, y_true, y_pred, error_function_list):
 
 	return errors
 
-"""
-def compute_errors(model, x, y_true, y_pred, error_function_list, y_is_primitive = None):
-	# error_function_list contain a list of function computing an error from all y_true and all y_pred.
-
-	if y_is_primitive == None:
-		if hasattr(y_true[0], "__len__"):
-			y_is_primitive = False
-		else:
-			y_is_primitive = True
-
-	if not y_is_primitive:
-		y_size = len(y_true[0])
-	else:
-		y_size = 1
-
-	num_errors = len(error_function_list)
-	errors = [[0] * y_size] * num_errors
-	for i in range(num_errors): # Error function.
-		err_func = error_function_list[i]
-		if y_is_primitive:
-			errors[i][0] = err_func(y_true, y_pred.flatten().tolist())
-		else:
-			for j in range(y_size): # y size.
-				errors[i][j] = err_func(y_true[j], y_pred[j].flatten().tolist())
-
-	return errors
-"""
-
 def mean_standard_deviation_errors(errors):
 	num_errors = len(errors)
 	y_size = get_y_size_from_errors(errors)
@@ -393,7 +365,7 @@ if __name__ == "__main__":
 	training_set = data_set
 	#x, y_true = get_data_for_neural_network(training_set, get_win_ratio)
 	x, y_true = get_data_for_neural_network(training_set, get_win_loss_draw_ratio)
-	model = create_fit_model(x, y_true)
+	model = create_fit_model(x, y_true, model_file_name = model_file_name)
 	y_pred = model.predict(x, batch_size = 1)
 
 	# Results
@@ -412,6 +384,6 @@ if __name__ == "__main__":
 	print()
 	print_mean_standard_deviation_errors(errors, y_names = y_names, error_names = error_names)
 	print_mutiple_error_bins_data_percentage(errors, error_ranges = error_ranges, y_names = y_names, error_names = error_names)
-	print_all_grids_with_result(x, y_true, y_pred, errors, y_names = y_names, error_names = error_names)
+	#print_all_grids_with_result(x, y_true, y_pred, errors, y_names = y_names, error_names = error_names)
 	print_grid_in_error_range(x, y_true, y_pred, errors, (0.5, 1.0), y_names = y_names, error_names = error_names)
 	print_mutiple_mean_standard_deviation_error_by_num_empty_squares(x, errors, y_names = y_names, error_names = error_names)
