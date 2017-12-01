@@ -23,10 +23,14 @@ def get_data_for_neural_network(training_set, y_true_computation_func):
 		grid = training_set[i][0]
 		scores = training_set[i][1]
 
-		x[i] = tuple(tile.value for tile in grid) # Grid.
+		#x[i] = tuple(tile.value for tile in grid) # Grid.
+		x[i] = grid
 		y_true[i] = y_true_computation_func(grid, scores)
 
 	return x, y_true
+
+def convert_grid_for_neural_network(grid):
+	return tuple([tile.value for tile in grid])
 
 def create_fit_model(x, y_true, output_size = None, model_file_name = None):
 	if output_size == None:
@@ -34,6 +38,8 @@ def create_fit_model(x, y_true, output_size = None, model_file_name = None):
 			output_size = len(y_true[0])
 		else:
 			output_size = 1
+
+	x = [convert_grid_for_neural_network(grid) for grid in x]
 
 	model = Sequential()
 	model.add(Dense(15, input_dim = 9))
@@ -142,27 +148,44 @@ def get_grid_in_error_range(grids, y_true, y_pred, errors, error_range):
 
 	return grids_in_range
 
-def mean_standard_deviation_error_by_num_empty_squares(grids, errors):
-	# The nth chunck corresponds to all grids with nth empty squares.
-	# For each chuck, compute the mean and the standard deviation for all errors in this chunck.
-	# The nth element from grids corresponds to the nth element from errors.
-	
+def filter_grids_by_empty_squares(grids, elements = None):
+	# elements is a list of elements related to grid (for exemple, y_true, y_pred, errors).
+	# The nth grid from grids corresponds to the nth element from elements.
+	# The nth bin corresponds to all grids with nth empty squares.
+
 	n = len(grids)
-	num_chunks = ttt.SIZE + 1
+	num_bins = ttt.SIZE + 1
 
 	# Split (grids, errors) by number of empty squares.
-	chunks = [[] for i in range(num_chunks)]
+	bins = [[] for i in range(num_bins)] 
 	for i in range(n):
-		gr = grids[i]
-		grid_tiles = tuple(ttt.Tile(tile) for tile in gr)
-		err = errors[i]
+		grid = grids[i]
+		
+		num_empty_squares = len(ttt.get_empty_tile_indexes(grid))
+		if elements is not None:
+			element = elements[i]
+			element_to_append = (grid, element)
+		else:
+			element_to_append = grid
+		bins[num_empty_squares].append(element_to_append)
 
-		num_empty_squares = len(ttt.get_empty_tile_indexes(grid_tiles))
-		chunks[num_empty_squares].append(err)
+	return bins
 
-	mean_std_error = [0] * num_chunks
-	for i in range(num_chunks):
-		mean_std_error[i] = (np.mean(chunks[i]), np.std(chunks[i]))
+def mean_standard_deviation_error_by_num_empty_squares(grids, errors):
+	# The nth bin corresponds to all grids with nth empty squares.
+	# For each bin, compute the mean and the standard deviation for all errors in this bin.
+	# The nth grid from grids corresponds to the nth error from errors.
+	
+	n = len(grids)
+
+	bins = filter_grids_by_empty_squares(grids, errors)
+	num_bins = len(bins)
+	for i in range(num_bins):
+		bins[i] = [err for (grid, err) in bins[i]]
+
+	mean_std_error = [0] * num_bins
+	for i in range(num_bins):
+		mean_std_error[i] = (np.mean(bins[i]), np.std(bins[i]))
 
 	return mean_std_error
 
@@ -199,6 +222,8 @@ def sort_by_y_components(y):
 	return np.transpose(y).tolist()
 
 def print_loss_metric_functions(model, x, y_true):
+	x = [convert_grid_for_neural_network(grid) for grid in x]
+
 	data_evaluation = model.evaluate(x, y_true, batch_size = 1)
 
 	print("\n\n")
@@ -281,7 +306,7 @@ def print_all_grids_with_result(x, y_true, y_pred, errors, y_names = None, error
 
 	print("All results (for each x, display y_true, y_pred and errors):")
 	for i in range(len(x)):
-		grid = tuple(ttt.Tile(tile) for tile in x[i])
+		grid = x[i]
 
 		print('\t' + '\n\t'.join(ttt.to_string(grid).split('\n'))) # Print the grid with tabulation.
 		for j in range(y_size):
@@ -315,9 +340,7 @@ def print_grid_in_error_range(x, y_true, y_pred, errors, error_range, y_names = 
 			print("\t\t{}:".format(y_names[j]))
 
 			grids_in_error_range = get_grid_in_error_range(x, y_true_components[j], y_pred_components[j], errors[i][j], error_range)
-			for x_gr, y_t, y_p, err in grids_in_error_range:
-				grid = tuple(ttt.Tile(tile) for tile in x_gr)
-
+			for grid, y_t, y_p, err in grids_in_error_range:
 				print('\t\t\t' + '\n\t\t\t'.join(ttt.to_string(grid).split('\n'))) # Print the grid with tabulation.
 				print("\t\t\ty_true: {:.2f}".format(y_t))
 				print("\t\t\ty_pred: {:.2f}".format(y_p))
@@ -366,7 +389,7 @@ if __name__ == "__main__":
 	#x, y_true = get_data_for_neural_network(training_set, get_win_ratio)
 	x, y_true = get_data_for_neural_network(training_set, get_win_loss_draw_ratio)
 	model = create_fit_model(x, y_true, model_file_name = model_file_name)
-	y_pred = model.predict(x, batch_size = 1)
+	y_pred = model.predict([convert_grid_for_neural_network(grid) for grid in x], batch_size = 1)
 
 	# Results
 	error_function_list = [lambda y_t, y_p: list(map(lambda t, p: abs(t - p), y_t, y_p))]
