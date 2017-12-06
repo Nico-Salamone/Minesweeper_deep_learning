@@ -42,14 +42,15 @@ def create_fit_model(x, y_true, output_size = None, model_file_name = None):
 	x = [convert_grid_for_neural_network(grid) for grid in x]
 
 	model = Sequential()
-	model.add(Dense(15, input_dim = 9))
-	model.add(Dense(29))
-	model.add(Dense(output_size))
+	model.add(Dense(60, input_dim = 9, activation = 'relu'))
+	model.add(Dense(180, activation = 'relu'))
+	model.add(Dense(70, activation = 'relu'))
+	model.add(Dense(output_size, activation = 'relu'))
 
-	model.compile(loss = 'mean_squared_error', optimizer = 'sgd', metrics = ['mean_squared_error', 'mean_absolute_error'])
+	model.compile(loss = 'mean_squared_error', optimizer = 'rmsprop', metrics = ['mean_squared_error', 'mean_absolute_error'])
 
-	#model.fit(x, y_true, epochs = 100, batch_size = 1)
-	model.fit(x, y_true, epochs = 10, batch_size = 100)
+	model.fit(x, y_true, epochs = 100, batch_size = 10)
+	#model.fit(x, y_true, epochs = 10, batch_size = 100)
 	if model_file_name:
 		model.save(model_file_name)
 
