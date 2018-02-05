@@ -9,30 +9,35 @@ from keras.models import load_model
 import tic_tac_toe as ttt
 import data_set as ds
 
-def get_data_for_neural_network(training_set, y_true_computation_func):
-	# Get data (x, y_true) for training the neural network.
+def format_data_for_neural_network(data_set, y_true_computation_func):
+	# Format data set (x, y_true) for the neural network.
 	# x is the grid and y is a value compted by y_true_computation_func.
 	# For each x, y_true is computed by sending x to the function y_true_computation_func.
 	# This function has two parameters: the grid and the scores.
 	
-	n = len(training_set)
+	n = len(data_set)
 	
-	x = [0] * n
-	y_true = [0] * n
+	data_set_nn = [0] * n 
 	for i in range(n):
-		grid = training_set[i][0]
-		scores = training_set[i][1]
+		grid = data_set[i][0]
+		scores = data_set[i][1]
 
-		#x[i] = tuple(tile.value for tile in grid) # Grid.
-		x[i] = grid
-		y_true[i] = y_true_computation_func(grid, scores)
+		x = grid
+		y_true = y_true_computation_func(grid, scores)
 
-	return x, y_true
+		data_set_nn[i] = (x, y_true)
+
+	return data_set_nn
+
+def split_data_set_in_x_y_true(data_set):
+	return ([x for (x, y_true) in data_set], [y_true for (x, y_true) in data_set])
 
 def convert_grid_for_neural_network(grid):
 	return tuple([tile.value for tile in grid])
 
-def create_fit_model(x, y_true, output_size = None, model_file_name = None):
+def create_fit_model(training_set, output_size = None, model_file_name = None):
+	x, y_true = split_data_set_in_x_y_true(training_set)
+
 	if output_size == None:
 		if hasattr(y_true[0], "__len__"):
 			output_size = len(y_true[0])
@@ -50,7 +55,6 @@ def create_fit_model(x, y_true, output_size = None, model_file_name = None):
 	model.compile(loss = 'mean_squared_error', optimizer = 'rmsprop', metrics = ['mean_squared_error', 'mean_absolute_error'])
 
 	model.fit(x, y_true, epochs = 100, batch_size = 10)
-	#model.fit(x, y_true, epochs = 10, batch_size = 100)
 	if model_file_name:
 		model.save(model_file_name)
 
@@ -75,19 +79,19 @@ def get_win_loss_draw_ratio(grid, scores):
 	return ((num_wins / total_games), (num_losses / total_games), (num_draws / total_games))
 
 def compute_errors(model, x, y_true, y_pred, error_function_list):
-	# y_true_components and y_pred_components are two-dimensuinal matrix. The first dimension represents the components of one y_true element and the second dimension the grid. 
 	# error_function_list contain a list of function computing an error from all y_true and all y_pred.
 	# The objets returned is a three-dimensional matrix. The first dimension represents the error, the second the y component and the third the grid.
 
 	y_size = get_y_size(y_true)
 	y_true_components = sort_by_y_components(y_true)
 	y_pred_components = sort_by_y_components(y_pred)
+	# y_true_components and y_pred_components are two-dimensuinal matrix. The first dimension represents the components of one y_true element and the second dimension the grid. 
 
 	num_errors = len(error_function_list)
 	errors = [[0] * y_size] * num_errors
 	for i in range(num_errors): # Error function.
 		err_func = error_function_list[i]
-		for j in range(y_size): # y size.
+		for j in range(y_size): # y.
 			errors[i][j] = err_func(y_true_components[j], y_pred_components[j])
 
 	return errors
@@ -186,7 +190,10 @@ def mean_standard_deviation_error_by_num_empty_squares(grids, errors):
 
 	mean_std_error = [0] * num_bins
 	for i in range(num_bins):
-		mean_std_error[i] = (np.mean(bins[i]), np.std(bins[i]))
+		if len(bins[i]) > 0:
+			mean_std_error[i] = (np.mean(bins[i]), np.std(bins[i]))
+		else:
+			mean_std_error[i] = (0, 0)
 
 	return mean_std_error
 
@@ -225,7 +232,7 @@ def sort_by_y_components(y):
 def print_loss_metric_functions(model, x, y_true):
 	x = [convert_grid_for_neural_network(grid) for grid in x]
 
-	data_evaluation = model.evaluate(x, y_true, batch_size = 1)
+	data_evaluation = model.evaluate(x, y_true)
 
 	print("\n\n")
 	
@@ -345,7 +352,7 @@ def print_grid_in_error_range(x, y_true, y_pred, errors, error_range, y_names = 
 				print('\t\t\t' + '\n\t\t\t'.join(ttt.to_string(grid).split('\n'))) # Print the grid with tabulation.
 				print("\t\t\ty_true: {:.2f}".format(y_t))
 				print("\t\t\ty_pred: {:.2f}".format(y_p))
-				print("\t\t\t{}: {:.2f}".format(y_names[j], err))
+				print("\t\t\tError ({}): {:.2f}".format(y_names[j], err))
 
 				print()
 
@@ -378,26 +385,30 @@ if __name__ == "__main__":
 	seed = 867342
 	#seed = time.time()
 	data_set_file_name = "data_set.csv"
-	num_samples = 1000
 	model_file_name = "model.h5"
 
 	random.seed(seed)
 	np.random.seed(int(seed))
 
 	data_set = ds.read_data_set(data_set_file_name)
-	#training_set = random.sample(data_set, num_samples)
-	training_set = data_set
-	#x, y_true = get_data_for_neural_network(training_set, get_win_ratio)
-	x, y_true = get_data_for_neural_network(training_set, get_win_loss_draw_ratio)
-	model = create_fit_model(x, y_true, model_file_name = model_file_name)
-	y_pred = model.predict([convert_grid_for_neural_network(grid) for grid in x], batch_size = 1)
+	data_set = format_data_for_neural_network(data_set, get_win_ratio)
+	#data_set = format_for_neural_network(data_set, get_win_loss_draw_ratio)
+	#training_set = data_set
+	training_set = random.sample(data_set, int(len(data_set) / 2))
+
+	model = create_fit_model(training_set, model_file_name = model_file_name)
+
+	#test_set = data_set
+	test_set = list(set(data_set) - set(training_set))
+	x, y_true = split_data_set_in_x_y_true(test_set)
+	y_pred = model.predict([convert_grid_for_neural_network(grid) for grid in x])
 
 	# Results
 	error_function_list = [lambda y_t, y_p: list(map(lambda t, p: abs(t - p), y_t, y_p))]
-	#error_ranges = [(0.0, 1.0)]
-	#y_names = ["Win ratio"]
-	error_ranges = [(0.0, 1.0)] * 3
-	y_names = ["Win ratio", "Loss ratio", "Draw ratio"]
+	error_ranges = [(0.0, 1.0)]
+	y_names = ["Win ratio"]
+	#error_ranges = [(0.0, 1.0)] * 3
+	#y_names = ["Win ratio", "Loss ratio", "Draw ratio"]
 	error_names = ["Absolute error"]
 
 	errors = compute_errors(model, x, y_true, y_pred, error_function_list)
