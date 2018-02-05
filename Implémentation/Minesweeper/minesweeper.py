@@ -22,16 +22,31 @@ class Tile(Enum):
 	def __str__(self):
 		if self == Tile.INVISIBLE:
 			return '⬛︎'
+		elif Tile.is_empty_tile(self):
+			return str(self.value)
 		elif self == Tile.BOMB:
 			return 'B'
 		elif self == Tile.FLAG:
 			return 'F'
-		elif (self == Tile.EMPTY0) or (self == Tile.EMPTY1) or (self == Tile.EMPTY2) or (self == Tile.EMPTY3) or \
-			(self == Tile.EMPTY4) or (self == Tile.EMPTY5) or (self == Tile.EMPTY6) or (self == Tile.EMPTY7) or \
-			(self == Tile.EMPTY8):
-			return str(self.value)
+		
 
 		return None
+
+	@classmethod
+	def is_empty_tile(cls, tile):
+		"""
+		Check if a tile is an empty tile or not.
+
+		:tile: A tile.
+		:return: True if the tile is an empty tile, false otherwise.
+		"""
+
+		if (tile == Tile.EMPTY0) or (tile == Tile.EMPTY1) or (tile == Tile.EMPTY2) or (tile == Tile.EMPTY3) or \
+			(tile == Tile.EMPTY4) or (tile == Tile.EMPTY5) or (tile == Tile.EMPTY6) or (tile == Tile.EMPTY7) or \
+			(tile == Tile.EMPTY8):
+			return True
+
+		return False
 
 # class Visibility(Enum):
 # 	"""
@@ -94,8 +109,9 @@ class Grid:
 			j = pos[1]
 
 			self._grid[i][j] = Tile.BOMB
-			for adj_tile in self._filter_by_empty_tiles(self._get_adjacent_tiles(i, j)):
-				self._increment_adjacent_bomb(adj_tile[0], adj_tile[1])
+			all_adj_tiles = self._get_adjacent_tiles(i, j)
+			for empty_adj_tile in filter(lambda pos: Tile.is_empty_tile(self._grid[pos[0]][pos[1]]), all_adj_tiles):
+				self._increment_adjacent_bomb(empty_adj_tile[0], empty_adj_tile[1])
 
 	def _get_adjacent_tiles(self, i, j):
 		"""
@@ -122,25 +138,6 @@ class Grid:
 
 		return adjacent_tile_list
 
-	def _filter_by_empty_tiles(self, position_list):
-		"""
-		Filter by the empty tiles.
-
-		:position_list: The list of positions to filter.
-		:return: The list of positions containing only the empty tiles.
-		"""
-
-		position_list_filtered = []
-		for pos in position_list:
-			tile = self._grid[pos[0]][pos[1]]
-
-			if (tile == Tile.EMPTY0) or (tile == Tile.EMPTY1) or (tile == Tile.EMPTY2) or (tile == Tile.EMPTY3) or \
-				(tile == Tile.EMPTY4) or (tile == Tile.EMPTY5) or (tile == Tile.EMPTY6) or (tile == Tile.EMPTY7) or \
-				(tile == Tile.EMPTY8):
-				position_list_filtered.append(pos)
-
-		return position_list_filtered
-
 	def _increment_adjacent_bomb(self, i, j, n = 1):
 		"""
 		Increment by 'n' the number of adjacent bombs of a position.
@@ -152,9 +149,7 @@ class Grid:
 
 		tile = self._grid[i][j]
 
-		if not((tile == Tile.EMPTY0) or (tile == Tile.EMPTY1) or (tile == Tile.EMPTY2) or (tile == Tile.EMPTY3) or
-			(tile == Tile.EMPTY4) or (tile == Tile.EMPTY5) or (tile == Tile.EMPTY6) or (tile == Tile.EMPTY7) or
-			(tile == Tile.EMPTY8)):
+		if not Tile.is_empty_tile(tile):
 			raise ValueError("Error: only empty tiles can be incremented!")
 
 		new_value = tile.value + n
