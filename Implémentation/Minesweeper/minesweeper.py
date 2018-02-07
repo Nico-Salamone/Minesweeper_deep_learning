@@ -1,173 +1,64 @@
-from enum import Enum
+from tile import Tile
+from grid import Grid
+
 import random
 
-class Tile(Enum):
+class Minesweeper:
 	"""
-	Tile of a grid.
-	"""
-
-	INVISIBLE = -3 # Invisible tile.
-	BOMB = -2 # Bomb tile.
-	FLAG = -1 # Flag tile.
-	EMPTY0 = 0 # Empty tile. It does not contain bomb, it contains a number.
-	EMPTY1 = 1
-	EMPTY2 = 2
-	EMPTY3 = 3
-	EMPTY4 = 4
-	EMPTY5 = 5
-	EMPTY6 = 6
-	EMPTY7 = 7
-	EMPTY8 = 8
-
-	def __str__(self):
-		if self == Tile.INVISIBLE:
-			return '⬛︎'
-		elif Tile.is_empty_tile(self):
-			return str(self.value)
-		elif self == Tile.BOMB:
-			return 'B'
-		elif self == Tile.FLAG:
-			return 'F'
-		
-
-		return None
-
-	@classmethod
-	def is_empty_tile(cls, tile):
-		"""
-		Check if a tile is an empty tile or not.
-
-		:tile: A tile.
-		:return: True if the tile is an empty tile, false otherwise.
-		"""
-
-		if (tile == Tile.EMPTY0) or (tile == Tile.EMPTY1) or (tile == Tile.EMPTY2) or (tile == Tile.EMPTY3) or \
-			(tile == Tile.EMPTY4) or (tile == Tile.EMPTY5) or (tile == Tile.EMPTY6) or (tile == Tile.EMPTY7) or \
-			(tile == Tile.EMPTY8):
-			return True
-
-		return False
-
-# class Visibility(Enum):
-# 	"""
-# 	Visibility of a tile.
-# 	"""
-
-# 	VISIBLE = 1 # Visible tile.
-# 	INVISIBLE = -1 # Invisible tile.
-
-# 	def __str__(self):
-# 		if self == Visibility.VISIBLE:
-# 			return '⬜︎'
-# 		elif self == Visibility.INVISIBLE:
-# 			return '⬛︎'
-
-# 		return None
-
-class State(Enum):
-	WIN = 1
-	LOSE = 2
-	CONTINUE = 0 # Unfinished game.
-
-class Grid:
-	"""
-	Grid of a minesweeper game.
+	Minesweeper game.
 	"""
 
-	def __init__(self, n, m, num_bombs):
+	def __init__(self, num_rows, num_columns, num_bombs):
 		"""
-		Create a grid.
+		Create a minesweeper game.
 
-		:n: A number of rows.
-		:m: A number of columns.
-		:num_bombs: A number of bombs.
+		:n: The number of rows of the grid.
+		:m: The number of columns of the grid.
+		:num_bombs: The number of bombs of the grid.
 		"""
 
-		if num_bombs > (n * m):
+		if num_bombs > (num_rows * num_columns):
 			raise ValueError("Error: the number of bombs can not be greater than (n * m)!")
 
-		self.n = n
-		self.m = m
-		self.num_bombs = num_bombs
-		self._num_tiles_to_return = (self.n * self.m) - self.num_bombs # Number of tiles to return to win the game.
+		pos_list = [(i, j) for i in range(num_rows) for j in range(num_columns)]
+		bomb_position_list = random.sample(pos_list, num_bombs)
 
-		self._grid = [[Tile.EMPTY0 for j in range(self.m)] for i in range(self.n)]
-		self._insert_bombs()
-		self._visibility_grid = [[False for j in range(self.m)] for i in range(self.n)]
-		#self._visibility_grid = [[Visibility.I for j in range(self.m)] for i in range(self.n)]
+		self._grid = Grid(num_rows, num_columns, bomb_position_list)
+
+		self._num_remaining_hidden_empty_tiles = (self.num_rows * self.num_columns) - self.get_number_bombs()
+		self._visibility_grid = [[False for j in range(self.num_columns)] for i in range(self.num_rows)]
 	
-	def _insert_bombs(self):
+	@property
+	def num_rows(self):
+		return self._grid.num_rows
+	
+	@property
+	def num_columns(self):
+		return self._grid.num_columns
+
+	@property
+	def num_remaining_hidden_empty_tiles(self):
+		return self._num_remaining_hidden_empty_tiles
+
+	def get_number_bombs(self):
 		"""
-		Insert bombs in the grid.
-		"""
+		Get the number of bombs of the grid.
 
-		pos_list = [(i, j) for i in range(self.n) for j in range(self.m)]
-		bomb_pos = random.sample(pos_list, self.num_bombs)
-
-		for pos in bomb_pos:
-			i = pos[0]
-			j = pos[1]
-
-			self._grid[i][j] = Tile.BOMB
-			all_adj_tiles = self._get_adjacent_tiles(i, j)
-			for empty_adj_tile in filter(lambda pos: Tile.is_empty_tile(self._grid[pos[0]][pos[1]]), all_adj_tiles):
-				self._increment_adjacent_bomb(empty_adj_tile[0], empty_adj_tile[1])
-
-	def _get_adjacent_tiles(self, i, j):
-		"""
-		Get the adjacent tiles from a position.
-
-		:i: The index of the row of the position.
-		:j: The index of the column of the position.
-		:return: A list of the adjacent tiles of the position.
+		:return: The number of bombs of the grid.
 		"""
 
-		pos_list = []
-		for offset in range(3):
-			pos_list.append((i - 1, j - 1 + offset))
-			pos_list.append((i + 1, j - 1 + offset))
-		pos_list.append((i, j - 1))
-		pos_list.append((i, j + 1))
-
-		adjacent_tile_list = []
-		for pos in pos_list:
-			i_temp = pos[0]
-			j_temp = pos[1]
-			if (0 <= i_temp < self.n) and (0 <= j_temp < self.m):
-				adjacent_tile_list.append(pos)
-
-		return adjacent_tile_list
-
-	def _increment_adjacent_bomb(self, i, j, n = 1):
-		"""
-		Increment by 'n' the number of adjacent bombs of a position.
-
-		:i: The index of the row of the position.
-		:j: The index of the column of the position.
-		:n: The number of adjacent bombs to add (increment).
-		"""
-
-		tile = self._grid[i][j]
-
-		if not Tile.is_empty_tile(tile):
-			raise ValueError("Error: only empty tiles can be incremented!")
-
-		new_value = tile.value + n
-
-		if new_value > 8:
-			raise ValueError("Error: the number of adjacent bombs can not be greater than 8!")
-
-		self._grid[i][j] = Tile(new_value)
+		return len(self._grid.bomb_position_list)
 	
 	def __str__(self):
-		str_grid = ""
+		str_grid = []
 		current_grid = self.get_current_grid()
 		for row in current_grid:
 			for tile in row:
-				str_grid += str(tile) + '\t'
+				str_grid.append(str(tile))
+				str_grid.append('\t')
 			str_grid += '\n'
 
-		return str_grid
+		return ''.join(str_grid)
 
 	def get_current_grid(self):
 		"""
@@ -176,57 +67,99 @@ class Grid:
 		:return: The current grid.
 		"""
 
-		current_grid = [[Tile.INVISIBLE for j in range(self.m)] for i in range(self.n)]
+		current_grid = [[Tile.INVISIBLE for j in range(self.num_columns)] for i in range(self.num_rows)]
 		for i, row in enumerate(self._visibility_grid):
 			for j, visibility in enumerate(row):
-				current_grid[i][j] = self._grid[i][j] if visibility == True else Tile.INVISIBLE
+				if visibility == True:
+					current_grid[i][j] = self._grid.get_tile(i, j)
 
 		return current_grid
 
-	def _print_grid(self):
+	def is_tile_visible(self, i, j):
 		"""
-		Print the grid with all the visibilities (used for the debugging).
-		"""
-
-		str_grid = ""
-		for row in self._grid:
-			for tile in row:
-				str_grid += str(tile) + '\t'
-			str_grid += '\n'
-
-		print(str_grid)
-
-	def return_tile(self, i, j):
-		"""
-		Return a tile.
+		Test if a tile is visible or invisible.
 
 		:i: The index of the row of the tile.
 		:j: The index of the column of the tile.
-		:return: The state of the game.
+		:return: True if the tile is visible, false otherwise.
 		"""
 
-		if self._grid[i][j] == Tile.BOMB:
-			return State.LOSE
+		return self._visibility_grid[i][j]
 
-		self._visibility_grid[i][j] = True
-		self._num_tiles_to_return -= 1
+	def play_tile(self, i, j):
+		"""
+		Play on a tile.
 
-		if self._num_tiles_to_return == 0:
-			return State.WIN
+		:i: The index of the row of the tile.
+		:j: The index of the column of the tile.
+		:return: The tile at position 'i' and 'j'.
+		"""
 
-		return State.CONTINUE
+		tile = self._grid.get_tile(i, j)
 
-	# def insert_flag(self, i, j):
-	# 	"""
-	# 	Insert a flag.
+		already_revealed = self._reveal_tile(i, j)
+		if (not already_revealed) and (tile == Tile.EMPTY) and (tile == 0):
+			# Explore and reveal the empty tiles around 'tile'.
+			tiles_to_explore = set()
+			tiles_to_explore.update(self._grid.adjacent_tiles(i, j))
+			while tiles_to_explore: # While 'tiles_to_explore' contains positions.
+				i_temp, j_temp = tiles_to_explore.pop()
+				tile_temp = self._grid.get_tile(i_temp, j_temp) # 'tile_temp' is a empty tile.
 
-	# 	:i: The index of the row of the flag.
-	# 	:j: The index of the column of the flag.
-	# 	:return: The state of the game.
-	# 	"""
+				already_revealed = self._reveal_tile(i_temp, j_temp)
+
+				if (not already_revealed) and (tile_temp == 0):
+					tiles_to_explore.update(self._grid.adjacent_tiles(i_temp, j_temp))
+
+		return tile
+
+	def _reveal_tile(self, i, j):
+		"""
+		Reveal a tile. It makes a tile visible and decrements by one the varaible 'num_remaining_hidden_empty_tiles'.
+
+		:i: The index of the row of the tile.
+		:j: The index of the column of the tile.
+		:return: True if the tile has already been revealed, false otherwise.
+		"""
+
+		if not self._visibility_grid[i][j]:
+			self._visibility_grid[i][j] = True
+			if self._grid.get_tile(i, j) == Tile.EMPTY:
+				self._num_remaining_hidden_empty_tiles -= 1
+
+			return False
+
+		return True
+
+	def reveal_all_tiles(self):
+		"""
+		Reveal all tiles. The 'num_remaining_hidden_empty_tiles' counter is equal to 0 after calling this function.
+		"""
+
+		for i in range(self.num_rows):
+			for j in range(self.num_columns):
+				self._reveal_tile(i, j)
 
 if __name__ == "__main__":
 	#random.seed(5)
-	g = Grid(10, 5, 10)
+	ms = Minesweeper(10, 5, 6)
 
-	print(g)
+	print(ms)
+
+	pos = input("Enter a position: ")
+	pos = tuple([int(i) for i in pos.split(' ')])
+	tile = ms.play_tile(pos[0], pos[1])
+	print(ms)
+	while (tile == Tile.EMPTY) and (ms.num_remaining_hidden_empty_tiles > 0):
+		pos = input("Enter a position: ")
+		pos = tuple([int(i) for i in pos.split(' ')])
+		tile = ms.play_tile(pos[0], pos[1])
+		print(ms)
+
+	if tile == Tile.BOMB:
+		print("You lost!")
+
+		ms.reveal_all_tiles()
+		print(ms)
+	else:
+		print("You won!")
