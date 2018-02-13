@@ -1,8 +1,14 @@
 from masked_grid import MaskedTile, MaskedGrid
 
+from enum import Enum
 import random
 
 SEED = None
+
+class State(Enum):
+	WIN = 1
+	LOSS = 2
+	CONTINUE = 0 # Unfinished game.
 
 class Minesweeper:
 	"""
@@ -22,6 +28,9 @@ class Minesweeper:
 		bomb_position_list = random.sample(pos_list, num_bombs)
 
 		self._grid = MaskedGrid(num_rows, num_columns, bomb_position_list)
+
+		self._state = State.CONTINUE
+		self._score = 0
 
 	@property
 	def num_rows(self):
@@ -62,6 +71,30 @@ class Minesweeper:
 		"""
 
 		return self._grid.grid
+
+	@property
+	def state(self):
+		"""
+		State of the game.
+		"""
+
+		return self._state
+
+	@property
+	def score(self):
+		"""
+		Score of the game.
+		"""
+
+		return self._score
+
+	@property
+	def highest_possible_score(self):
+		"""
+		Highest possible score for this game.
+		"""
+
+		return (self._grid.num_rows * self._grid.num_columns) - self._grid.num_bombs
 
 	def __str__(self):
 		return str(self._grid)
@@ -105,21 +138,37 @@ class Minesweeper:
 
 	def play_tile(self, i, j):
 		"""
-		Play on a tile.
+		Play on a tile and update the state and the score. It does not do anything if the game is lost.
 
 		:i: The index of the row of the tile.
 		:j: The index of the column of the tile.
-		:return: The tile at position 'i' and 'j'.
+		:return: The state and the current score.
 		"""
 
-		return self._grid.unmask_tiles(i, j)
+		if self._state == State.LOSS:
+			return (self._state, self._score)
+
+		old_num_masked_tiles = self._grid.num_masked_tiles
+
+		played_tile = self._grid.unmask_tiles(i, j)
+
+		new_num_masked_tiles = self._grid.num_masked_tiles
+		self._score += (old_num_masked_tiles - new_num_masked_tiles)
+
+		if played_tile == MaskedTile.BOMB:
+			self._state = State.LOSS
+		elif (self._grid.num_masked_tiles - self._grid.num_bombs) == 0:
+			self._state = State.WIN
+
+		return (self._state, self._score)
 
 	def reveal_all_tiles(self):
 		"""
-		Reveal all tiles. The 'num_masked_tiles' counter is equal to 0 after calling this function.
+		Reveal all tiles. The 'num_masked_tiles' counter is equal to 0 and the state is set to State.LOSS after calling this function.
 		"""
 
 		self._grid.unmask_all_tiles()
+		self._state = State.LOSS
 
 if __name__ == "__main__":
 	random.seed(SEED)
@@ -129,18 +178,20 @@ if __name__ == "__main__":
 
 	pos = input("Enter a position: ")
 	pos = tuple([int(i) for i in pos.split(' ')])
-	tile = ms.play_tile(pos[0], pos[1])
+	state, score = ms.play_tile(pos[0], pos[1])
 	print(ms, "\n\n")
-	while (tile == MaskedTile.EMPTY) and ((ms.num_masked_tiles - ms.num_bombs) > 0):
+	while state == State.CONTINUE:
 		pos = input("Enter a position: ")
 		pos = tuple([int(i) for i in pos.split(' ')])
-		tile = ms.play_tile(pos[0], pos[1])
+		state, score = ms.play_tile(pos[0], pos[1])
 		print(ms, "\n\n")
 
-	if tile == MaskedTile.BOMB:
+	if state == State.LOSS:
 		print("You lost!")
 	else:
 		print("You won!")
+
+	print("Your score: {}.".format(score))
 
 	ms.reveal_all_tiles()
 	print(ms)
