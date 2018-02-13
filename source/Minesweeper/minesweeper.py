@@ -1,10 +1,10 @@
-from grid_with_mask import TileWithMask, GridWithMask
+from masked_grid import MaskedTile, MaskedGrid
 
 import random
 
 SEED = None
 
-class Minesweeper(GridWithMask):
+class Minesweeper(MaskedGrid):
 	"""
 	Minesweeper game.
 	"""
@@ -33,13 +33,13 @@ if __name__ == "__main__":
 	pos = tuple([int(i) for i in pos.split(' ')])
 	tile = ms.unmask_tiles(pos[0], pos[1])
 	print(ms, "\n\n")
-	while (tile == TileWithMask.EMPTY) and ((ms.num_masked_tiles - ms.num_bombs) > 0):
+	while (tile == MaskedTile.EMPTY) and ((ms.num_masked_tiles - ms.num_bombs) > 0):
 		pos = input("Enter a position: ")
 		pos = tuple([int(i) for i in pos.split(' ')])
 		tile = ms.unmask_tiles(pos[0], pos[1])
 		print(ms, "\n\n")
 
-	if tile == TileWithMask.BOMB:
+	if tile == MaskedTile.BOMB:
 		print("You lost!")
 	else:
 		print("You won!")
