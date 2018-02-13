@@ -74,6 +74,20 @@ class MaskedGrid(Grid):
 		"""
 
 		return self._num_masked_tiles
+
+	@property
+	def grid(self):
+		"""
+		Grid with mask (what the user see).
+		"""
+
+		grid = [[MaskedTile.MASKED for j in range(self.num_columns)] for i in range(self.num_rows)]
+		for i, row in enumerate(self._masked_grid):
+			for j, masked in enumerate(row):
+				if not masked:
+					grid[i][j] = MaskedTile.convert_tile_to_masked_tile(self.tile_at(i, j))
+
+		return grid
 	
 	def __str__(self):
 		str_grid = []
@@ -94,20 +108,6 @@ class MaskedGrid(Grid):
 			str_grid.append('\n')
 
 		return ''.join(str_grid)
-
-	@property
-	def grid(self):
-		"""
-		Grid with mask (what the user see).
-		"""
-
-		grid = [[MaskedTile.MASKED for j in range(self.num_columns)] for i in range(self.num_rows)]
-		for i, row in enumerate(self._masked_grid):
-			for j, masked in enumerate(row):
-				if not masked:
-					grid[i][j] = MaskedTile.convert_tile_to_masked_tile(self.tile_at(i, j))
-
-		return grid
 
 	def is_tile_masked(self, i, j):
 		"""
@@ -151,6 +151,15 @@ class MaskedGrid(Grid):
 
 		return tile
 
+	def unmask_all_tiles(self):
+		"""
+		Unmask all tiles. The 'num_masked_tiles' counter is equal to 0 after calling this function.
+		"""
+
+		for i in range(self.num_rows):
+			for j in range(self.num_columns):
+				self._unmask_tile(i, j)
+
 	def _unmask_tile(self, i, j):
 		"""
 		Unmask one tile at position 'i' and 'j'. It reveal the tile in this position and decrements by one the varaible 'num_masked_tiles'.
@@ -167,15 +176,6 @@ class MaskedGrid(Grid):
 			return False
 
 		return True
-
-	def unmask_all_tiles(self):
-		"""
-		Unmask all tiles. The 'num_masked_tiles' counter is equal to 0 after calling this function.
-		"""
-
-		for i in range(self.num_rows):
-			for j in range(self.num_columns):
-				self._unmask_tile(i, j)
 
 if __name__ == "__main__":
 	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]

@@ -154,6 +154,68 @@ class Grid:
 
 		return num_tiles
 
+	def __str__(self):
+		str_grid = []
+
+		str_grid.append("-\t \t")
+		for i in range(self._num_columns):
+			str_grid.append(str(i))
+			str_grid.append('\t')
+		str_grid.append("\n\n")
+
+		for i, row in enumerate(self._number_grid):
+			str_grid.append(str(i))
+			str_grid.append("\t \t")
+
+			for tile in row:
+				str_grid.append(str(tile))
+				str_grid.append('\t')
+			str_grid.append('\n')
+
+		return ''.join(str_grid)
+
+	def tile_at(self, i, j):
+		"""
+		Get tile at a position. The returned value is either Tile.WALL, Tile.BOMB or the number of adjacent bombs.
+		In this last case, the tile is a Tile.EMPTY.
+
+		:i: The index of the row of the position.
+		:j: The index of the column of the position.
+		:return: Tile.WALL if the tile contains a wall, Tile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
+		"""
+
+		return self._number_grid[i][j]
+
+	def within_boundaries(self, i, j, include_walls = False):
+		"""
+		Test if a position is within the boundaries.
+
+		:i: The index of the row of the position.
+		:j: The index of the column of the position.
+		:include_walls: True if the walls are included, False otherwise.
+		:return: True if the position is within the boundaries, False otherwise.
+		"""
+
+		return ((0 <= i < self._num_rows) and (0 <= j < self._num_columns)) and \
+			(not(include_walls) and ((self._number_grid[i][j] != Tile.WALL)))
+
+	def adjacent_tiles(self, i, j):
+		"""
+		Get a list of the adjacent tiles from a position. It does not contain the position outside the grid and
+		the position of tiles which contains a wall. It therefore contains positions of the empty and bomb tiles.
+
+		:i: The index of the row of the position.
+		:j: The index of the column of the position.
+		:return: A list of the adjacent tiles of the position.
+		"""
+
+		adjacent_tile_list = list(itertools.product([-1, 0, 1], repeat=2))
+		adjacent_tile_list.remove((0, 0))
+		adjacent_tile_list = [(i + o1, j + o2) for o1, o2 in adjacent_tile_list]
+		adjacent_tile_list = list(filter(lambda pos: self.within_boundaries(pos[0], pos[1]), adjacent_tile_list))
+
+		return adjacent_tile_list
+
 	def _insert_walls(self):
 		"""
 		Insert the walls in the grid of numbers.
@@ -201,36 +263,6 @@ class Grid:
 			for adj_tile in adjacent_tile_list:
 				self._increment_adjacent_bomb(adj_tile[0], adj_tile[1])
 
-	def adjacent_tiles(self, i, j):
-		"""
-		Get a list of the adjacent tiles from a position. It does not contain the position outside the grid and
-		the position of tiles which contains a wall. It therefore contains positions of the empty and bomb tiles.
-
-		:i: The index of the row of the position.
-		:j: The index of the column of the position.
-		:return: A list of the adjacent tiles of the position.
-		"""
-
-		adjacent_tile_list = list(itertools.product([-1, 0, 1], repeat=2))
-		adjacent_tile_list.remove((0, 0))
-		adjacent_tile_list = [(i + o1, j + o2) for o1, o2 in adjacent_tile_list]
-		adjacent_tile_list = list(filter(lambda pos: self.within_boundaries(pos[0], pos[1]), adjacent_tile_list))
-
-		return adjacent_tile_list
-
-	def within_boundaries(self, i, j, include_walls = False):
-		"""
-		Test if a position is within the boundaries.
-
-		:i: The index of the row of the position.
-		:j: The index of the column of the position.
-		:include_walls: True if the walls are included, False otherwise.
-		:return: True if the position is within the boundaries, False otherwise.
-		"""
-
-		return ((0 <= i < self._num_rows) and (0 <= j < self._num_columns)) and \
-			(not(include_walls) and ((self._number_grid[i][j] != Tile.WALL)))
-
 	def _increment_adjacent_bomb(self, i, j, n=1):
 		"""
 		Increment by 'n' the number of adjacent bombs of a position. The tile of this position must be an empty tile.
@@ -247,38 +279,6 @@ class Grid:
 		assert 0 <= new_value <= 8, "Error: the number of adjacent bombs can not be greater than 8!"
 
 		self._number_grid[i][j] = new_value
-	
-	def __str__(self):
-		str_grid = []
-
-		str_grid.append("-\t \t")
-		for i in range(self._num_columns):
-			str_grid.append(str(i))
-			str_grid.append('\t')
-		str_grid.append("\n\n")
-
-		for i, row in enumerate(self._number_grid):
-			str_grid.append(str(i))
-			str_grid.append("\t \t")
-
-			for tile in row:
-				str_grid.append(str(tile))
-				str_grid.append('\t')
-			str_grid.append('\n')
-
-		return ''.join(str_grid)
-
-	def tile_at(self, i, j):
-		"""
-		Get tile at a position. The returned value is either Tile.WALL, Tile.BOMB or the number of adjacent bombs.
-		In this last case, the tile is a Tile.EMPTY.
-
-		:i: The index of the row of the position.
-		:j: The index of the column of the position.
-		:return: Tile.WALL if the tile contains a wall, Tile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
-		"""
-
-		return self._number_grid[i][j]
 
 if __name__ == "__main__":
 	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]
