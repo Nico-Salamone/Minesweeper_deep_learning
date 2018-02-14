@@ -46,7 +46,7 @@ class Minesweeper:
 		Number of columns.
 		"""
 
-		return self._grid._num_columns
+		return self._grid.num_columns
 
 	@property 
 	def num_bombs(self):
@@ -94,7 +94,7 @@ class Minesweeper:
 		Highest possible score for this game.
 		"""
 
-		return (self._grid.num_rows * self._grid.num_columns) - self._grid.num_bombs
+		return (self.num_rows * self.num_columns) - self.num_bombs
 
 	def __str__(self):
 		return str(self._grid)
@@ -110,31 +110,17 @@ class Minesweeper:
 
 		return self._grid.within_boundaries(i, j)
 
-	def is_tile_masked(self, i, j):
-		"""
-		Test if a tile is masked or not masked.
-
-		:i: The index of the row of the tile.
-		:j: The index of the column of the tile.
-		:return: True if the tile is masked, False otherwise.
-		"""
-
-		return self._grid.is_tile_masked(i, j)
-
 	def tile_at(self, i, j):
 		"""
-		Get tile at a position. The returned value is either Tile.MASKED, Tile.BOMB or the number of adjacent bombs.
-		In this last case, the tile is a Tile.EMPTY.
+		Get tile at a position. The returned value is either MaskedTile.MASKED, MaskedTile.BOMB or the number of adjacent bombs.
+		In this last case, the tile is a MaskedTile.EMPTY.
 
 		:i: The index of the row of the position.
 		:j: The index of the column of the position.
-		:return: Tile.MASKED if the tile is masked, Tile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
-		"""
+		:return: MaskedTile.MASKED if the tile is masked, MaskedTile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
+		"""	
 
-		if self._grid.is_tile_masked(i, j):
-			return MaskedTile.MASKED		
-
-		return MaskedTile.convert_tile_to_masked_tile(self._grid.tile_at(i, j))
+		return self._grid.tile_at(i, j)
 
 	def play_tile(self, i, j):
 		"""
@@ -146,18 +132,20 @@ class Minesweeper:
 		"""
 
 		if self._state == State.LOSS:
-			return (self._state, self._score)
+			return (self.state, self.score)
 
-		old_num_masked_tiles = self._grid.num_masked_tiles
+		old_num_masked_tiles = self.num_masked_tiles
 
-		played_tile = self._grid.unmask_tiles(i, j)
+		played_tile = self._grid.unmask_tile(i, j)
 
-		new_num_masked_tiles = self._grid.num_masked_tiles
+		# Updating of the score.
+		new_num_masked_tiles = self.num_masked_tiles
 		self._score += (old_num_masked_tiles - new_num_masked_tiles)
 
+		# Updating of the state.
 		if played_tile == MaskedTile.BOMB:
 			self._state = State.LOSS
-		elif (self._grid.num_masked_tiles - self._grid.num_bombs) == 0:
+		elif (self.num_masked_tiles - self.num_bombs) == 0:
 			self._state = State.WIN
 
 		return (self._state, self._score)

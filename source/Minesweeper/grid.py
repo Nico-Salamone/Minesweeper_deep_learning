@@ -1,5 +1,6 @@
 from enum import IntEnum
 import itertools
+import copy
 
 class Tile(IntEnum):
 	"""
@@ -68,11 +69,19 @@ class Grid:
 		self._top_wall = top_wall
 		self._bottom_wall = bottom_wall
 
-		# '_number_grid' is a grid of numbers whose each tile contains the number of adjacent bombs or 'Tile.BOMB' if this tile
+		# '_grid' is a grid of numbers whose each tile contains the number of adjacent bombs or 'Tile.BOMB' if this tile
 		# contains a bomb or 'Tile.WALL' if this tile contains a wall.
-		self._number_grid = [[0 for j in range(self._num_columns)] for i in range(self._num_rows)]
+		self._grid = [[0 for j in range(self.num_columns)] for i in range(self.num_rows)]
 		self._insert_walls()
 		self._insert_bombs()
+
+	@property
+	def grid(self):
+		"""
+		Grid.
+		"""
+
+		return copy.deepcopy(self._grid)
 	
 	@property
 	def num_rows(self):
@@ -144,26 +153,21 @@ class Grid:
 		Number of tiles (without the walls).
 		"""
 
-		width_wall_thickness = self._left_wall + self._right_wall
+		num_rows = self.num_rows - self.top_wall - self.bottom_wall
+		num_columns = self.num_columns - self.left_wall - self.right_wall
 
-		num_tiles = self._num_rows * self._num_columns # Number of tiles of the grid with the walls.
-		num_tiles -= self._num_rows * self._left_wall # Left wall.
-		num_tiles -= self._num_rows * self._right_wall # Right wall.
-		num_tiles -= (self._num_columns * self._top_wall) - (width_wall_thickness * self._top_wall) # Top wall.
-		num_tiles -= (self._num_columns * self._bottom_wall) - (width_wall_thickness * self._bottom_wall) # Bottom wall.
-
-		return num_tiles
+		return num_rows * num_columns
 
 	def __str__(self):
 		str_grid = []
 
 		str_grid.append("-\t \t")
-		for i in range(self._num_columns):
+		for i in range(self.num_columns):
 			str_grid.append(str(i))
 			str_grid.append('\t')
 		str_grid.append("\n\n")
 
-		for i, row in enumerate(self._number_grid):
+		for i, row in enumerate(self.grid):
 			str_grid.append(str(i))
 			str_grid.append("\t \t")
 
@@ -184,7 +188,7 @@ class Grid:
 		:return: Tile.WALL if the tile contains a wall, Tile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
 		"""
 
-		return self._number_grid[i][j]
+		return self._grid[i][j]
 
 	def within_boundaries(self, i, j, include_walls = False):
 		"""
@@ -196,8 +200,18 @@ class Grid:
 		:return: True if the position is within the boundaries, False otherwise.
 		"""
 
-		return ((0 <= i < self._num_rows) and (0 <= j < self._num_columns)) and \
-			(not(include_walls) and ((self._number_grid[i][j] != Tile.WALL)))
+		if include_walls:
+			min_i = 0
+			max_i = self.num_rows - 1
+			min_j = 0
+			max_j = self.num_columns - 1
+		else:
+			min_i = self.top_wall
+			max_i = self.num_rows - self.bottom_wall - 1
+			min_j = self.left_wall
+			max_j = self.num_columns - self.right_wall - 1
+
+		return (min_i <= i <= max_i) and (min_j <= j <= max_j)
 
 	def adjacent_tiles(self, i, j):
 		"""
@@ -225,42 +239,39 @@ class Grid:
 		# 'j' is the iterator of the columns.
 		
 		# Left wall.
-		for j in range(self._left_wall):
-			for i in range(self._num_rows):
-				self._number_grid[i][j] = Tile.WALL
+		for j in range(self.left_wall):
+			for i in range(self.num_rows):
+				self._grid[i][j] = Tile.WALL
 
 		# Right wall.
-		for j in range(self._num_columns - self._right_wall, self._num_columns):
-			for i in range(self._num_rows):
-				self._number_grid[i][j] = Tile.WALL
+		for j in range(self.num_columns - self.right_wall, self.num_columns):
+			for i in range(self.num_rows):
+				self._grid[i][j] = Tile.WALL
 
 		# Top wall.
-		for i in range(self._top_wall):
-			for j in range(self._num_columns):
-				self._number_grid[i][j] = Tile.WALL
+		for i in range(self.top_wall):
+			for j in range(self.num_columns):
+				self._grid[i][j] = Tile.WALL
 
 		# Bottom wall.
-		for i in range(self._num_rows - self._bottom_wall, self._num_rows):
-			for j in range(self._num_columns):
-				self._number_grid[i][j] = Tile.WALL
+		for i in range(self.num_rows - self.bottom_wall, self.num_rows):
+			for j in range(self.num_columns):
+				self._grid[i][j] = Tile.WALL
 	
 	def _insert_bombs(self):
 		"""
 		Insert the bombs and compute the numbers of adjacent bombs in the grid of numbers.
 		"""
 
-		for bomb_pos in self._bomb_position_list:
-			i = bomb_pos[0]
-			j = bomb_pos[1]
+		for i, j in self.bomb_position_list:
 
-			if self._number_grid[i][j] == Tile.WALL:
+			if self._grid[i][j] == Tile.WALL:
 				raise ValueError("Error: can not put a bomb (at {}, {}) on a wall!".format(i, j))
 
-			self._number_grid[i][j] = Tile.BOMB
+			self._grid[i][j] = Tile.BOMB
 			adjacent_tile_list = self.adjacent_tiles(i, j)
 			# Remove the tiles containing a bomb. 'adjacent_tile_list' therefore contains the adjacent empty tiles.
-			adjacent_tile_list = filter(lambda adj_pos: self._number_grid[adj_pos[0]][adj_pos[1]] == Tile.EMPTY, adjacent_tile_list)
-			for adj_tile in adjacent_tile_list:
+			for adj_tile in filter(lambda adj_pos: self._grid[adj_pos[0]][adj_pos[1]] == Tile.EMPTY, adjacent_tile_list):
 				self._increment_adjacent_bomb(adj_tile[0], adj_tile[1])
 
 	def _increment_adjacent_bomb(self, i, j, n=1):
@@ -272,13 +283,13 @@ class Grid:
 		:n: The number of adjacent bombs to add (increment).
 		"""
 
-		num_tile = self._number_grid[i][j]
+		num_tile = self._grid[i][j]
 		assert num_tile == Tile.EMPTY, "Error: only empty tiles (that does not contain a bomb or a wall) can be incremented!"
 
 		new_value = num_tile + n
 		assert 0 <= new_value <= 8, "Error: the number of adjacent bombs can not be greater than 8!"
 
-		self._number_grid[i][j] = new_value
+		self._grid[i][j] = new_value
 
 if __name__ == "__main__":
 	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]
