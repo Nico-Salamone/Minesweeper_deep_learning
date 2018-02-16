@@ -24,19 +24,7 @@ class MaskedTile(IntEnum):
 		
 		return Tile(self.value) == other
 
-	@classmethod
-	def from_tile(cls, tile):
-		"""
-		Convert a tile (Tile object) to a masked tile (MaskedTile object).
-
-		:tile: The tile (Tile object).
-		:return: The masked tile (MaskedTile object).
-		"""
-
-		if tile == Tile.EMPTY:
-			return tile
-		
-		return MaskedTile(tile.value)
+assert MaskedTile.MASKED not in Tile.__members__.values()
 
 class MaskedGrid(Grid):
 	"""
@@ -60,10 +48,13 @@ class MaskedGrid(Grid):
 		super().__init__(num_rows, num_columns, bomb_position_list, left_wall, right_wall,
 			top_wall, bottom_wall)
 
-		get_mask_at = lambda pos: True if (super(type(self), self).tile_at(pos[0], pos[1]) != Tile.WALL) else False
+		tile_at = super().tile_at
 		# '_masked_grid' is the mask of the grid: True if the tile at position (i, j) is masked, False othewise.
 		# By default, all tiles is masked except the walls.
-		self._masked_grid = [[get_mask_at((i, j)) for j in range(self.num_columns)] for i in range(self.num_rows)]
+		self._masked_grid = [
+			[(tile_at(i, j) != Tile.WALL) for j in range(self.num_columns)]
+			for i in range(self.num_rows)
+		]
 
 		self._num_masked_tiles = self.num_tiles
 
@@ -106,7 +97,7 @@ class MaskedGrid(Grid):
 		if self._masked_grid[i][j]:
 			return MaskedTile.MASKED
 
-		return MaskedTile.from_tile(super().tile_at(i, j))
+		return super().tile_at(i, j)
 
 	def unmask_tile(self, i, j):
 		"""

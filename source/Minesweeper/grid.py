@@ -167,12 +167,12 @@ class Grid:
 			str_grid.append('\t')
 		str_grid.append("\n\n")
 
-		for i, row in enumerate(self.grid):
+		for i in range(self.num_rows):
 			str_grid.append(str(i))
 			str_grid.append("\t \t")
 
-			for tile in row:
-				str_grid.append(str(tile))
+			for j in range(self.num_columns):
+				str_grid.append(str(self.tile_at(i, j)))
 				str_grid.append('\t')
 			str_grid.append('\n')
 
@@ -270,8 +270,9 @@ class Grid:
 
 			self._grid[i][j] = Tile.BOMB
 			adjacent_tile_list = self.adjacent_tiles(i, j)
+			is_empty_tile = lambda adj_pos: self._grid[adj_pos[0]][adj_pos[1]] == Tile.EMPTY
 			# Remove the tiles containing a bomb. 'adjacent_tile_list' therefore contains the adjacent empty tiles.
-			for adj_tile in filter(lambda adj_pos: self._grid[adj_pos[0]][adj_pos[1]] == Tile.EMPTY, adjacent_tile_list):
+			for adj_tile in filter(is_empty_tile, adjacent_tile_list):
 				self._increment_adjacent_bomb(adj_tile[0], adj_tile[1])
 
 	def _increment_adjacent_bomb(self, i, j, n=1):
