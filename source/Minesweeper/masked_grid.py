@@ -91,7 +91,7 @@ class MaskedGrid(Grid):
 		:i: The index of the row of the position.
 		:j: The index of the column of the position.
 		:return: Tile.MASKED if the tile is masked, Tile.WALL if the tile contains a wall,
-		Tile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
+			Tile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
 		"""
 
 		if self._masked_grid[i][j]:

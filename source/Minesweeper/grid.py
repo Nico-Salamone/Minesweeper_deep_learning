@@ -266,7 +266,7 @@ class Grid:
 		for i, j in self.bomb_position_list:
 
 			if self._grid[i][j] == Tile.WALL:
-				raise ValueError("Error: can not put a bomb (at {}, {}) on a wall!".format(i, j))
+				raise ValueError("Error: can not insert a bomb (at {}, {}) on a wall!".format(i, j))
 
 			self._grid[i][j] = Tile.BOMB
 			adjacent_tile_list = self.adjacent_tiles(i, j)
