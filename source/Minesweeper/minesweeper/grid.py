@@ -292,6 +292,27 @@ class Grid:
 
 		self._grid[i][j] = new_value
 
+def get_positions(num_rows, num_columns, left_wall=0, right_wall=0, top_wall=0, bottom_wall=0):
+	"""
+	Get the positions of a grid. This function return all positions in the ('num_rows' * 'num_columns') grid except
+	the positions of walls.
+
+	:num_rows: The number of rows of the grid.
+	:num_columns: The number of columns of the grid.
+	:left_wall: The thickness of the left wall.
+	:right_wall: The thickness of the right wall.
+	:top_wall: The thickness of the top wall.
+	:bottom_wall: The thickness of the bottom wall.
+	:return The positions of the grid
+	"""
+
+	min_row_index = top_wall
+	max_row_index = num_rows - bottom_wall
+	min_column_index = left_wall
+	max_column_index = num_columns - right_wall
+
+	return [(i, j) for i in range(min_row_index, max_row_index) for j in range(min_column_index, max_column_index)]
+
 if __name__ == "__main__":
 	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]
 	g = Grid(10, 5, bomb_position_list)

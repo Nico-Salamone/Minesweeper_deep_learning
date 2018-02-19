@@ -1,6 +1,7 @@
-from grid import Tile, Grid
+from minesweeper.grid import Tile, Grid, get_positions
 
 from enum import IntEnum
+import random
 
 class MaskedTile(IntEnum):
 	"""
@@ -56,7 +57,7 @@ class MaskedGrid(Grid):
 			for i in range(self.num_rows)
 		]
 
-		self._num_masked_tiles = self.num_tiles
+		self._masked_tile_positions = set(get_positions(num_rows, num_columns, left_wall, right_wall, top_wall, bottom_wall))
 
 	@property
 	def grid(self):
@@ -78,7 +79,11 @@ class MaskedGrid(Grid):
 		Number of masked tiles.
 		"""
 
-		return self._num_masked_tiles
+		return len(self._masked_tile_positions)
+
+	@property
+	def masked_tile_positions(self):
+		return list(self._masked_tile_positions)
 	
 	def __str__(self):
 		return super().__str__()
@@ -150,11 +155,30 @@ class MaskedGrid(Grid):
 
 		if self._masked_grid[i][j]:
 			self._masked_grid[i][j] = False
-			self._num_masked_tiles -= 1
+			self._masked_tile_positions.remove((i, j))
 
 			return False
 
 		return True
+
+def generate_masked_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, top_wall=0, bottom_wall=0):
+	"""
+	Generate a random masked grid.
+
+	:num_rows: The number of rows of the grid.
+	:num_columns: The number of columns of the grid.
+	:num_bombs: The number of bombs.
+	:left_wall: The thickness of the left wall.
+	:right_wall: The thickness of the right wall.
+	:top_wall: The thickness of the top wall.
+	:bottom_wall: The thickness of the bottom wall.
+	:return A random masked grid.
+	"""
+
+	pos_list = get_positions(num_rows, num_columns, left_wall, right_wall, top_wall, bottom_wall)
+	bomb_position_list = random.sample(pos_list, num_bombs)
+
+	return MaskedGrid(num_rows, num_columns, bomb_position_list, left_wall, right_wall, top_wall, bottom_wall)
 
 if __name__ == "__main__":
 	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]
