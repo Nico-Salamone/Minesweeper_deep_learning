@@ -1,7 +1,6 @@
 from minesweeper.grid import Tile, Grid, get_positions
 
 from enum import IntEnum
-import random
 
 class MaskedTile(IntEnum):
 	"""
@@ -110,30 +109,33 @@ class MaskedGrid(Grid):
 
 		:i: The index of the row of the tile.
 		:j: The index of the column of the tile.
-		:return: The tile at position 'i' and 'j'.
+		:return: A set of the position of unmasked tiles.
 		"""
 
+		unmasked_tiles = set()
 		tile = super().tile_at(i, j)
 
 		already_unmasked = self._unmask_tile(i, j)
+		unmasked_tiles.add((i, j))
 		if already_unmasked:
 			raise ValueError("Error: the tile (at {}, {}) is already unmasked or is a wall!".format(i, j))
 
 		if (tile != MaskedTile.EMPTY) or (tile > 0):
-			return tile
+			return unmasked_tiles
 
 		# Explore and unmask the empty tiles around 'tile'.
 		tiles_to_explore = set()
 		tiles_to_explore.update(self.adjacent_tiles(i, j))
 		while tiles_to_explore: # While 'tiles_to_explore' contains positions.
 			i_temp, j_temp = tiles_to_explore.pop()
-			tile_temp = super().tile_at(i_temp, j_temp) # 'tile_temp' is a empty tile.
+			tile_temp = super().tile_at(i_temp, j_temp) # 'tile_temp' is an empty tile.
 
 			already_unmasked = self._unmask_tile(i_temp, j_temp)
+			unmasked_tiles.add((i_temp, j_temp))
 			if not(already_unmasked) and (tile_temp == 0):
 				tiles_to_explore.update(self.adjacent_tiles(i_temp, j_temp))
 
-		return tile
+		return unmasked_tiles
 
 	def unmask_all_tiles(self):
 		"""
@@ -161,42 +163,23 @@ class MaskedGrid(Grid):
 
 		return True
 
-def generate_masked_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, top_wall=0, bottom_wall=0):
-	"""
-	Generate a random masked grid.
-
-	:num_rows: The number of rows of the grid.
-	:num_columns: The number of columns of the grid.
-	:num_bombs: The number of bombs.
-	:left_wall: The thickness of the left wall.
-	:right_wall: The thickness of the right wall.
-	:top_wall: The thickness of the top wall.
-	:bottom_wall: The thickness of the bottom wall.
-	:return A random masked grid.
-	"""
-
-	pos_list = get_positions(num_rows, num_columns, left_wall, right_wall, top_wall, bottom_wall)
-	bomb_position_list = random.sample(pos_list, num_bombs)
-
-	return MaskedGrid(num_rows, num_columns, bomb_position_list, left_wall, right_wall, top_wall, bottom_wall)
-
 if __name__ == "__main__":
 	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]
 	g = MaskedGrid(10, 5, bomb_position_list)
 	print(g)
-	g.unmask_tile(0, 0)
-	print(g)
-	g.unmask_tile(2, 4)
-	print(g)
-	g.unmask_tile(5, 3)
-	print(g)
+	unmasked_tiles = g.unmask_tile(0, 0)
+	print("{}{}\n".format(g, unmasked_tiles))
+	unmasked_tiles = g.unmask_tile(2, 4)
+	print("{}{}\n".format(g, unmasked_tiles))
+	unmasked_tiles = g.unmask_tile(5, 3)
+	print("{}{}\n".format(g, unmasked_tiles))
 
 	print("\n\n\n")
 
 	bomb_position_list = [(5, 4), (4, 2), (2, 1), (4, 4)]
 	g = MaskedGrid(10, 5, bomb_position_list, 1, 0, 2, 3)
-	print(g)
-	g.unmask_tile(2, 4)
-	print(g)
-	g.unmask_tile(5, 3)
-	print(g)
+	print("{}{}\n".format(g, unmasked_tiles))
+	unmasked_tiles = g.unmask_tile(2, 4)
+	print("{}{}\n".format(g, unmasked_tiles))
+	unmasked_tiles = g.unmask_tile(5, 3)
+	print("{}{}\n".format(g, unmasked_tiles))

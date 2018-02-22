@@ -36,9 +36,7 @@ if __name__ == "__main__":
 	ms = Minesweeper(10, 5, 6)
 	print(ms)
 
-	state = ms.state
-	score = ms.score
-	while state == State.CONTINUE:
+	while ms.state == State.CONTINUE:
 		pos = None
 		while not pos:
 			str_pos = input("Enter a position: ")
@@ -50,15 +48,15 @@ if __name__ == "__main__":
 				print("WARNING: you have already played on this tile!")
 				pos = None
 
-		state, score = ms.play_tile(pos[0], pos[1])
+		ms.play_tile(pos[0], pos[1])
 		print(ms, "\n\n")
 
-	if state == State.LOSS:
+	if ms.state == State.LOSS:
 		print("You lost!")
 	else:
 		print("You won!")
 
-	print("Your score: {}.".format(score))
+	print("Your score: {}.".format(ms.score))
 
 	ms.reveal_all_tiles()
 	print(ms)

@@ -1,4 +1,5 @@
-from minesweeper.masked_grid import MaskedTile, MaskedGrid, generate_masked_grid
+from minesweeper.masked_grid import MaskedTile, MaskedGrid
+from minesweeper.grid_generation import generate_grid
 
 from enum import Enum
 
@@ -21,7 +22,7 @@ class Minesweeper:
 		:num_bombs: The number of bombs of the grid.
 		"""
 
-		self._grid = generate_masked_grid(num_rows, num_columns, num_bombs)
+		self._grid = generate_grid(num_rows, num_columns, num_bombs)
 
 		self._state = State.CONTINUE
 		self._score = 0
@@ -122,7 +123,7 @@ class Minesweeper:
 
 		:i: The index of the row of the tile.
 		:j: The index of the column of the tile.
-		:return: The state and the current score.
+		:return: A set of the position of played tiles.
 		"""
 
 		if self._state == State.LOSS:
@@ -130,19 +131,19 @@ class Minesweeper:
 
 		old_num_masked_tiles = self.num_masked_tiles
 
-		played_tile = self._grid.unmask_tile(i, j)
+		played_tiles = self._grid.unmask_tile(i, j)
 
 		# Updating of the score.
 		new_num_masked_tiles = self.num_masked_tiles
 		self._score += (old_num_masked_tiles - new_num_masked_tiles)
 
 		# Updating of the state.
-		if played_tile == MaskedTile.BOMB:
+		if self.tile_at(i, j) == MaskedTile.BOMB:
 			self._state = State.LOSS
 		elif (self.num_masked_tiles - self.num_bombs) == 0:
 			self._state = State.WIN
 
-		return (self._state, self._score)
+		return played_tiles
 
 	def reveal_all_tiles(self):
 		"""
