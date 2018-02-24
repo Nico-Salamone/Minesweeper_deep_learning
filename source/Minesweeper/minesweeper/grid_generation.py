@@ -24,14 +24,14 @@ def generate_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, t
 
 def generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid):
 	"""
-	Generate a random masked subgrid. This function generates a "good" number of bombs and the "good" thickness of walls ("good"
+	Generate a random subgrid. This function generates a "good" number of bombs and the "good" thickness of walls ("good"
 	for realistic).
 
 	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the grid.
-	:return A random masked subgrid.
+	:return A random subgrid.
 	"""
 
 	# This funtion generates a (('num_rows_subgrid' + 2) x ('num_columns_subgrid' + 2)) subgrid and extract then
