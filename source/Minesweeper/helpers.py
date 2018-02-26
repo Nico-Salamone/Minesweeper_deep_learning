@@ -29,7 +29,7 @@ def extract_subgrid(grid, i, j, radius):
 	:i: The index of the row of the position.
 	:j: The index of the columns of the position.
 	:radius: The radius of the subgrid. For example, with a radius of 2, this function will return a 5 by 5 subgrid.
-	:return: The subgrid.
+	:return: The subgrid (a list of lists of tiles).
 	"""
 
 	num_rows = 1 + (2 * radius)
@@ -44,16 +44,6 @@ def extract_subgrid(grid, i, j, radius):
 			j_grid = j_min + j_subgrid
 			if grid.within_boundaries(i_grid, j_grid):
 				subgrid[i_subgrid][j_subgrid] = grid.tile_at(i_grid, j_grid)
-
-	"""
-	# Compute thickness of walls.
-	left_wall = (left - j) if (j - left) < 0 else 0
-	right_wall = ((j + right) - grid.num_columns) if (j + right) >= grid.num_columns else 0
-	top_wall = (top - i) if (i - top) < 0 else 0
-	bottom_wall = ((i + bottom) - grid.num_rows) if (i + bottom) >= grid.num_rows else 0
-
-	subgrid = MaskedGrid(num_rows, num_columns, left_wall, right_wall, top_wall, bottom_wall)
-	"""
 
 	return subgrid
 

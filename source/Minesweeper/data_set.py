@@ -1,5 +1,3 @@
-#from grid import Tile, Grid
-#from masked_grid import MaskedTile, MaskedGrid
 from minesweeper.grid_generation import generate_subgrid
 from helpers import to_value_list
 
@@ -42,7 +40,7 @@ def read_data_set(file_name):
 	Read a subgrid data set.
 
 	:file_name: The file name.
-	:return: The subgrid data set.
+	:return: The subgrid data set (a list of tiles, that is an one-dimensional grid).
 	"""
 
 	data_set = []
