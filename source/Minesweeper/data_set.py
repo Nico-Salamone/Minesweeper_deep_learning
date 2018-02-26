@@ -29,8 +29,8 @@ def write_data_set(data_set, file_name):
 	:file_name: The file name.
 	"""
 
-	with open(file_name, 'w', newline = '') as file:
-		csv_writer = csv.writer(file, delimiter = ';', quotechar = '\"', quoting = csv.QUOTE_MINIMAL)
+	with open(file_name, 'w', newline='') as file:
+		csv_writer = csv.writer(file, delimiter=';', quotechar='\"', quoting=csv.QUOTE_MINIMAL)
 
 		for subgrid in data_set:
 			csv_writer.writerow(to_value_list(subgrid))
@@ -40,12 +40,12 @@ def read_data_set(file_name):
 	Read a subgrid data set.
 
 	:file_name: The file name.
-	:return: The subgrid data set (a list of tiles, that is an one-dimensional grid).
+	:return: The subgrid data set (a list of tile values, that is an one-dimensional grid).
 	"""
 
 	data_set = []
-	with open(file_name, newline = '') as file:
-		csv_reader = csv.reader(file, delimiter = ';', quotechar = '\"')
+	with open(file_name, newline='') as file:
+		csv_reader = csv.reader(file, delimiter=';', quotechar='\"')
 
 		for row in csv_reader:
 			data_set.append([int(tile) for tile in row])

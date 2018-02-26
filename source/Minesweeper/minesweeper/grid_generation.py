@@ -75,7 +75,7 @@ def generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_
 		for i in range(1, (num_rows_larger_subgrid - 1))
 	]
 
-	# Creation of the larger subgrid.
+	# Creation of the subgrid.
 	subgrid = Grid(num_rows_subgrid, num_columns_subgrid, [], left_wall_subgrid, right_wall_subgrid, top_wall_subgrid, bottom_wall_subgrid)
 	subgrid._bomb_position_list = bomb_position_list
 	subgrid._grid = grid
