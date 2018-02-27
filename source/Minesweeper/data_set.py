@@ -19,7 +19,7 @@ def generate_data_set(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs
 
 	random.seed(seed)
 
-	return [generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid) for i in range(size)]
+	return (generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid) for i in range(size))
 
 def write_data_set(data_set, file_name):
 	"""
@@ -37,20 +37,19 @@ def write_data_set(data_set, file_name):
 
 def read_data_set(file_name):
 	"""
-	Read a subgrid data set.
+	Read a data set of subgrids.
 
 	:file_name: The file name.
-	:return: The subgrid data set (a list of tile values, that is an one-dimensional grid).
+	:return: A generator of the data set of subgrids (a list of tile values, that is an one-dimensional grid).
 	"""
 
-	data_set = []
 	with open(file_name, newline='') as file:
 		csv_reader = csv.reader(file, delimiter=';', quotechar='\"')
 
 		for row in csv_reader:
-			data_set.append([int(tile) for tile in row])
+			yield [int(tile) for tile in row]
 
-	return data_set
+	return
 
 if __name__ == "__main__":
 	radius_subgrid = 2

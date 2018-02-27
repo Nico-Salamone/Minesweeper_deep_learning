@@ -43,7 +43,7 @@ def compute_walls(grid):
 	top_wall = 0
 	bottom_wall = 0
 
-	for i in range((radius * edge_size), ((radius * edge_size) + radius)):
+	for i in range((radius * edge_size), ((radius * edge_size) + radius)): # '(radius * edge_size)' is the position of the tile in the left middle.
 		if grid[i] == Tile.WALL:
 			left_wall += 1
 
@@ -51,7 +51,7 @@ def compute_walls(grid):
 		if grid[i] == Tile.WALL:
 			right_wall += 1
 
-	for i in range(radius, (radius * edge_size), edge_size):
+	for i in range(radius, (radius * edge_size), edge_size): # 'radius' is the position of the tile in the top middle.
 		if grid[i] == Tile.WALL:
 			top_wall += 1
 
@@ -61,49 +61,51 @@ def compute_walls(grid):
 
 	return (left_wall, right_wall, top_wall, bottom_wall)
 
-def generate_random_mask(subgrid, min_masked_tiles=0, max_masked_tiles=None):
+def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False):
 	"""
-	Generate a list of grids with a mask.
-	The tile in the middle of 'subgrid' is masked and this tile is added to a list. Then, this function rands a number 'n'
-	between 'min_masked_tiles' and 'max_masked_tiles'. Then, it masks a tile randomly and adds it to the list (2 tiles are
-	masked). Then, it masks again a tile randomly and adds it to the list (3 tiles is masked). It repeats this until 'n' + 1
-	tiles are masked. If 'n' is greater than the the number of 'availabe' tiles (tiles that can be masked), then 'n' is
-	replaced by this number.
+	Generate a grid with a random mask with 'num_masked_tiles' masked tiles.
+	If 'num_masked_tiles' is greater than the the number of 'availabe' tiles (tiles that can be masked), then
+	'num_masked_tiles' is replaced by this number.
 	The wall tiles are not masked.
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
-	:min_masked_tiles: The minimum number of tiles to mask.
-	:max_masked_tiles: The maximum number of tiles to mask.
-	:return: A list of grids with a mask (a list of tile values, that is an one-dimensional grid).
+	:num_masked_tiles: The number of tiles to mask.
+	:mask_middle_tile: If True, then The tile in the middle of 'subgrid' will be masked (therefore 'num_masked_tiles' - 1
+		others tiles will be masked).
+	:return: A subgrid with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
 
-	num_tiles = len(subgrid)
+	if num_masked_tiles <= 0:
+		raise ValueError("Error: the number of masked tiles must be greater or equals to 1!")
+
+	masked_subgrid = copy.copy(subgrid)
+
+	num_tiles = len(masked_subgrid)
 	edge_size = int(math.sqrt(num_tiles))
 	radius = int((edge_size - 1) / 2)
-	left_wall, right_wall, top_wall, bottom_wall = compute_walls(subgrid)
-
-	if max_masked_tiles == None:
-		max_masked_tiles = num_tiles - 1 # The tile in the middle of the grid can not be masked.
+	left_wall, right_wall, top_wall, bottom_wall = compute_walls(masked_subgrid)
 
 	pos = get_positions(edge_size, edge_size, left_wall, right_wall, top_wall, bottom_wall)
-	pos.remove((radius, radius)) # Tile in the middle of the grid.
 
-	num_masked_tiles = random.randint(min_masked_tiles, max_masked_tiles)
+	masked_tile_pos = []
+	if mask_middle_tile:
+		middle_tile_pos = (radius, radius)
+
+		pos.remove(middle_tile_pos)
+		masked_tile_pos.append(middle_tile_pos)
+		num_masked_tiles -= 1
+
 	if num_masked_tiles > len(pos):
 		num_masked_tiles = len(pos)
 
-	masked_tiles_pos = [(radius, radius)]
-	masked_tiles_pos.extend(random.sample(pos, num_masked_tiles))
+	masked_tile_pos.extend(random.sample(pos, num_masked_tiles))
 
-	masked_subgrids = []
-	for i, j in masked_tiles_pos:
+	for i, j in masked_tile_pos:
 		k = (i * edge_size) + j
 
-		subgrid = copy.copy(subgrid)
-		subgrid[k] = MaskedTile.MASKED.value
-		masked_subgrids.append(subgrid)
+		masked_subgrid[k] = MaskedTile.MASKED.value
 
-	return masked_subgrids
+	return masked_subgrid
 
 def extract_subgrid(grid, i, j, radius):
 	"""
@@ -154,14 +156,13 @@ if __name__ == "__main__":
 	radius = 2
 	edge_size = (radius * 2) + 1
 
-	g = generate_subgrid(radius, 10, 10, 10)
-	g2 = to_value_list(g)
+	sg = generate_subgrid(radius, 10, 10, 10)
+	sg2 = to_value_list(sg)
+	print(sg)
+	print(sg2)
 
-	print(g)
-	print(g2)
-	for msg in generate_random_mask(g2, 3, 16):
-		for i in range(len(msg)):
-			print(msg[i], end='\t')
-			if (i > 0) and ((i + 1) % edge_size == 0):
-				print('')
-		print('')
+	msg = generate_random_mask(sg2, 4, True)
+	for i in range(len(msg)):
+		print(msg[i], end='\t')
+		if (i > 0) and ((i + 1) % edge_size == 0):
+			print('')
