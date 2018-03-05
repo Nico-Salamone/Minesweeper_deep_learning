@@ -51,11 +51,11 @@ def read_data_set(file_name):
 
 	return
 
-def get_file_name(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size):
+def get_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size):
 	"""
 	Get the file name folling parameters.
 
-	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the grid.
@@ -63,11 +63,11 @@ def get_file_name(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_gri
 	:return: The file name.
 	"""
 
-	return "data_set_{}ra_{}ro_{}c_{}b_{}sb.csv".format(radius_subgrid, num_rows_grid, num_columns_grid,
+	return "data_set_{}ra_{}ro_{}c_{}b_{}sb.csv".format(radius_subgrids, num_rows_grid, num_columns_grid,
 		num_bombs_grid, data_set_size)
 
 if __name__ == "__main__":
-	radius_subgrid = 2
+	radius_subgrids = 2
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
@@ -75,9 +75,9 @@ if __name__ == "__main__":
 	data_set_size = 100000
 	seed = 42
 
-	file_name = get_file_name(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size)
+	file_name = get_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size)
 
-	data_set = generate_data_set(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid,
+	data_set = generate_data_set(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,
 		data_set_size, seed)
 
 	write_data_set(data_set, file_name)
