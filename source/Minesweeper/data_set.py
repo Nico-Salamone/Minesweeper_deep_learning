@@ -70,12 +70,13 @@ if __name__ == "__main__":
 	radius_subgrids = 2
 	num_rows_grid = 10
 	num_columns_grid = 10
-	num_bombs_grid = 10
+	num_bombs_grid = 40
 
-	data_set_size = 100000
+	data_set_size = 10000
 	seed = 42
 
-	file_name = get_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size)
+	file_name = "data_sets/" + get_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,
+		data_set_size)
 
 	data_set = generate_data_set(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,
 		data_set_size, seed)
@@ -84,6 +85,8 @@ if __name__ == "__main__":
 	data_set = read_data_set(file_name)
 
 	"""
+	from helpers import print_grid
 	for subgrid in data_set:
-		print(subgrid)
+		print_grid(subgrid)
+		print('')
 	"""

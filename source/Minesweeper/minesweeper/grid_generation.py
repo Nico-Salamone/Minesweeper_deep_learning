@@ -14,7 +14,7 @@ def generate_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, t
 	:right_wall: The thickness of the right wall.
 	:top_wall: The thickness of the top wall.
 	:bottom_wall: The thickness of the bottom wall.
-	:return A random grid.
+	:return: A random grid.
 	"""
 
 	pos_list = get_positions(num_rows, num_columns, left_wall, right_wall, top_wall, bottom_wall)
@@ -31,7 +31,7 @@ def generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the grid.
-	:return A random subgrid.
+	:return: A random subgrid.
 	"""
 
 	# This funtion generates a (('num_rows_subgrid' + 2) x ('num_columns_subgrid' + 2)) subgrid and extract then
@@ -89,7 +89,7 @@ def _compute_wall_thickness_subgrid(radius_subgrid, num_rows_grid, num_columns_g
 	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
-	:return A random thickness of the left, right, top and bottom walls.
+	:return: A random thickness of the left, right, top and bottom walls.
 	"""
 
 	left_wall = 0

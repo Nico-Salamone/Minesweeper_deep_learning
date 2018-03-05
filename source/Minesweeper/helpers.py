@@ -170,6 +170,27 @@ def extract_subgrid(grid, i, j, radius):
 
 	return subgrid
 
+def print_grid(grid):
+	"""
+	Print a grid.
+
+	:grid: The grid (a list of tile values, that is an one-dimensional grid).
+	"""
+
+	num_tiles = len(grid)
+	edge_size = int(math.sqrt(num_tiles))
+
+	for i, tile in enumerate(grid):
+		try: # If tile is an empty (and has 0 as value), a bomb, a wall or a masked tile.
+			tile = MaskedTile(tile)
+		except ValueError: # If tile is an integer (empty tile).
+			pass
+
+		print(tile, end='\t')
+
+		if (i > 0) and ((i + 1) % edge_size == 0):
+			print('')
+
 if __name__ == "__main__":
 	from minesweeper.masked_grid import MaskedGrid
 	bomb_position_list = [(5, 4), (4, 2), (2, 1), (4, 4)]
@@ -200,15 +221,9 @@ if __name__ == "__main__":
 
 	msgs = generate_random_masks(sg2, 5, True)
 	for msg in msgs:
-		for i in range(len(msg)):
-			print(msg[i], end='\t')
-			if (i > 0) and ((i + 1) % edge_size == 0):
-				print('')
-		print("")
+		print_grid(msg)
+		print('')
 	"""
 	msg = generate_random_mask(sg2, 4, True)
-	for i in range(len(msg)):
-		print(msg[i], end='\t')
-		if (i > 0) and ((i + 1) % edge_size == 0):
-			print('')
+	print_grid(msg)
 	"""
