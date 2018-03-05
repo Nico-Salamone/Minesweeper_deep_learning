@@ -61,17 +61,19 @@ def compute_walls(grid):
 
 	return (left_wall, right_wall, top_wall, bottom_wall)
 
-def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False):
+def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, walls=None):
 	"""
 	Generate a grid with a random mask with 'num_masked_tiles' masked tiles.
-	If 'num_masked_tiles' is greater than the the number of 'availabe' tiles (tiles that can be masked), then
+	If 'num_masked_tiles' is greater than the number of "available" tiles (tiles that can be masked), then
 	'num_masked_tiles' is replaced by this number.
 	The wall tiles are not masked.
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
 	:num_masked_tiles: The number of tiles to mask.
-	:mask_middle_tile: If True, then The tile in the middle of 'subgrid' will be masked (therefore 'num_masked_tiles' - 1
-		others tiles will be masked).
+	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked (therefore 'num_masked_tiles' - 1
+		others tiles will then be masked).
+	:walls: A tuple of four integers. The first one for the thickness of the left wall, the second for the right wall, the 
+		hird for the top wall and the fourth the bottom wall. If None, then the thicknesses are computed (lower performance).
 	:return: A subgrid with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
 
@@ -83,7 +85,7 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False):
 	num_tiles = len(masked_subgrid)
 	edge_size = int(math.sqrt(num_tiles))
 	radius = int((edge_size - 1) / 2)
-	left_wall, right_wall, top_wall, bottom_wall = compute_walls(masked_subgrid)
+	left_wall, right_wall, top_wall, bottom_wall = compute_walls(masked_subgrid) if (walls == None) else walls
 
 	pos = get_positions(edge_size, edge_size, left_wall, right_wall, top_wall, bottom_wall)
 
@@ -106,6 +108,41 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False):
 		masked_subgrid[k] = MaskedTile.MASKED.value
 
 	return masked_subgrid
+
+def generate_random_masks(subgrid, num_masked_subgrids_by_num_masked_tiles, mask_middle_tile=False):
+	"""
+	Generate a list of grids with a random mask. First, this function generates 'num_masked_subgrids_by_num_masked_tiles'
+	random sugrids with one masked tile (if 'mask_middle_tile' is True, only one grid is generated). Then, it generates
+	'num_masked_subgrids_by_num_masked_tiles' random sugrids with two masked tiles. And so on until the number of "available"
+	tiles (tiles that can be masked) is reached.
+	The wall tiles are not masked.	
+
+	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
+	:num_masked_subgrids_by_num_masked_tiles: The number of grids to generate for each number of masked tiles.
+	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked.
+	:return: A list of subgrids with a random mask (a list of tile values, that is an one-dimensional grid).
+	"""
+
+	walls = compute_walls(subgrid)
+	left_wall, right_wall, top_wall, bottom_wall = walls
+
+	num_tiles = len(subgrid)
+	edge_size = int(math.sqrt(num_tiles))
+	# Number of tiles that can be masked.
+	num_available_tiles = (edge_size - top_wall - bottom_wall) * (edge_size - left_wall - right_wall)
+
+	subgrids = []
+	for i in range(1, (num_available_tiles + 1)): # 'i' is the number of tiles to mask.
+		# Avoids returning the same masked grid several times.
+		if (((i == 1) and mask_middle_tile)) or ((num_available_tiles - i) == 0):
+			n = 1
+		else:
+			n = num_masked_subgrids_by_num_masked_tiles
+
+		for j in range(n):
+			subgrids.append(generate_random_mask(subgrid, i, mask_middle_tile, walls))
+
+	return subgrids
 
 def extract_subgrid(grid, i, j, radius):
 	"""
@@ -161,8 +198,17 @@ if __name__ == "__main__":
 	print(sg)
 	print(sg2)
 
+	msgs = generate_random_masks(sg2, 5, True)
+	for msg in msgs:
+		for i in range(len(msg)):
+			print(msg[i], end='\t')
+			if (i > 0) and ((i + 1) % edge_size == 0):
+				print('')
+		print("")
+	"""
 	msg = generate_random_mask(sg2, 4, True)
 	for i in range(len(msg)):
 		print(msg[i], end='\t')
 		if (i > 0) and ((i + 1) % edge_size == 0):
 			print('')
+	"""
