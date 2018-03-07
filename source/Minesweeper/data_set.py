@@ -51,9 +51,9 @@ def read_data_set(file_name):
 
 	return
 
-def get_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size):
+def data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size):
 	"""
-	Get the file name folling parameters.
+	Get the file name for the data set folling parameters.
 
 	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:num_rows_grid: The number of rows of the original grid.
@@ -72,10 +72,10 @@ if __name__ == "__main__":
 	num_columns_grid = 10
 	num_bombs_grid = 40
 
-	data_set_size = 10000
+	data_set_size = 1000
 	seed = 42
 
-	file_name = "data_sets/" + get_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,
+	file_name = "data_sets/" + data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,
 		data_set_size)
 
 	data_set = generate_data_set(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,

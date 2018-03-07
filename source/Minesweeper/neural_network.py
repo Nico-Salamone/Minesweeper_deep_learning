@@ -1,15 +1,12 @@
 from minesweeper.grid import Tile
 import data_set as ds
-from helpers import generate_random_masks, print_grid
+from helpers import generate_random_masks
 
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.models import load_model
 from keras.optimizers import Adam
 import random
 import numpy as np
-import operator
-from functools import reduce
 
 def create_model(num_tiles_subgrids):
 	"""
@@ -44,18 +41,19 @@ if __name__ == "__main__":
 	num_bombs_grid = 40
 	data_set_size = 1000
 
-	file_name = "data_sets/" + ds.get_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size)
+	ds_file_name = "data_sets/" + ds.data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size)
+	model_file_name = "model.h5"
 
 	random.seed(seed)
 	np.random.seed(int(seed)) # Makes Tensorflow deterministic.
 
 	# Load the data set.
-	data_set = list(ds.read_data_set(file_name))
+	data_set = list(ds.read_data_set(ds_file_name))
 
 	# Create the model.
 	model = create_model(num_tiles_subgrids)
 
-	# Create 'x' and 'y_true' vectors
+	# Create the 'x' and 'y_true' vectors
 	x = []
 	y_true = []
 	for subgrid in data_set:
@@ -71,47 +69,6 @@ if __name__ == "__main__":
 	for i, (x_subgrid, y_true_subgrid) in enumerate(zip(x, y_true)):
 		model.fit(x_subgrid, y_true_subgrid, epochs=1, batch_size=10)
 		print("{}/{} subgrids done!".format(i, data_set_size))
-		break
 
-	# Flatten 'x' and 'y_true' vectors.
-	x = reduce(operator.add, x)
-	y_true = reduce(operator.add, y_true)
-
-	# Evaluation.
-	evaluation = model.evaluate(x, y_true)
-	for i, ev in enumerate(evaluation):
-		print("{}: {:.3f}".format(model.metrics_names[i], ev))
-
-	y_pred = model.predict(x)
-	print('')
-
-	true_positive = 0 # Positive means 1 (bomb in the middle of the subgrid).
-	false_positive = 0
-	false_negative = 0 # Negative means 0 (no bomb in the middle of the subgrid).
-	true_negative = 0
-	for y_t, y_p in zip(y_true, y_pred):
-		y_p = round(y_p[0])
-
-		if y_p == 1:
-			if y_t == 1:
-				true_positive += 1
-			else: # 'y_t' is equals to 0.
-				false_positive += 1
-		else: # 'y_p' is equals to 0.
-			if y_t == 1:
-				false_negative += 1
-			else: # 'y_t' is equals to 0.
-				true_negative += 1
-
-	condition_positive = true_positive + false_negative
-	condition_negative = false_positive + true_negative
-	accuracy = (true_positive + true_negative) / (condition_positive + condition_negative)
-	recall = true_positive /  condition_positive
-
-	print("True positive: {}\nFalse positive: {}\nFalse negative: {}\nTrue negative: {}\nAccuracy: {}\nRecall: {}\n".format(true_positive, false_positive,
-		false_negative, true_negative, accuracy, recall))
-
-	for x_t, y_t, y_p in zip(x, y_true, y_pred):
-		print_grid(x_t)
-
-		print("y_true: {}\ny_pred: {}\n".format(y_t, y_p))
+	# Save the model.
+	model.save(model_file_name)
