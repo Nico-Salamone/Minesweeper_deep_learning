@@ -4,14 +4,14 @@ from helpers import to_value_list
 import random
 import csv
 
-def generate_data_set(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid, size, seed=None):
+def generate_data_set(radius_subgrid, num_rows_grid, num_columns_grid, prob_bomb_tile, size, seed=None):
 	"""
 	Generate a random data set of subgrids.
 
 	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
-	:num_bombs_grid: The number of bombs of the grid.
+	:prob_bomb_tile: The porbability that one tile of the subgrid contains a bomb.
 	:size: The size of data set.
 	:seed: The seed.
 	:return: A generator of the data set of subgrids.
@@ -19,7 +19,7 @@ def generate_data_set(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs
 
 	random.seed(seed)
 
-	return (generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid) for i in range(size))
+	return (generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, prob_bomb_tile) for i in range(size))
 
 def write_data_set(data_set, file_name):
 	"""
@@ -51,35 +51,34 @@ def read_data_set(file_name):
 
 	return
 
-def data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size):
+def data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile, data_set_size):
 	"""
 	Get the file name for the data set folling parameters.
 
 	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
-	:num_bombs_grid: The number of bombs of the grid.
+	:prob_bomb_tile: The porbability that one tile of the subgrid contains a bomb.
 	:data_set_size: The size of data set.
 	:return: The file name.
 	"""
 
-	return "data_set_{}ra_{}ro_{}c_{}b_{}sb.csv".format(radius_subgrids, num_rows_grid, num_columns_grid,
-		num_bombs_grid, data_set_size)
+	return "data_set_{}ro_{}c_{}ra_{}pb_{}sb.csv".format(num_rows_grid, num_columns_grid, radius_subgrids,
+		prob_bomb_tile, data_set_size)
 
 if __name__ == "__main__":
 	radius_subgrids = 2
 	num_rows_grid = 10
 	num_columns_grid = 10
-	num_bombs_grid = 40
+	prob_bomb_tile = 0.30
 
 	data_set_size = 1000
 	seed = 42
 
-	file_name = "data_sets/" + data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,
+	file_name = "data_sets/" + data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, prob_bomb_tile,
 		data_set_size)
 
-	data_set = generate_data_set(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid,
-		data_set_size, seed)
+	data_set = generate_data_set(radius_subgrids, num_rows_grid, num_columns_grid, prob_bomb_tile, data_set_size, seed)
 
 	write_data_set(data_set, file_name)
 	data_set = read_data_set(file_name)
