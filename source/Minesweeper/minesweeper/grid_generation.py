@@ -22,15 +22,17 @@ def generate_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, t
 
 	return Grid(num_rows, num_columns, bomb_position_list, left_wall, right_wall, top_wall, bottom_wall)
 
-def generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, prob_bomb_tile):
+def generate_subgrid(radius_subgrid, prob_bomb_tile, bomb_middle_tile, num_rows_grid, num_columns_grid):
 	"""
 	Generate a random subgrid. This function generates a "good" number of bombs and the "good" thickness of walls ("good"
 	for realistic).
 
 	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:prob_bomb_tile: The porbability that one tile of the subgrid contains a bomb.
+	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile will
+		not contain a bomb.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
-	:prob_bomb_tile: The porbability that one tile of the subgrid contains a bomb.
 	:return: A random subgrid.
 	"""
 
@@ -49,7 +51,7 @@ def generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, prob_bomb_
 	(left_wall_lg_sg, right_wall_lg_sg, top_wall_lg_sg, bottom_wall_lg_sg) = _compute_wall_thickness_subgrid(
 		radius_lg_sg, num_rows_grid, num_columns_grid)
 
-	# Number of tiles that are not walls (of the larger subgrid).
+	# Position of tiles that are not walls (of the larger subgrid).
 	tile_pos_list = get_positions(num_rows_lg_sg, num_columns_lg_sg, left_wall_lg_sg, right_wall_lg_sg, top_wall_lg_sg,
 		bottom_wall_lg_sg)
 	num_tiles_lg_sg = len(tile_pos_list)
@@ -58,7 +60,21 @@ def generate_subgrid(radius_subgrid, num_rows_grid, num_columns_grid, prob_bomb_
 	num_bombs_lg_sg = _compute_num_bombs_subgrid(num_tiles_lg_sg, prob_bomb_tile)
 
 	# Creation of the larger subgrid.
-	larger_subgrid = generate_grid(num_rows_lg_sg, num_columns_lg_sg, num_bombs_lg_sg, left_wall_lg_sg, right_wall_lg_sg,
+	middle_tile_pos = (radius_lg_sg, radius_lg_sg)
+	tile_pos_list.remove(middle_tile_pos)
+
+	bomb_position_list = []
+	if bomb_middle_tile:
+		bomb_position_list.append(middle_tile_pos)
+		if num_bombs_lg_sg > 0:
+			num_bombs_lg_sg -= 1
+	else:
+		if num_bombs_lg_sg == num_tiles_lg_sg:
+			num_bombs_lg_sg -= 1
+
+	bomb_position_list.extend(random.sample(tile_pos_list, num_bombs_lg_sg))
+
+	larger_subgrid = Grid(num_rows_lg_sg, num_columns_lg_sg, bomb_position_list, left_wall_lg_sg, right_wall_lg_sg,
 		top_wall_lg_sg, bottom_wall_lg_sg)
 
 	# Subgrid.
@@ -147,5 +163,8 @@ if __name__ == "__main__":
 	g = generate_grid(num_rows, num_columns, num_bombs, 2, 1, 0, 3)
 	print(g)
 
-	g = generate_subgrid(2, num_rows, num_columns, prob_bomb_tile)
+	g = generate_subgrid(2, prob_bomb_tile, False, num_rows, num_columns)
+	print(g)
+
+	g = generate_subgrid(2, prob_bomb_tile, True, num_rows, num_columns)
 	print(g)
