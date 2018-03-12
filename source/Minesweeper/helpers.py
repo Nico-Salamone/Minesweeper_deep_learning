@@ -1,4 +1,4 @@
-from minesweeper.grid import Tile, get_positions
+from minesweeper.grid import Tile, Grid, get_positions
 from minesweeper.masked_grid import MaskedTile
 
 import random
@@ -9,14 +9,29 @@ def to_value_list(grid):
 	"""
 	Convert a grid to a list of values of each tile.
 
-	:grid: A grid.
+	:grid: A grid (a Grid object or a list of lists of tiles).
 	:return: The list of values of each tile.
 	"""
 
+	if isinstance(grid, Grid):
+		grid_object = True
+
+		num_rows = grid.num_rows
+		num_columns = grid.num_columns
+	else:
+		grid_object = False
+
+		num_rows = len(grid)
+		num_columns = len(grid[0])
+
 	value_list = []
-	for i in range(grid.num_rows):
-		for j in range(grid.num_columns):
-			tile = grid.tile_at(i, j)
+	for i in range(num_rows):
+		for j in range(num_columns):
+			if grid_object:
+				tile = grid.tile_at(i, j)
+			else:
+				tile = grid[i][j]
+
 			try: # If tile is an empty (and has 0 as value), a bomb, a wall or a masked tile.
 				tile = tile.value
 			except AttributeError: # If tile is an integer (empty tile).
@@ -63,7 +78,7 @@ def compute_walls(grid):
 
 def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, walls=None):
 	"""
-	Generate a grid with a random mask with 'num_masked_tiles' masked tiles.
+	Generate a subgrid with a random mask with 'num_masked_tiles' masked tiles.
 	If 'num_masked_tiles' is greater than the number of "available" tiles (tiles that can be masked), then
 	'num_masked_tiles' is replaced by this number.
 	The wall tiles are not masked.
@@ -109,16 +124,14 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, wall
 
 	return masked_subgrid
 
-def generate_random_masks(subgrid, num_masked_subgrids_by_num_masked_tiles, mask_middle_tile=False):
+def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False):
 	"""
-	Generate a list of grids with a random mask. First, this function generates 'num_masked_subgrids_by_num_masked_tiles'
-	random sugrids with one masked tile (if 'mask_middle_tile' is True, only one grid is generated). Then, it generates
-	'num_masked_subgrids_by_num_masked_tiles' random sugrids with two masked tiles. And so on until the number of "available"
-	tiles (tiles that can be masked) is reached.
-	The wall tiles are not masked.	
+	Generate a list of subgrids with a random mask. For each one, between 1 and ('num_available_tiles' - 1) tiles are masked,
+	where 'num_available_tiles' is the number of "available" tiles (tiles that can be masked).
+	The wall tiles are not masked.
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
-	:num_masked_subgrids_by_num_masked_tiles: The number of grids to generate for each number of masked tiles.
+	:num_masked_subgrids: The number of subgrids with a random mask to generate.
 	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked.
 	:return: A list of subgrids with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
@@ -132,15 +145,9 @@ def generate_random_masks(subgrid, num_masked_subgrids_by_num_masked_tiles, mask
 	num_available_tiles = (edge_size - top_wall - bottom_wall) * (edge_size - left_wall - right_wall)
 
 	subgrids = []
-	for i in range(1, (num_available_tiles + 1)): # 'i' is the number of tiles to mask.
-		# Avoids returning the same masked grid several times.
-		if (((i == 1) and mask_middle_tile)) or ((num_available_tiles - i) == 0):
-			n = 1
-		else:
-			n = num_masked_subgrids_by_num_masked_tiles
-
-		for j in range(n):
-			subgrids.append(generate_random_mask(subgrid, i, mask_middle_tile, walls))
+	for i in range(num_masked_subgrids):
+		num_masked_tiles = random.randint(1, (num_available_tiles - 1))
+		subgrids.append(generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile, walls))
 
 	return subgrids
 
@@ -201,29 +208,23 @@ if __name__ == "__main__":
 
 	radius = 2
 	sg = extract_subgrid(g, 4, 4, radius)
-	print("i = {}\nj = {}".format(radius, radius))
-	for row in sg:
-		for tile in row:
-			print(tile, end='\t')
-		print('')
+	sg2 = to_value_list(sg)
+	print(sg2)
+	print_grid(sg2)
 
 
 
 	print('\n\n')
 	from minesweeper.grid_generation import generate_subgrid
 	radius = 2
-	edge_size = (radius * 2) + 1
 
-	sg = generate_subgrid(radius, 10, 10, 10)
+	sg = generate_subgrid(radius, 0.5, False, 10, 10)
 	sg2 = to_value_list(sg)
-	print(sg)
 	print(sg2)
+	print_grid(sg2)
+	print('')
 
 	msgs = generate_random_masks(sg2, 5, True)
 	for msg in msgs:
 		print_grid(msg)
 		print('')
-	"""
-	msg = generate_random_mask(sg2, 4, True)
-	print_grid(msg)
-	"""
