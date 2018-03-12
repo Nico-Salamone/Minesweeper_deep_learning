@@ -63,7 +63,7 @@ def data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bo
 	:num_columns_grid: The number of columns of the original grid.
 	:prob_bomb_tile: The porbability that one tile of the subgrid contains a bomb.
 	:data_set_size: The size of data set.
-	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile will
+	:bomb_middle_tile: If True, then the tile in the middle of the subgrids contains a bomb. If False, then this tile does
 		not contain a bomb.
 	:return: The file name.
 	"""
@@ -75,14 +75,14 @@ if __name__ == "__main__":
 	radius_subgrids = 2
 	num_rows_grid = 10
 	num_columns_grid = 10
-	prob_bomb_tile = 0.30
+	prob_bomb_tile = 0.3
 
 	data_set_size = 500
 	seed = 42
 
 	bomb_middle_tile_list = [False, True]
 	for bomb_middle_tile in bomb_middle_tile_list:
-		file_name = "data_sets/" + data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, prob_bomb_tile,
+		file_name = "data_sets/" + data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
 			data_set_size, bomb_middle_tile)
 
 		data_set = generate_data_set(radius_subgrids, prob_bomb_tile, bomb_middle_tile, num_rows_grid, num_columns_grid,

@@ -1,6 +1,6 @@
-from minesweeper.grid import Tile
 import data_set as ds
-from helpers import generate_random_masks, print_grid
+from neural_network import format_data_set, get_inputs
+from helpers import print_grid
 
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score
@@ -10,36 +10,32 @@ if __name__ == "__main__":
 	seed = 42
 
 	radius_subgrids = 2
-	edge_size_subgrids = (radius_subgrids * 2) + 1
-	num_tiles_subgrids = edge_size_subgrids ** 2
-	mid_tile_pos = (radius_subgrids * edge_size_subgrids) + radius_subgrids
 	num_rows_grid = 10
 	num_columns_grid = 10
-	num_bombs_grid = 40
-	data_set_size = 1000
+	prob_bomb_tile = 0.3
+	data_set_size = 500
+	num_masked_subgrids = 100
 
-	ds_file_name = "data_sets/" + ds.data_set_file_name(radius_subgrids, num_rows_grid, num_columns_grid, num_bombs_grid, data_set_size)
+	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
+		data_set_size, False)
+	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
+		data_set_size, True) # 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = "model.h5"
 
 	random.seed(seed)
 
 	# Load the data set.
 	data_set = list(ds.read_data_set(ds_file_name))
+	data_set.extend(list(ds.read_data_set(ds_bm_file_name)))
+
+	# Format the data set.
+	data_set = format_data_set(data_set, num_masked_subgrids)
+
+	# Get the 'x' and 'y_true' vectors.
+	x, y_true = get_inputs(data_set)
 
 	# Load the model.
 	model = load_model(model_file_name)
-
-	# Create the 'x' and 'y_true' vectors
-	x = []
-	y_true = []
-	for subgrid in data_set:
-		x_subgrid = generate_random_masks(subgrid, 5, True)
-
-		mid_tile = subgrid[mid_tile_pos]
-		y_true_subgrid = [1 if (mid_tile == Tile.BOMB) else 0] * len(x_subgrid)
-
-		x.extend(x_subgrid)
-		y_true.extend(y_true_subgrid)
 
 	# Evaluation.
 	evaluation = model.evaluate(x, y_true)
@@ -56,7 +52,6 @@ if __name__ == "__main__":
 	# 'false_negative' and 'true_negative': negative means 0 (no bomb in the middle of the subgrid).
 	accuracy = accuracy_score(y_true, y_pred_rounded)
 	recall = recall_score(y_true, y_pred_rounded)
-
 
 	print("True positive: {}\nFalse positive: {}\nFalse negative: {}\nTrue negative: {}\nAccuracy: {}\nRecall: {}\n".format(true_positive,
 		false_positive, false_negative, true_negative, accuracy, recall))

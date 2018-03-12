@@ -99,7 +99,7 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, wall
 
 	num_tiles = len(masked_subgrid)
 	edge_size = int(math.sqrt(num_tiles))
-	radius = int((edge_size - 1) / 2)
+	radius = int(edge_size / 2)
 	left_wall, right_wall, top_wall, bottom_wall = compute_walls(masked_subgrid) if (walls == None) else walls
 
 	pos = get_positions(edge_size, edge_size, left_wall, right_wall, top_wall, bottom_wall)
