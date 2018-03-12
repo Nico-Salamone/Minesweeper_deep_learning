@@ -80,8 +80,8 @@ if __name__ == "__main__":
 	num_rows_grid = 10
 	num_columns_grid = 10
 	prob_bomb_tile = 0.3
-	data_set_size = 500
-	num_masked_subgrids = 100
+	data_set_size = 5000
+	num_masked_subgrids = 20
 
 	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
 		data_set_size, False)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
 	model = create_model(num_tiles_subgrids)
 
 	# Train the model.
-	model.fit(x, y_true, epochs=1, batch_size=1)
+	model.fit(x, y_true, epochs=1, batch_size=10)
 
 	# Save the model.
 	model.save(model_file_name)

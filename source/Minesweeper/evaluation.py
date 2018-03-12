@@ -14,7 +14,7 @@ if __name__ == "__main__":
 	num_columns_grid = 10
 	prob_bomb_tile = 0.3
 	data_set_size = 500
-	num_masked_subgrids = 100
+	num_masked_subgrids = 20
 
 	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
 		data_set_size, False)
