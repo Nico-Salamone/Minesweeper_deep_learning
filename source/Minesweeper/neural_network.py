@@ -79,14 +79,14 @@ if __name__ == "__main__":
 	num_tiles_subgrids = edge_size_subgrids ** 2
 	num_rows_grid = 10
 	num_columns_grid = 10
-	prob_bomb_tile = 0.3
+	num_bombs_grid = 10
 	data_set_size = 5000
 	num_masked_subgrids = 20
 
-	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
-		data_set_size, False)
-	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
-		data_set_size, True) # 'bm' for means that the tile in the middle of the subgrids contains a bomb.
+	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
+			data_set_size, False)
+	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
+			data_set_size, True) # 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = "model.h5"
 
 	random.seed(seed)

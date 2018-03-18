@@ -22,17 +22,17 @@ def generate_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, t
 
 	return Grid(num_rows, num_columns, bomb_position_list, left_wall, right_wall, top_wall, bottom_wall)
 
-def generate_subgrid(radius_subgrid, prob_bomb_tile, bomb_middle_tile, num_rows_grid, num_columns_grid):
+def generate_subgrid(radius_subgrid, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid):
 	"""
 	Generate a random subgrid. This function generates a "good" number of bombs and the "good" thickness of walls ("good"
 	for realistic).
 
 	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
-	:prob_bomb_tile: The porbability that one tile of the subgrid contains a bomb.
 	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile will
 		not contain a bomb.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
+	:num_bombs_grid: The number of bombs of the original grid.
 	:return: A random subgrid.
 	"""
 
@@ -57,7 +57,7 @@ def generate_subgrid(radius_subgrid, prob_bomb_tile, bomb_middle_tile, num_rows_
 	num_tiles_lg_sg = len(tile_pos_list)
 
 	# Number of bombs.
-	num_bombs_lg_sg = _compute_num_bombs_subgrid(num_tiles_lg_sg, prob_bomb_tile)
+	num_bombs_lg_sg = _compute_num_bombs_subgrid(num_tiles_lg_sg, num_rows_grid, num_columns_grid, num_bombs_grid)
 
 	# Creation of the larger subgrid.
 	middle_tile_pos = (radius_lg_sg, radius_lg_sg)
@@ -138,33 +138,37 @@ def _compute_wall_thickness_subgrid(radius_subgrid, num_rows_grid, num_columns_g
 
 	return (left_wall, right_wall, top_wall, bottom_wall)
 
-def _compute_num_bombs_subgrid(num_tiles_subgrid, prob_bomb_tile):
+def _compute_num_bombs_subgrid(num_tiles_subgrid, num_rows_grid, num_columns_grid, num_bombs_grid):
 	"""
 	Compute a random number of bombs for the subgrids.
 
 	:num_tiles_subgrid: The number of tiles that are not walls of the subgrid.
-	:prob_bomb_tile: The porbability that one tile contains a bomb.
+	:num_rows_grid: The number of rows of the original grid.
+	:num_columns_grid: The number of columns of the original grid.
+	:num_bombs_grid: The number of bombs of the original grid.
 	:return: A random number of bombs between 0 and 'num_tiles_subgrid'.
 	"""
 
+	num_tiles_grid = num_rows_grid * num_columns_grid
+	tile_ratio = num_tiles_subgrid / num_tiles_grid
+
 	num_bombs_subgrid = 0
-	for i in range(num_tiles_subgrid):
-		if random.random() < prob_bomb_tile:
+	for i in range(num_bombs_grid):
+		if random.random() < tile_ratio:
 			num_bombs_subgrid += 1
 
-	return num_bombs_subgrid	
+	return num_bombs_subgrid
 
 if __name__ == "__main__":
 	num_rows = 10
 	num_columns = 10
 	num_bombs = 10
-	prob_bomb_tile = 0.5
 
 	g = generate_grid(num_rows, num_columns, num_bombs, 2, 1, 0, 3)
 	print(g)
 
-	g = generate_subgrid(2, prob_bomb_tile, False, num_rows, num_columns)
+	g = generate_subgrid(2, False, num_rows, num_columns, num_bombs)
 	print(g)
 
-	g = generate_subgrid(2, prob_bomb_tile, True, num_rows, num_columns)
+	g = generate_subgrid(2, True, num_rows, num_columns, num_bombs)
 	print(g)

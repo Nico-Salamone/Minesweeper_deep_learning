@@ -218,7 +218,7 @@ if __name__ == "__main__":
 	from minesweeper.grid_generation import generate_subgrid
 	radius = 2
 
-	sg = generate_subgrid(radius, 0.5, False, 10, 10)
+	sg = generate_subgrid(radius, False, 10, 10, 10)
 	sg2 = to_value_list(sg)
 	print(sg2)
 	print_grid(sg2)

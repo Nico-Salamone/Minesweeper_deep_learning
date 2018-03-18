@@ -303,7 +303,7 @@ def get_positions(num_rows, num_columns, left_wall=0, right_wall=0, top_wall=0, 
 	:right_wall: The thickness of the right wall.
 	:top_wall: The thickness of the top wall.
 	:bottom_wall: The thickness of the bottom wall.
-	:return The positions of the grid
+	:return: The positions of the grid.
 	"""
 
 	min_row_index = top_wall

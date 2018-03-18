@@ -12,14 +12,14 @@ if __name__ == "__main__":
 	radius_subgrids = 2
 	num_rows_grid = 10
 	num_columns_grid = 10
-	prob_bomb_tile = 0.3
+	num_bombs_grid = 10
 	data_set_size = 500
 	num_masked_subgrids = 20
 
-	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
-		data_set_size, False)
-	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, radius_subgrids, prob_bomb_tile,
-		data_set_size, True) # 'bm' for means that the tile in the middle of the subgrids contains a bomb.
+	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
+			data_set_size, False)
+	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
+			data_set_size, True) # 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = "model.h5"
 
 	random.seed(seed)
@@ -53,8 +53,8 @@ if __name__ == "__main__":
 	accuracy = accuracy_score(y_true, y_pred_rounded)
 	recall = recall_score(y_true, y_pred_rounded)
 
-	print("True positive: {}\nFalse positive: {}\nFalse negative: {}\nTrue negative: {}\nAccuracy: {}\nRecall: {}\n".format(true_positive,
-		false_positive, false_negative, true_negative, accuracy, recall))
+	print("True positive: {}\nFalse positive: {}\nFalse negative: {}\nTrue negative: {}\nAccuracy: {}\nRecall: {}\n".format(
+		true_positive, false_positive, false_negative, true_negative, accuracy, recall))
 
 	for x_t, y_t, y_p in zip(x, y_true, y_pred):
 		print_grid(x_t)
