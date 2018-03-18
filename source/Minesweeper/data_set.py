@@ -77,7 +77,7 @@ if __name__ == "__main__":
 	num_columns_grid = 10
 	num_bombs_grid = 10
 
-	data_set_size = 500
+	data_set_size = 5000
 	seed = 42
 
 	bomb_middle_tile_list = [False, True]

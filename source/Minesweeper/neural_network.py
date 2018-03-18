@@ -37,7 +37,7 @@ def format_data_set(data_set, num_masked_subgrids):
 
 	:data_set: The data set.
 	:num_masked_subgrids: The number of subgrids with a mask to generate for each subgrid of the data set.
-	:return: the formated data set.
+	:return: the formatted data set.
 	"""
 
 	num_tiles = len(data_set[0])
@@ -45,21 +45,21 @@ def format_data_set(data_set, num_masked_subgrids):
 	radius = int(edge_size / 2)
 	mid_tile_pos = (radius * edge_size) + radius
 
-	formated_data_set = []
+	formatted_data_set = []
 	for subgrid in data_set:
 		mid_tile = subgrid[mid_tile_pos]
 		y_true_subgrid = 1 if (mid_tile == Tile.BOMB) else 0
 
 		masked_subgrids = generate_random_masks(subgrid, num_masked_subgrids, True)
-		formated_data_set.extend([(msg, y_true_subgrid) for msg in masked_subgrids])
+		formatted_data_set.extend([(msg, y_true_subgrid) for msg in masked_subgrids])
 
-	return formated_data_set
+	return formatted_data_set
 
 def get_inputs(data_set):
 	"""
 	Get the inputs for the neural network ('x' and 'y_true').
 
-	:data_set: The formated data set.
+	:data_set: The formatted data set.
 	:return: The inputs for the neural network ('x' and 'y_true').
 	"""
 
@@ -80,8 +80,8 @@ if __name__ == "__main__":
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
-	data_set_size = 5000
-	num_masked_subgrids = 20
+	data_set_size = 50000
+	num_masked_subgrids = 10
 
 	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
 			data_set_size, False)
@@ -95,21 +95,26 @@ if __name__ == "__main__":
 	# Load the data set.
 	data_set = list(ds.read_data_set(ds_file_name))
 	data_set.extend(list(ds.read_data_set(ds_bm_file_name)))
+	print("Data set loaded.")
 
 	# Format the data set.
 	data_set = format_data_set(data_set, num_masked_subgrids)
+	print("Data set formatted.")
 
 	# Shuffle the data set.
-	random.shuffle(data_set)
+	#random.shuffle(data_set)
+	#print("Data set shuffled.")
 
 	# Get the 'x' and 'y_true' vectors.
 	x, y_true = get_inputs(data_set)
+	print("Inputs and outputs extracted.")
 
 	# Create the model.
 	model = create_model(num_tiles_subgrids)
 
 	# Train the model.
 	model.fit(x, y_true, epochs=1, batch_size=10)
+	print("Neural network trained.")
 
 	# Save the model.
 	model.save(model_file_name)

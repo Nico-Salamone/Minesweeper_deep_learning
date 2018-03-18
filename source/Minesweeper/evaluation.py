@@ -27,12 +27,15 @@ if __name__ == "__main__":
 	# Load the data set.
 	data_set = list(ds.read_data_set(ds_file_name))
 	data_set.extend(list(ds.read_data_set(ds_bm_file_name)))
+	print("Data set loaded.")
 
 	# Format the data set.
 	data_set = format_data_set(data_set, num_masked_subgrids)
+	print("Data set formatted.")
 
 	# Get the 'x' and 'y_true' vectors.
 	x, y_true = get_inputs(data_set)
+	print("Inputs and outputs extracted.")
 
 	# Load the model.
 	model = load_model(model_file_name)
