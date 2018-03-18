@@ -60,7 +60,7 @@ def get_inputs(data_set):
 	Get the inputs for the neural network ('x' and 'y_true').
 
 	:data_set: The formatted data set.
-	:return: The inputs for the neural network ('x' and 'y_true').
+	:return: The inputs and the real outputs of the neural network ('x' and 'y_true').
 	"""
 
 	x = []
