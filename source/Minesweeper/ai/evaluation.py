@@ -1,6 +1,6 @@
-import data_set as ds
-from neural_network import format_data_set, get_inputs
-from helpers import print_grid
+import ai.data_set as ds
+from ai.neural_network import format_data_set, get_inputs
+from ai.helpers import print_grid
 
 from keras.models import load_model
 from sklearn.metrics import confusion_matrix, accuracy_score, recall_score

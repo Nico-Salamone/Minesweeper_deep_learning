@@ -1,5 +1,5 @@
 from minesweeper.grid_generation import generate_subgrid
-from helpers import to_value_list
+from ai.helpers import to_value_list
 
 import random
 import csv

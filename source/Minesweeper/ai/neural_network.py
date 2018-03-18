@@ -1,6 +1,6 @@
 from minesweeper.masked_grid import Tile
-import data_set as ds
-from helpers import generate_random_masks
+import ai.data_set as ds
+from ai.helpers import generate_random_masks
 
 from keras.models import Sequential
 from keras.layers import Dense
