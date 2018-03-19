@@ -4,6 +4,7 @@ from ai.helpers import print_grid
 
 from keras.models import load_model
 import sklearn.metrics as skmet
+import numpy as np
 import random
 
 def print_loss_metric_functions(model, x, y_true):
@@ -19,7 +20,7 @@ def print_loss_metric_functions(model, x, y_true):
 
 	print("Results of loss and metric functions:")
 	for i, ev in enumerate(evaluation):
-		print("{}: {:.3f}".format(model.metrics_names[i], ev))
+		print("\t{}: {:.3f}".format(model.metrics_names[i], ev))
 
 def confusion_matrix(y_true, y_pred):
 	"""
@@ -57,6 +58,53 @@ def accuracy_recall_specificity(conf_mat):
 	specificity = true_negatives / negatives
 
 	return accuracy, recall, specificity
+
+def errors(y_true, y_pred, error_func):
+	"""
+	Compute the errors.
+
+	:y_true: The real outputs.
+	:y_pred: The outputs predicted by the neural network.
+	:error_func: The error function. It takes one real output and one single output predicted as input and return a
+		error from these values.
+	:return: A list of errors.
+	"""
+
+	return [error_func(y_t, y_p[0]) for y_t, y_p in zip(y_true, y_pred)]
+
+def histogram_percentage(errors, num_bins=10, error_range=None):
+	"""
+	Compute the percentage of counts of the histogram of the errors.
+
+	:errors: The errors.
+	:num_bins: The number of bins.
+	:error_range: The error range.
+	:return: The percentage of counts of the histogram of the errors and the bins.
+	"""
+
+	if error_range == None:
+		error_range = (min(errors), max(errors))
+
+	counts, bins = np.histogram(np.array(errors), bins=num_bins, range=error_range)
+	counts = counts.astype(float)
+
+	n = len(errors)
+	perc_counts = [(c / n) for c in counts]
+
+	return (perc_counts, bins)
+
+def print_histogram_percentage(hist_perc):
+	"""
+	Print the histogram percentage.
+
+	:hist_perc: The histogram percentage.
+	"""
+
+	perc_counts, bins = hist_perc
+
+	print("Histogram percentage:")
+	for i, pc in enumerate(perc_counts):
+		print("\t[{:.2f}-{:.2f}]: {:.3%}".format(bins[i], bins[i+1], pc))
 
 def print_x_y_true_y_pred(x, y_true, x_pred):
 	"""
@@ -101,7 +149,7 @@ if __name__ == "__main__":
 	data_set = format_data_set(data_set, num_masked_subgrids)
 	print("Data set formatted.")
 
-	# Get the 'x' and the 'y_true' vectors.
+	# Get the 'x' and 'y_true' vectors.
 	x, y_true = get_inputs_real_outputs(data_set)
 	print("Inputs and reak outputs extracted.\n\n\n")
 
@@ -110,6 +158,8 @@ if __name__ == "__main__":
 
 	# Evaluation.
 	y_pred = model.predict(x)
+	error_func = lambda y_t, y_p: abs(y_t - y_p)
+	errors = errors(y_true, y_pred, error_func)
 
 	print_loss_metric_functions(model, x, y_true)
 	print('')
@@ -118,8 +168,12 @@ if __name__ == "__main__":
 	true_negatives, false_positives, false_negatives, true_positives = conf_mat
 	accuracy, recall, specificity = accuracy_recall_specificity(conf_mat)
 	print("Confusion matrix, accuracy, recall and specificity:")
-	print("True positives: {}\nFalse positives: {}\nFalse negatives: {}\nTrue negatives: {}\nAccuracy: {}\n" \
-		"Recall: {}\nSpecificity: {}\n".format(true_positives, false_positives, false_negatives, true_negatives,
-		accuracy, recall, specificity))
+	print("\tTrue positives: {}\n\tFalse positives: {}\n\tFalse negatives: {}\n\tTrue negatives: {}\n\t" \
+		"Accuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(true_positives, false_positives, false_negatives,
+		true_negatives, accuracy, recall, specificity))
+
+	hist_perc = histogram_percentage(errors, 10, (0.0, 1.0))
+	print_histogram_percentage(hist_perc)
+	print('')
 
 	print_x_y_true_y_pred(x, y_true, y_pred)

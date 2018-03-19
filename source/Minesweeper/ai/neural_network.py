@@ -107,7 +107,7 @@ if __name__ == "__main__":
 	#random.shuffle(data_set)
 	#print("Data set shuffled.")
 
-	# Get the 'x' and the 'y_true' vectors.
+	# Get the 'x' and 'y_true' vectors.
 	x, y_true = get_inputs_real_outputs(data_set)
 	print("Inputs and real outputs extracted.")
 
