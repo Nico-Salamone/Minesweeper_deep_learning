@@ -1,26 +1,23 @@
 from minesweeper.grid import Grid, get_positions
+from minesweeper.masked_grid import MaskedGrid
 
 import random
 import numpy.random
 
-def generate_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, top_wall=0, bottom_wall=0):
+def generate_masked_grid(num_rows, num_columns, num_bombs):
 	"""
-	Generate a random grid. This function inserts 'num_bombs' at random positions.
+	Generate a random grid with mask. This function inserts 'num_bombs' at random positions.
 
 	:num_rows: The number of rows of the grid.
 	:num_columns: The number of columns of the grid.
 	:num_bombs: The number of bombs.
-	:left_wall: The thickness of the left wall.
-	:right_wall: The thickness of the right wall.
-	:top_wall: The thickness of the top wall.
-	:bottom_wall: The thickness of the bottom wall.
-	:return: A random grid.
+	:return: A random grid with mask.
 	"""
 
-	pos_list = get_positions(num_rows, num_columns, left_wall, right_wall, top_wall, bottom_wall)
+	pos_list = get_positions(num_rows, num_columns)
 	bomb_position_list = random.sample(pos_list, num_bombs)
 
-	return Grid(num_rows, num_columns, bomb_position_list, left_wall, right_wall, top_wall, bottom_wall)
+	return MaskedGrid(num_rows, num_columns, bomb_position_list)
 
 def generate_subgrid(radius_subgrid, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid):
 	"""

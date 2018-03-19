@@ -31,8 +31,8 @@ class MaskedGrid(Grid):
 	Grid with walls and mask (including the visibilities).
 	"""
 
-	def __init__(self, num_rows, num_columns, bomb_position_list, left_wall=0, right_wall=0,
-			top_wall=0, bottom_wall=0):
+	def __init__(self, num_rows, num_columns, bomb_position_list, left_wall=0, right_wall=0, top_wall=0,
+		bottom_wall=0):
 		"""
 		Create a minesweeper game.
 

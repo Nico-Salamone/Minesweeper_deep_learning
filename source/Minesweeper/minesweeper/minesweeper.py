@@ -1,5 +1,5 @@
 from minesweeper.masked_grid import MaskedTile, MaskedGrid
-from minesweeper.grid_generation import generate_grid
+from minesweeper.grid_generation import generate_masked_grid
 
 from enum import Enum
 
@@ -22,7 +22,7 @@ class Minesweeper:
 		:num_bombs: The number of bombs of the grid.
 		"""
 
-		self._grid = generate_grid(num_rows, num_columns, num_bombs)
+		self._grid = generate_masked_grid(num_rows, num_columns, num_bombs)
 
 		self._state = State.CONTINUE
 		self._score = 0
