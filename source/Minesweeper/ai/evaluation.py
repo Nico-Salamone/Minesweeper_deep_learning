@@ -36,7 +36,7 @@ def confusion_matrix(y_true, y_pred):
 		the fourth is the number of the true positives.
 	"""
 
-	y_pred_rounded = [round(y_p[0]) for y_p in y_pred]
+	y_pred_rounded = [round(y_p) for y_p in y_pred]
 
 	return skmet.confusion_matrix(y_true, y_pred_rounded).ravel()
 
@@ -70,7 +70,7 @@ def errors(y_true, y_pred, error_func):
 	:return: A list of errors.
 	"""
 
-	return [error_func(y_t, y_p[0]) for y_t, y_p in zip(y_true, y_pred)]
+	return [error_func(y_t, y_p) for y_t, y_p in zip(y_true, y_pred)]
 
 def histogram_percentage(errors, num_bins=10, error_range=None):
 	"""
@@ -106,20 +106,52 @@ def print_histogram_percentage(hist_perc):
 	for i, pc in enumerate(perc_counts):
 		print("\t[{:.2f}-{:.2f}]: {:.3%}".format(bins[i], bins[i+1], pc))
 
-def print_x_y_true_y_pred(x, y_true, x_pred):
+def extrat_data_error_range(x, y_true, y_pred, errors, error_range):
 	"""
-	Print for each input the real outputs and the outputs predicted by the neural network.
+	Extract the data within a range.
 
 	:x: The inputs.
 	:y_true: The real outputs.
 	:y_pred: The outputs predicted by the neural network.
+	:errors: The errors.
+	:error_range: The error range.
+	:return: A list of inputs, real outputs, ouputs predicted and erros.
 	"""
 
-	print("All results (for each input, display the real outputs and the outputs predicted by the neural network):")
-	for x_t, y_t, y_p in zip(x, y_true, y_pred):
-		print_grid(x_t)
+	min_value = error_range[0]
+	max_value = error_range[1]
 
-		print("y_true: {}\ny_pred: {}\n".format(y_t, y_p))
+	data_within_range = []
+	for x_t, y_t, y_p, e in zip(x, y_true, y_pred, errors):
+		if min_value <= e <= max_value:
+			data_within_range.append((x_t, y_t, y_p, e))
+
+	return data_within_range
+
+def print_x_y_true_y_pred_err(x, y_true, y_pred, errors=None):
+	"""
+	Print for each input the real output, the output predicted by the neural network and the error.
+
+	:x: The inputs.
+	:y_true: The real outputs.
+	:y_pred: The outputs predicted by the neural network.
+	:errors: The errors.
+	"""
+
+	print_msg = "Inputs, real outputs, outputs predicted and errors:"
+
+	if errors == None:
+		print_msg = "Inputs, real outputs and outputs predicted:"
+		errors = [None] * len(x)
+
+	print(print_msg)
+	for x_t, y_t, y_p, e in zip(x, y_true, y_pred, errors):
+		print_grid(x_t)
+		print("y_true: {}\ny_pred: {}".format(y_t, y_p))
+		if e:
+			print("err: {}".format(e))
+
+		print('')
 
 if __name__ == "__main__":
 	seed = 42
@@ -158,6 +190,8 @@ if __name__ == "__main__":
 
 	# Evaluation.
 	y_pred = model.predict(x)
+	y_pred = [y_p[0] for y_p in y_pred]
+
 	error_func = lambda y_t, y_p: abs(y_t - y_p)
 	errors = errors(y_true, y_pred, error_func)
 
@@ -176,4 +210,12 @@ if __name__ == "__main__":
 	print_histogram_percentage(hist_perc)
 	print('')
 
-	print_x_y_true_y_pred(x, y_true, y_pred)
+	#print_x_y_true_y_pred_err(x, y_true, y_pred)
+
+	data_within_range = extrat_data_error_range(x, y_true, y_pred, errors, (0.6, 1.0))
+	data_within_range_trans = np.transpose(data_within_range).tolist()
+	# 'data_within_range_trans[0]' corresponds to 'x'.
+	# 'data_within_range_trans[1]' corresponds to 'y_true'.
+	# 'data_within_range_trans[2]' corresponds to 'y_pred'.
+	# 'data_within_range_trans[3]' corresponds to 'errors'.
+	print_x_y_true_y_pred_err(data_within_range_trans[0], data_within_range_trans[1], data_within_range_trans[2])
