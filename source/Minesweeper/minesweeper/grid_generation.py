@@ -24,20 +24,20 @@ def generate_grid(num_rows, num_columns, num_bombs, left_wall=0, right_wall=0, t
 
 def generate_subgrid(radius_subgrid, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid):
 	"""
-	Generate a random subgrid. This function generates a "good" number of bombs and the "good" thickness of walls ("good"
-	for realistic).
+	Generate a random subgrid. This function generates a "good" number of bombs and the "good" thickness of walls
+	("good" for realistic).
 
 	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
-	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile will
-		not contain a bomb.
+	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile
+		will not contain a bomb.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the original grid.
 	:return: A random subgrid.
 	"""
 
-	# This funtion generates a (('num_rows_subgrid' + 2) x ('num_columns_subgrid' + 2)) subgrid ('larger_subgrid') and extract
-	# then the ('num_rows_subgrid' x 'num_columns_subgrid') subgrid ('subgrid').
+	# This funtion generates a (('num_rows_subgrid' + 2) x ('num_columns_subgrid' + 2)) subgrid ('larger_subgrid') and
+	# extract then the ('num_rows_subgrid' x 'num_columns_subgrid') subgrid ('subgrid').
 
 	num_rows_sg = 1 + (2 * radius_subgrid) # 'sg' for subgrid.
 	num_columns_sg = num_rows_sg

@@ -4,13 +4,14 @@ from ai.helpers import to_value_list
 import random
 import csv
 
-def generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid, size, seed=None):
+def generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid, size,
+	seed=None):
 	"""
 	Generate a random data set of subgrids.
 
 	:radius_subgrids: The radius of the subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
-	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile will
-		not contain a bomb.
+	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile
+	will not contain a bomb.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the original grid.
@@ -54,7 +55,8 @@ def read_data_set(file_name):
 
 	return
 
-def data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, data_set_size, bomb_middle_tile):
+def data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, data_set_size,
+	bomb_middle_tile):
 	"""
 	Get the file name for the data set folling parameters.
 
@@ -63,13 +65,13 @@ def data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_s
 	:num_bombs_grid: The number of bombs of the grid.
 	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:data_set_size: The size of data set.
-	:bomb_middle_tile: If True, then the tile in the middle of the subgrids contains a bomb. If False, then this tile does
-		not contain a bomb.
+	:bomb_middle_tile: If True, then the tile in the middle of the subgrids contains a bomb. If False, then this tile
+	does not contain a bomb.
 	:return: The file name.
 	"""
 
-	return "data_set_{}ro_{}c_{}b_{}ra_{}sb_{}bm.csv".format(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
-		data_set_size, bomb_middle_tile)
+	return "data_set_{}ro_{}c_{}b_{}ra_{}sb_{}bm.csv".format(num_rows_grid, num_columns_grid, num_bombs_grid,
+		radius_subgrids, data_set_size, bomb_middle_tile)
 
 if __name__ == "__main__":
 	radius_subgrids = 2
@@ -85,8 +87,8 @@ if __name__ == "__main__":
 		file_name = "data_sets/" + data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
 			data_set_size, bomb_middle_tile)
 
-		data_set = generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid,
-			data_set_size, seed)
+		data_set = generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid,
+			num_bombs_grid, data_set_size, seed)
 
 		write_data_set(data_set, file_name)
 

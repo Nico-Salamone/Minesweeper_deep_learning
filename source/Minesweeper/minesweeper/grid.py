@@ -55,11 +55,11 @@ class Grid:
 				"({} * {})!".format(num_bombs, num_rows, num_columns))
 
 		if (left_wall + right_wall) >= num_columns:
-			raise ValueError("Error: the sum the thickness of the left wall ({}) and the right wall ({}) can not be greater " \
-				"than or equal to the number of columns ({})!".format(left_wall, right_wall, num_columns))
+			raise ValueError("Error: the sum the thickness of the left wall ({}) and the right wall ({}) can not be " \
+				"greater than or equal to the number of columns ({})!".format(left_wall, right_wall, num_columns))
 		if (top_wall + bottom_wall) >= num_rows:
-			raise ValueError("Error: the sum the thickness of the top wall ({}) and the bottom wall ({}) can not be greater " \
-				"than or equal to the number of rows ({})!".format(top_wall, bottom_wall, num_rows))
+			raise ValueError("Error: the sum the thickness of the top wall ({}) and the bottom wall ({}) can not be " \
+				"greater than or equal to the number of rows ({})!".format(top_wall, bottom_wall, num_rows))
 
 		self._num_rows = num_rows
 		self._num_columns = num_columns
@@ -69,8 +69,8 @@ class Grid:
 		self._top_wall = top_wall
 		self._bottom_wall = bottom_wall
 
-		# '_grid' is a grid of numbers whose each tile contains the number of adjacent bombs or 'Tile.BOMB' if this tile
-		# contains a bomb or 'Tile.WALL' if this tile contains a wall.
+		# '_grid' is a grid of numbers whose each tile contains the number of adjacent bombs or 'Tile.BOMB' if this
+		# tile contains a bomb or 'Tile.WALL' if this tile contains a wall.
 		self._grid = [[0 for j in range(self.num_columns)] for i in range(self.num_rows)]
 		self._insert_walls()
 		self._insert_bombs()
@@ -185,7 +185,8 @@ class Grid:
 
 		:i: The index of the row of the position.
 		:j: The index of the column of the position.
-		:return: Tile.WALL if the tile contains a wall, Tile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
+		:return: Tile.WALL if the tile contains a wall, Tile.BOMB if the tile contains a bomb, the number of adjacent
+			bombs otherwise.
 		"""
 
 		return self._grid[i][j]
@@ -285,7 +286,8 @@ class Grid:
 		"""
 
 		num_tile = self._grid[i][j]
-		assert num_tile == Tile.EMPTY, "Error: only empty tiles (that does not contain a bomb or a wall) can be incremented!"
+		assert num_tile == Tile.EMPTY, "Error: only empty tiles (that does not contain a bomb or a wall) can be " \
+			"incremented!"
 
 		new_value = num_tile + n
 		assert 0 <= new_value <= 8, "Error: the number of adjacent bombs can not be greater than 8!"
@@ -314,7 +316,8 @@ def get_positions(num_rows, num_columns, left_wall=0, right_wall=0, top_wall=0, 
 	return [(i, j) for i in range(min_row_index, max_row_index) for j in range(min_column_index, max_column_index)]
 
 if __name__ == "__main__":
-	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]
+	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2),
+		(3, 0)]
 	g = Grid(10, 5, bomb_position_list)
 	print(g)
 

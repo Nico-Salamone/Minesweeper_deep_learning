@@ -26,14 +26,15 @@ def create_model(num_tiles_subgrids):
 
 	#optimizer = Adam(lr=0.0001)
 	optimizer = 'rmsprop'
-	model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['mean_squared_error', 'mean_absolute_error', 'accuracy'])
+	model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['mean_squared_error', 'mean_absolute_error',
+		'accuracy'])
 
 	return model
 
 def format_data_set(data_set, num_masked_subgrids):
 	"""
-	Format the data set for the neural network. For each subgrid of the data set, this function generates 'num_masked_subgrids' subgrids
-	with a random mask.
+	Format the data set for the neural network. For each subgrid of the data set, this function generates
+	'num_masked_subgrids' subgrids with a random mask.
 
 	:data_set: The data set.
 	:num_masked_subgrids: The number of subgrids with a mask to generate for each subgrid of the data set.
@@ -83,10 +84,11 @@ if __name__ == "__main__":
 	data_set_size = 50000
 	num_masked_subgrids = 10
 
-	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
-			data_set_size, False)
-	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
-			data_set_size, True) # 'bm' for means that the tile in the middle of the subgrids contains a bomb.
+	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid,
+		radius_subgrids, data_set_size, False)
+	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid,
+		radius_subgrids, data_set_size, True)
+	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = "model.h5"
 
 	random.seed(seed)

@@ -107,12 +107,14 @@ class Minesweeper:
 
 	def tile_at(self, i, j):
 		"""
-		Get tile at a position. The returned value is either MaskedTile.MASKED, MaskedTile.BOMB or the number of adjacent bombs.
+		Get tile at a position. The returned value is either MaskedTile.MASKED, MaskedTile.BOMB or the number of
+		adjacent bombs.
 		In this last case, the tile is a MaskedTile.EMPTY.
 
 		:i: The index of the row of the position.
 		:j: The index of the column of the position.
-		:return: MaskedTile.MASKED if the tile is masked, MaskedTile.BOMB if the tile contains a bomb, the number of adjacent bombs otherwise.
+		:return: MaskedTile.MASKED if the tile is masked, MaskedTile.BOMB if the tile contains a bomb, the number of
+			adjacent bombs otherwise.
 		"""	
 
 		return self._grid.tile_at(i, j)
@@ -147,7 +149,8 @@ class Minesweeper:
 
 	def reveal_all_tiles(self):
 		"""
-		Reveal all tiles. The 'num_masked_tiles' counter is equal to 0 and the state is set to State.LOSS after calling this function.
+		Reveal all tiles. The 'num_masked_tiles' counter is equal to 0 and the state is set to State.LOSS after calling
+		this function.
 		"""
 
 		self._grid.unmask_all_tiles()

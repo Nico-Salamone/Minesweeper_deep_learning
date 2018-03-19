@@ -58,7 +58,8 @@ def compute_walls(grid):
 	top_wall = 0
 	bottom_wall = 0
 
-	for i in range((radius * edge_size), ((radius * edge_size) + radius)): # '(radius * edge_size)' is the position of the tile in the left middle.
+	for i in range((radius * edge_size), ((radius * edge_size) + radius)):
+		# '(radius * edge_size)' is the position of the tile in the left middle.
 		if grid[i] == Tile.WALL:
 			left_wall += 1
 
@@ -85,10 +86,11 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, wall
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
 	:num_masked_tiles: The number of tiles to mask.
-	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked (therefore 'num_masked_tiles' - 1
-		others tiles will then be masked).
-	:walls: A tuple of four integers. The first one for the thickness of the left wall, the second for the right wall, the 
-		hird for the top wall and the fourth the bottom wall. If None, then the thicknesses are computed (lower performance).
+	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked (therefore
+		'num_masked_tiles' - 1 others tiles will then be masked).
+	:walls: A tuple of four integers. The first one for the thickness of the left wall, the second for the right wall,
+		the third for the top wall and the fourth the bottom wall. If None, then the thicknesses are computed (lower
+		performance).
 	:return: A subgrid with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
 
@@ -126,8 +128,8 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, wall
 
 def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False):
 	"""
-	Generate a list of subgrids with a random mask. For each one, between 1 and ('num_available_tiles' - 1) tiles are masked,
-	where 'num_available_tiles' is the number of "available" tiles (tiles that can be masked).
+	Generate a list of subgrids with a random mask. For each one, between 1 and ('num_available_tiles' - 1) tiles are
+	masked, where 'num_available_tiles' is the number of "available" tiles (tiles that can be masked).
 	The wall tiles are not masked.
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).

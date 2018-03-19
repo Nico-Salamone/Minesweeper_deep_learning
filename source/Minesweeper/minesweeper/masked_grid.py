@@ -56,7 +56,8 @@ class MaskedGrid(Grid):
 			for i in range(self.num_rows)
 		]
 
-		self._masked_tile_positions = set(get_positions(num_rows, num_columns, left_wall, right_wall, top_wall, bottom_wall))
+		self._masked_tile_positions = set(get_positions(num_rows, num_columns, left_wall, right_wall, top_wall,
+			bottom_wall))
 
 	@property
 	def grid(self):
@@ -89,7 +90,8 @@ class MaskedGrid(Grid):
 
 	def tile_at(self, i, j):
 		"""
-		Get tile at a position. The returned value is either Tile.MASKED, Tile.WALL, Tile.BOMB or the number of adjacent bombs.
+		Get tile at a position. The returned value is either Tile.MASKED, Tile.WALL, Tile.BOMB or the number of
+		adjacent bombs.
 		In this last case, the tile is a Tile.EMPTY.
 
 		:i: The index of the row of the position.
@@ -148,7 +150,8 @@ class MaskedGrid(Grid):
 
 	def _unmask_tile(self, i, j):
 		"""
-		Unmask one tile at position 'i' and 'j'. It reveal the tile in this position and decrements by one the varaible 'num_masked_tiles'.
+		Unmask one tile at position 'i' and 'j'. It reveal the tile in this position and decrements by one the varaible
+		'num_masked_tiles'.
 
 		:i: The index of the row of the tile.
 		:j: The index of the column of the tile.
@@ -164,7 +167,8 @@ class MaskedGrid(Grid):
 		return True
 
 if __name__ == "__main__":
-	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2), (3, 0)]
+	bomb_position_list = [(0, 1), (5, 4), (4, 2), (9, 4), (2, 1), (4, 4), (9, 0), (9, 1), (7, 1), (0, 3), (7, 2),
+		(3, 0)]
 	g = MaskedGrid(10, 5, bomb_position_list)
 	print(g)
 	unmasked_tiles = g.unmask_tile(0, 0)
