@@ -100,9 +100,9 @@ if __name__ == "__main__":
 	data_set = format_data_set(data_set, num_masked_subgrids)
 	print("Data set formatted.")
 
-	# Get the 'x' and 'y_true' vectors.
-	x, y_true = get_inputs(data_set)
-	print("Inputs and outputs extracted.\n\n\n")
+	# Get the 'x' and the 'y_true' vectors.
+	x, y_true = get_inputs_real_outputs(data_set)
+	print("Inputs and reak outputs extracted.\n\n\n")
 
 	# Load the model.
 	model = load_model(model_file_name)

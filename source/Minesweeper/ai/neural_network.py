@@ -55,9 +55,9 @@ def format_data_set(data_set, num_masked_subgrids):
 
 	return formatted_data_set
 
-def get_inputs(data_set):
+def get_inputs_real_outputs(data_set):
 	"""
-	Get the inputs for the neural network ('x' and 'y_true').
+	Get the inputs and the real outputs of the neural network ('x' and 'y_true').
 
 	:data_set: The formatted data set.
 	:return: The inputs and the real outputs of the neural network ('x' and 'y_true').
@@ -105,9 +105,9 @@ if __name__ == "__main__":
 	#random.shuffle(data_set)
 	#print("Data set shuffled.")
 
-	# Get the 'x' and 'y_true' vectors.
-	x, y_true = get_inputs(data_set)
-	print("Inputs and outputs extracted.")
+	# Get the 'x' and the 'y_true' vectors.
+	x, y_true = get_inputs_real_outputs(data_set)
+	print("Inputs and real outputs extracted.")
 
 	# Create the model.
 	model = create_model(num_tiles_subgrids)

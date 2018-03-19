@@ -85,7 +85,7 @@ def compute_errors(model, x, y_true, y_pred, error_function_list):
 	y_size = get_y_size(y_true)
 	y_true_components = sort_by_y_components(y_true)
 	y_pred_components = sort_by_y_components(y_pred)
-	# y_true_components and y_pred_components are two-dimensuinal matrix. The first dimension represents the components of one y_true element and the second dimension the grid. 
+	# y_true_components and y_pred_components are two-dimensional matrix. The first dimension represents the components of one y_true element and the second dimension the grid. 
 
 	num_errors = len(error_function_list)
 	errors = [[0] * y_size] * num_errors
@@ -222,7 +222,7 @@ def get_y_size_from_errors(errors):
 	return len(errors[0])
 		
 def sort_by_y_components(y):
-	# The output of this function is a two-dimensuinal matrix. The first dimension represents the components of one y element and the second dimension the grid.
+	# The output of this function is a two-dimensional matrix. The first dimension represents the components of one y element and the second dimension the grid.
 
 	if not hasattr(y[0], "__len__"): # y is primitive.
 		y = [[e] for e in y]
