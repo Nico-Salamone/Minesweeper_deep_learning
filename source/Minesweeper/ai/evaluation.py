@@ -72,23 +72,23 @@ def errors(y_true, y_pred, error_func):
 
 	return [error_func(y_t, y_p) for y_t, y_p in zip(y_true, y_pred)]
 
-def histogram_percentage(errors, num_bins=10, error_range=None):
+def histogram_percentage(err, num_bins=10, error_range=None):
 	"""
 	Compute the percentage of counts of the histogram of the errors.
 
-	:errors: The errors.
+	:err: The errors.
 	:num_bins: The number of bins.
 	:error_range: The error range.
 	:return: The percentage of counts of the histogram of the errors and the bins.
 	"""
 
 	if error_range == None:
-		error_range = (min(errors), max(errors))
+		error_range = (min(err), max(err))
 
-	counts, bins = np.histogram(np.array(errors), bins=num_bins, range=error_range)
+	counts, bins = np.histogram(np.array(err), bins=num_bins, range=error_range)
 	counts = counts.astype(float)
 
-	n = len(errors)
+	n = len(err)
 	perc_counts = [(c / n) for c in counts]
 
 	return (perc_counts, bins)
@@ -106,14 +106,14 @@ def print_histogram_percentage(hist_perc):
 	for i, pc in enumerate(perc_counts):
 		print("\t[{:.2f}-{:.2f}]: {:.3%}".format(bins[i], bins[i+1], pc))
 
-def extrat_data_error_range(x, y_true, y_pred, errors, error_range):
+def extrat_data_error_range(x, y_true, y_pred, err, error_range):
 	"""
 	Extract the data within a range.
 
 	:x: The inputs.
 	:y_true: The real outputs.
 	:y_pred: The outputs predicted by the neural network.
-	:errors: The errors.
+	:err: The errors.
 	:error_range: The error range.
 	:return: A list of inputs, real outputs, ouputs predicted and erros.
 	"""
@@ -122,30 +122,30 @@ def extrat_data_error_range(x, y_true, y_pred, errors, error_range):
 	max_value = error_range[1]
 
 	data_within_range = []
-	for x_t, y_t, y_p, e in zip(x, y_true, y_pred, errors):
+	for x_t, y_t, y_p, e in zip(x, y_true, y_pred, err):
 		if min_value <= e <= max_value:
 			data_within_range.append((x_t, y_t, y_p, e))
 
 	return data_within_range
 
-def print_x_y_true_y_pred_err(x, y_true, y_pred, errors=None):
+def print_x_y_true_y_pred_err(x, y_true, y_pred, err=None):
 	"""
 	Print for each input the real output, the output predicted by the neural network and the error.
 
 	:x: The inputs.
 	:y_true: The real outputs.
 	:y_pred: The outputs predicted by the neural network.
-	:errors: The errors.
+	:err: The errors.
 	"""
 
 	print_msg = "Inputs, real outputs, outputs predicted and errors:"
 
-	if errors == None:
+	if err == None:
 		print_msg = "Inputs, real outputs and outputs predicted:"
-		errors = [None] * len(x)
+		err = [None] * len(x)
 
 	print(print_msg)
-	for x_t, y_t, y_p, e in zip(x, y_true, y_pred, errors):
+	for x_t, y_t, y_p, e in zip(x, y_true, y_pred, err):
 		print_grid(x_t)
 		print("y_true: {}\ny_pred: {}".format(y_t, y_p))
 		if e:
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
 	# Get the 'x' and 'y_true' vectors.
 	x, y_true = get_inputs_real_outputs(data_set)
-	print("Inputs and reak outputs extracted.\n\n\n")
+	print("Inputs and real outputs extracted.")
 
 	# Load the model.
 	model = load_model(model_file_name)
@@ -193,7 +193,8 @@ if __name__ == "__main__":
 	y_pred = [y_p[0] for y_p in y_pred]
 
 	error_func = lambda y_t, y_p: abs(y_t - y_p)
-	errors = errors(y_true, y_pred, error_func)
+	err = errors(y_true, y_pred, error_func)
+	print("Errors computed.\n\n\n")
 
 	print_loss_metric_functions(model, x, y_true)
 	print('')
@@ -206,16 +207,16 @@ if __name__ == "__main__":
 		"Accuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(true_positives, false_positives, false_negatives,
 		true_negatives, accuracy, recall, specificity))
 
-	hist_perc = histogram_percentage(errors, 10, (0.0, 1.0))
+	hist_perc = histogram_percentage(err, 10, (0.0, 1.0))
 	print_histogram_percentage(hist_perc)
 	print('')
 
 	#print_x_y_true_y_pred_err(x, y_true, y_pred)
 
-	data_within_range = extrat_data_error_range(x, y_true, y_pred, errors, (0.6, 1.0))
+	data_within_range = extrat_data_error_range(x, y_true, y_pred, err, (0.6, 1.0))
 	data_within_range_trans = np.transpose(data_within_range).tolist()
 	# 'data_within_range_trans[0]' corresponds to 'x'.
 	# 'data_within_range_trans[1]' corresponds to 'y_true'.
 	# 'data_within_range_trans[2]' corresponds to 'y_pred'.
-	# 'data_within_range_trans[3]' corresponds to 'errors'.
+	# 'data_within_range_trans[3]' corresponds to 'err'.
 	print_x_y_true_y_pred_err(data_within_range_trans[0], data_within_range_trans[1], data_within_range_trans[2])
