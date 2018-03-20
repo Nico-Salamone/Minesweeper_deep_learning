@@ -83,13 +83,15 @@ if __name__ == "__main__":
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
-	data_set_size = 5000
+	num_no_bm_subgrids = int(ds.SIZE / 2)
+	num_bm_subgrids = int(ds.SIZE / 2)
+	num_subgrids = num_no_bm_subgrids + num_bm_subgrids
+	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
+
 	num_masked_subgrids = 10
 
-	ds_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid,
-		radius_subgrids, data_set_size, False)
-	ds_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid,
-		radius_subgrids, data_set_size, True)
+	ds_no_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, False)
+	ds_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = "model.h5"
 
@@ -98,8 +100,11 @@ if __name__ == "__main__":
 	tf.set_random_seed(seed) # Makes TensorFlow deterministic.
 
 	# Load the data set.
-	data_set = list(ds.read_data_set(ds_file_name))
-	data_set.extend(list(ds.read_data_set(ds_bm_file_name)))
+	data_set_gen = ds.read_data_set(ds_no_bm_file_name)
+	data_set = [next(data_set_gen) for i in range(num_no_bm_subgrids)]
+	
+	data_set_gen = ds.read_data_set(ds_bm_file_name)
+	data_set.extend([next(data_set_gen) for i in range(num_bm_subgrids)])
 	print("Data set loaded.")
 
 	# Format the data set.
