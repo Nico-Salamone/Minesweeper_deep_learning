@@ -92,8 +92,8 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 		'num_masked_tiles' - 1 others tiles will then be masked).
 	:mask_bomb_tiles: If True, then the tiles that contain a bomb will be masked.
 	:walls: A tuple of four integers. The first one for the thickness of the left wall, the second for the right wall,
-		the third for the top wall and the fourth the bottom wall. If None, then the thicknesses are computed (lower
-		performance).
+		the third for the top wall and the fourth the bottom wall. If None, then the thicknesses will be computed
+		(lower performance).
 	:return: A subgrid with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
 
