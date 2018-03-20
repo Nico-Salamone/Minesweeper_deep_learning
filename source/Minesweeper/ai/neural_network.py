@@ -53,7 +53,7 @@ def format_data_set(data_set, num_masked_subgrids):
 		mid_tile = subgrid[mid_tile_pos]
 		y_true_subgrid = 1 if (mid_tile == Tile.BOMB) else 0
 
-		masked_subgrids = generate_random_masks(subgrid, num_masked_subgrids, True)
+		masked_subgrids = generate_random_masks(subgrid, num_masked_subgrids, True, True)
 		formatted_data_set.extend([(msg, y_true_subgrid) for msg in masked_subgrids])
 
 	return formatted_data_set
@@ -87,7 +87,6 @@ if __name__ == "__main__":
 	num_bm_subgrids = int(ds.SIZE / 2)
 	num_subgrids = num_no_bm_subgrids + num_bm_subgrids
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-
 	num_masked_subgrids = 10
 
 	ds_no_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, False)
@@ -102,7 +101,7 @@ if __name__ == "__main__":
 	# Load the data set.
 	data_set_gen = ds.read_data_set(ds_no_bm_file_name)
 	data_set = [next(data_set_gen) for i in range(num_no_bm_subgrids)]
-	
+
 	data_set_gen = ds.read_data_set(ds_bm_file_name)
 	data_set.extend([next(data_set_gen) for i in range(num_bm_subgrids)])
 	print("Data set loaded.")

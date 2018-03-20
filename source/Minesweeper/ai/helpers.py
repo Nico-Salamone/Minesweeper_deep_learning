@@ -77,17 +77,20 @@ def compute_walls(grid):
 
 	return (left_wall, right_wall, top_wall, bottom_wall)
 
-def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, walls=None):
+def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask_bomb_tiles=False, walls=None):
 	"""
 	Generate a subgrid with a random mask with 'num_masked_tiles' masked tiles.
 	If 'num_masked_tiles' is greater than the number of "available" tiles (tiles that can be masked), then
 	'num_masked_tiles' is replaced by this number.
+	If 'mask_bomb_tile' is True and if the number of the bombs within 'subgrid' is greater than 'num_masked_tiles',
+	then only the tiles containing a bomb will be masked.
 	The wall tiles are not masked.
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
 	:num_masked_tiles: The number of tiles to mask.
 	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked (therefore
 		'num_masked_tiles' - 1 others tiles will then be masked).
+	:mask_bomb_tiles: If True, then the tiles that contain a bomb will be masked.
 	:walls: A tuple of four integers. The first one for the thickness of the left wall, the second for the right wall,
 		the third for the top wall and the fourth the bottom wall. If None, then the thicknesses are computed (lower
 		performance).
@@ -102,39 +105,52 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, wall
 	num_tiles = len(masked_subgrid)
 	edge_size = int(math.sqrt(num_tiles))
 	radius = int(edge_size / 2)
+	middle_tile_pos = int(num_tiles / 2)
 	left_wall, right_wall, top_wall, bottom_wall = compute_walls(masked_subgrid) if (walls == None) else walls
 
-	pos = get_positions(edge_size, edge_size, left_wall, right_wall, top_wall, bottom_wall)
+	pos_to_sample = get_positions(edge_size, edge_size, left_wall, right_wall, top_wall, bottom_wall)
+	pos_to_sample = {((i * edge_size) + j) for (i, j) in pos_to_sample}
 
 	masked_tile_pos = []
-	if mask_middle_tile:
-		middle_tile_pos = (radius, radius)
+	pos_to_remove = set()
 
-		pos.remove(middle_tile_pos)
+	if mask_middle_tile:
+		pos_to_remove.add(middle_tile_pos)
 		masked_tile_pos.append(middle_tile_pos)
 		num_masked_tiles -= 1
 
-	if num_masked_tiles > len(pos):
-		num_masked_tiles = len(pos)
+	if mask_bomb_tiles:
+		bomb_tile_pos = []
+		for i, tile in enumerate(subgrid):
+			if tile == Tile.BOMB:
+				if not((i == middle_tile_pos) and mask_middle_tile): # If not add above.
+					pos_to_remove.add(i)
+					masked_tile_pos.append(i)
+					num_masked_tiles -= 1
 
-	masked_tile_pos.extend(random.sample(pos, num_masked_tiles))
+	pos_to_sample = pos_to_sample - pos_to_remove
 
-	for i, j in masked_tile_pos:
-		k = (i * edge_size) + j
+	if num_masked_tiles < 0:
+		num_masked_tiles = 0
+	if num_masked_tiles > len(pos_to_sample):
+		num_masked_tiles = len(pos_to_sample)
 
-		masked_subgrid[k] = MaskedTile.MASKED.value
+	masked_tile_pos.extend(random.sample(pos_to_sample, num_masked_tiles))
+
+	for i in masked_tile_pos:
+		masked_subgrid[i] = MaskedTile.MASKED.value
 
 	return masked_subgrid
 
-def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False):
+def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, mask_bomb_tiles=False):
 	"""
 	Generate a list of subgrids with a random mask. For each one, between 1 and ('num_available_tiles' - 1) tiles are
 	masked, where 'num_available_tiles' is the number of "available" tiles (tiles that can be masked).
-	The wall tiles are not masked.
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
 	:num_masked_subgrids: The number of subgrids with a random mask to generate.
 	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked.
+	:mask_bomb_tiles: If True, then the tiles that contain a bomb will be masked.
 	:return: A list of subgrids with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
 
@@ -149,7 +165,8 @@ def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False):
 	subgrids = []
 	for i in range(num_masked_subgrids):
 		num_masked_tiles = random.randint(1, (num_available_tiles - 1))
-		subgrids.append(generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile, walls))
+		masked_grid = generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile, mask_bomb_tiles, walls)
+		subgrids.append(masked_grid)
 
 	return subgrids
 
@@ -226,7 +243,7 @@ if __name__ == "__main__":
 	print_grid(sg2)
 	print('')
 
-	msgs = generate_random_masks(sg2, 5, True)
+	msgs = generate_random_masks(sg2, 5, True, True)
 	for msg in msgs:
 		print_grid(msg)
 		print('')
