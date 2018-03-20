@@ -4,26 +4,28 @@ from ai.helpers import generate_random_masks
 
 from keras.models import Sequential
 from keras.layers import Dense
-from keras.optimizers import Adam
+import tensorflow as tf
 import math
 import random
 import numpy as np
 
-def create_model(num_tiles_subgrids):
+def create_model(num_tiles_subgrids, seed=None):
 	"""
 	Create and compile a model.
 
 	:num_tiles_subgrids: The number of tiles of subgrids.
+	:seed: A seed.
 	:return: The compiled model.
 	"""
 
 	model = Sequential()
 
-	model.add(Dense(300, activation='relu', kernel_initializer='uniform', input_dim=num_tiles_subgrids))
-	model.add(Dense(256, activation='relu', kernel_initializer='uniform'))
-	model.add(Dense(128, activation='relu', kernel_initializer='uniform'))
-	model.add(Dense(1, activation='sigmoid', kernel_initializer='uniform'))
+	model.add(Dense(300, activation='relu', kernel_initializer='random_uniform', input_dim=num_tiles_subgrids))
+	model.add(Dense(256, activation='relu', kernel_initializer='random_uniform'))
+	model.add(Dense(128, activation='relu', kernel_initializer='random_uniform'))
+	model.add(Dense(1, activation='sigmoid', kernel_initializer='random_uniform'))
 
+	#from keras.optimizers import Adam
 	#optimizer = Adam(lr=0.0001)
 	optimizer = 'rmsprop'
 	model.compile(loss='mean_squared_error', optimizer=optimizer, metrics=['mean_squared_error', 'mean_absolute_error',
@@ -81,18 +83,19 @@ if __name__ == "__main__":
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
-	data_set_size = 50000
+	data_set_size = 5000
 	num_masked_subgrids = 10
 
-	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid,
+	ds_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid,
 		radius_subgrids, data_set_size, False)
-	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid,
+	ds_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid,
 		radius_subgrids, data_set_size, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = "model.h5"
 
 	random.seed(seed)
-	np.random.seed(int(seed)) # Makes Tensorflow deterministic.
+	np.random.seed(int(seed)) # Makes Keras deterministic.
+	tf.set_random_seed(seed) # Makes TensorFlow deterministic.
 
 	# Load the data set.
 	data_set = list(ds.read_data_set(ds_file_name))
@@ -112,7 +115,7 @@ if __name__ == "__main__":
 	print("Inputs and real outputs extracted.")
 
 	# Create the model.
-	model = create_model(num_tiles_subgrids)
+	model = create_model(num_tiles_subgrids, seed)
 
 	# Train the model.
 	model.fit(x, y_true, epochs=1, batch_size=10)

@@ -163,9 +163,9 @@ if __name__ == "__main__":
 	data_set_size = 500
 	num_masked_subgrids = 20
 
-	ds_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid,
+	ds_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid,
 		radius_subgrids, data_set_size, False)
-	ds_bm_file_name = "data_sets/" + ds.data_set_file_name(num_rows_grid, num_columns_grid, num_bombs_grid,
+	ds_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid,
 		radius_subgrids, data_set_size, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = "model.h5"
@@ -191,6 +191,11 @@ if __name__ == "__main__":
 	# Evaluation.
 	y_pred = model.predict(x)
 	y_pred = [y_p[0] for y_p in y_pred]
+	
+	#mean = np.mean(y_pred)
+	#percentile = np.percentile(y_pred, (mean * 100))
+	#print("Mean: {}".format(mean))
+	#print("Percentile: {}".format(percentile))
 
 	error_func = lambda y_t, y_p: abs(y_t - y_p)
 	err = errors(y_true, y_pred, error_func)
