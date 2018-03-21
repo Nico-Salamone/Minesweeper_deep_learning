@@ -1,6 +1,6 @@
 import ai.data_set as ds
 from ai.neural_network import format_data_set, get_inputs_real_outputs
-from ai.helpers import print_grid
+from ai.helpers import count_num_masked_tiles, print_grid
 
 from keras.models import load_model
 import sklearn.metrics as skmet
@@ -46,7 +46,7 @@ def confusion_matrix(y_true, y_pred, pivot_value=0.5):
 	:y_true: The real outputs.
 	:y_pred: The outputs predicted by the neural network.
 	:pivot_value: The pivot value.
-	:return: The confusion matrix. This is a four-dimensional tuple. The first component is the number of true
+	:return: The confusion matrix. This is an array with four components. The first component is the number of true
 		negatives, the second is the number of the false positives, the third is the number of the false negatives and
 		the fourth is the number of the true positives.
 	"""
@@ -74,6 +74,74 @@ def accuracy_recall_specificity(conf_mat):
 	specificity = true_negatives / negatives
 
 	return accuracy, recall, specificity
+
+def x_confusion_matrix(x, y_true, y_pred, pivot_value=0.5):
+	"""
+	Distributes the inputs to the tiles of the confusion matrix.
+
+	:x: The inputs.
+	:y_true: The real outputs.
+	:y_pred: The outputs predicted by the neural network.
+	:pivot_value: The pivot value.
+	:return: The inputs distributed in the confusion matrix. This is an array with four components. The first component
+		contains the inputs lied in the true negative tile, the second component contains the inputs lied in the false
+		positive tile, the third component contains the inputs lied in the false negative tile and the fourth component
+		contains the inputs lied in the true positive tile.
+	"""
+	
+	round_y_pred = lambda y_p: 0 if (y_p <= pivot_value) else 1
+	y_pred_rounded = [round_y_pred(y_p) for y_p in y_pred]
+
+	true_negatives = []
+	false_positives = []
+	false_negatives = []
+	true_positives = []
+	for x_t, y_t, y_p in zip(x, y_true, y_pred_rounded):
+		if y_t == 1:
+			if y_p == 1:
+				# True positive.
+				
+				true_positives.append(x_t)
+			else: # 'y_p' = 0.
+				# False negative.
+				
+				false_negatives.append(x_t)
+		else: # 'y_t' = 0.
+			if y_p == 1:
+				# False positive.
+				
+				false_positives.append(x_t)
+			else: # 'y_p' = 0.
+				# True negative.
+				
+				true_negatives.append(x_t)
+
+	return true_negatives, false_positives, false_negatives, true_positives
+
+def num_masked_tiles_confusion_matrix(x, y_true, y_pred, pivot_value=0.5):
+	"""
+	Distributes the inputs to the tiles of the confusion matrix and compute for each tile of this matrix a list of the
+	numbers of masked tiles of subgrids lied in this tile.
+
+	:x: The inputs.
+	:y_true: The real outputs.
+	:y_pred: The outputs predicted by the neural network.
+	:pivot_value: The pivot value.
+	:return: A list of the numbers of masked tiles lied in each tile of the confusion matrix. This is an array with
+		four components. The first component contains a list of the numbers of masked tiles of subgrids lied in the
+		true negative tile, the second component contains a list of the numbers of masked tiles of subgrids lied in the
+		false positive tile, the third component contains a list of the numbers of masked tiles of subgrids lied in the
+		false negative tile and the fourth component contains a list of the numbers of masked tiles of subgrids lied in
+		the true positive tile.
+	"""
+
+	x_conf_mat = x_confusion_matrix(x, y_true, y_pred, pivot_value)
+
+	num_masked_tiles_conf_mat = []
+	for i, cf_tile in enumerate(x_conf_mat):
+		num_masked_tiles_conf_mat.append([count_num_masked_tiles(x_t) for x_t in x_conf_mat[i]])
+
+	return num_masked_tiles_conf_mat
 
 def errors(y_true, y_pred, error_func):
 	"""
@@ -221,13 +289,22 @@ if __name__ == "__main__":
 	print_loss_metric_functions(model, x, y_true)
 	print('')
 
-	conf_mat = confusion_matrix(y_true, y_pred, pivot_value(y_pred, 0.5))
-	true_negatives, false_positives, false_negatives, true_positives = conf_mat
+	pivot_value = pivot_value(y_pred, 0.5)
+	conf_mat = confusion_matrix(y_true, y_pred, pivot_value)
+	conf_mat_names = ["True positives", "False positives", "False negatives", "True negatives"]
 	accuracy, recall, specificity = accuracy_recall_specificity(conf_mat)
+	num_masked_tiles_conf_mat = num_masked_tiles_confusion_matrix(x, y_true, y_pred, pivot_value)
 	print("Confusion matrix, accuracy, recall and specificity:")
-	print("\tTrue positives: {}\n\tFalse positives: {}\n\tFalse negatives: {}\n\tTrue negatives: {}\n\t" \
-		"Accuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(true_positives, false_positives, false_negatives,
-		true_negatives, accuracy, recall, specificity))
+	for cf_name, cf_tile, ct_nmt_tile in zip(conf_mat_names, conf_mat, num_masked_tiles_conf_mat):
+		print("\t{}: {}\n\t\tNumber of masked tiles:\n\t\t\tMin: {}\n\t\t\tMax: {}\n\t\t\tPercentile 25: {}" \
+			"\n\t\t\tPercentile 50 (median): {:.3f}\n\t\t\tPercentile 75: {}\n\t\t\tMean: {}".format(cf_name, cf_tile,
+			min(ct_nmt_tile), max(ct_nmt_tile), np.percentile(ct_nmt_tile, 25), np.percentile(ct_nmt_tile[0], 50),
+			np.percentile(ct_nmt_tile, 75), np.mean(ct_nmt_tile)))
+	print("\tAccuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(accuracy, recall, specificity))
+	#print("\tTrue positives: {}\n\tFalse positives: {}\n\tFalse negatives: {}\n\tTrue negatives: {}\n\t" \
+	#	"Accuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(true_positives, false_positives, false_negatives,
+	#	true_negatives, accuracy, recall, specificity))
+
 
 	hist_perc = histogram_percentage(err, 10, (0.0, 1.0))
 	print_histogram_percentage(hist_perc)
