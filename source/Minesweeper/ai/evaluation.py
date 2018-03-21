@@ -297,7 +297,7 @@ if __name__ == "__main__":
 	print("Confusion matrix, accuracy, recall and specificity:")
 	for cf_name, cf_tile, ct_nmt_tile in zip(conf_mat_names, conf_mat, num_masked_tiles_conf_mat):
 		print("\t{}: {}\n\t\tNumber of masked tiles:\n\t\t\tMin: {}\n\t\t\tMax: {}\n\t\t\tPercentile 25: {}" \
-			"\n\t\t\tPercentile 50 (median): {:.3f}\n\t\t\tPercentile 75: {}\n\t\t\tMean: {}".format(cf_name, cf_tile,
+			"\n\t\t\tPercentile 50 (median): {}\n\t\t\tPercentile 75: {}\n\t\t\tMean: {:.3f}".format(cf_name, cf_tile,
 			min(ct_nmt_tile), max(ct_nmt_tile), np.percentile(ct_nmt_tile, 25), np.percentile(ct_nmt_tile[0], 50),
 			np.percentile(ct_nmt_tile, 75), np.mean(ct_nmt_tile)))
 	print("\tAccuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(accuracy, recall, specificity))
