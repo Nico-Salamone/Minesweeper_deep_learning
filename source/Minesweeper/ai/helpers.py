@@ -170,9 +170,9 @@ def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, 
 
 	return subgrids
 
-def compute_num_masked_tiles(subgrid):
+def count_num_masked_tiles(subgrid):
 	"""
-	Compute the number of masked tiles of a subgrid.
+	Count the number of masked tiles of a subgrid.
 
 	:sugrid: The subgrid (a list of tile values, that is an one-dimensional grid).
 	:return: The number of masked tiles of the subgrid.
@@ -184,6 +184,21 @@ def compute_num_masked_tiles(subgrid):
 			num_masked_tiles += 1
 
 	return num_masked_tiles
+
+def count_num_empty_tiles_not_masked(subgrid):
+	"""
+	Count the number of empty tiles that are not masked of a subgrid.
+
+	:sugrid: The subgrid (a list of tile values, that is an one-dimensional grid).
+	:return: The number of empty tiles that are not masked of the subgrid.
+	"""
+
+	num_empty_tiles_not_masked = 0
+	for tile in subgrid:
+		if tile == MaskedTile.EMPTY:
+			num_empty_tiles_not_masked += 1
+
+	return num_empty_tiles_not_masked
 
 def extract_subgrid(grid, i, j, radius):
 	"""
