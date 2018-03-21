@@ -9,12 +9,11 @@ import math
 import random
 import numpy as np
 
-def create_model(num_tiles_subgrids, seed=None):
+def create_model(num_tiles_subgrids):
 	"""
 	Create and compile a model.
 
 	:num_tiles_subgrids: The number of tiles of subgrids.
-	:seed: A seed.
 	:return: The compiled model.
 	"""
 
@@ -85,7 +84,6 @@ if __name__ == "__main__":
 	num_bombs_grid = 10
 	num_no_bm_subgrids = int(ds.SIZE / 2)
 	num_bm_subgrids = int(ds.SIZE / 2)
-	num_subgrids = num_no_bm_subgrids + num_bm_subgrids
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 10
 
@@ -119,7 +117,7 @@ if __name__ == "__main__":
 	print("Inputs and real outputs extracted.")
 
 	# Create the model.
-	model = create_model(num_tiles_subgrids, seed)
+	model = create_model(num_tiles_subgrids)
 
 	# Train the model.
 	model.fit(x, y_true, epochs=1, batch_size=10)

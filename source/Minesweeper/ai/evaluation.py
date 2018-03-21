@@ -246,7 +246,6 @@ if __name__ == "__main__":
 	num_bombs_grid = 10
 	num_no_bm_subgrids = int(ds.SIZE / 200)
 	num_bm_subgrids = int(ds.SIZE / 200)
-	num_subgrids = num_no_bm_subgrids + num_bm_subgrids
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 20
 
