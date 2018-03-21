@@ -22,7 +22,21 @@ def print_loss_metric_functions(model, x, y_true):
 	for i, ev in enumerate(evaluation):
 		print("\t{}: {:.3f}".format(model.metrics_names[i], ev))
 
-def confusion_matrix(y_true, y_pred, no_bm_subgrids_rate=None):
+def pivot_value(y_pred, no_bm_subgrids_rate):
+	"""
+	Compute the pivot value (used in the 'confusion_matrix' function). It is the value that separates 'y_pred' so that
+	'no_bm_subgrids_rate'% of 'y_pred' is lower than the pivot value (that is the percentile
+	'no_bm_subgrids_rate' * 100).
+
+	:y_pred: The outputs predicted by the neural network.
+	:no_bm_subgrids_rate: The rate (percentage) of subgrids whose the tile in the middfle does not contain a bomb of
+		the training set.
+	:return: The pivot value.
+	"""
+
+	return np.percentile(y_pred, (no_bm_subgrids_rate * 100))
+
+def confusion_matrix(y_true, y_pred, pivot_value=0.5):
 	"""
 	Compute the confusion matrix.
 
@@ -31,25 +45,11 @@ def confusion_matrix(y_true, y_pred, no_bm_subgrids_rate=None):
 
 	:y_true: The real outputs.
 	:y_pred: The outputs predicted by the neural network.
-	:no_bm_subgrids_rate: The rate (percentage) of subgrids whose the tile in the middfle does not contain a bomb of
-		the training set. If None, then this value will be computed (lower performance) assuming that the rate of the
-		training set is the same that the rate of test set (the rate is therefore computed from 'y_true').
+	:pivot_value: The pivot value.
 	:return: The confusion matrix. This is a four-dimensional tuple. The first component is the number of true
 		negatives, the second is the number of the false positives, the third is the number of the false negatives and
 		the fourth is the number of the true positives.
 	"""
-
-	if no_bm_subgrids_rate == None:
-		num_subgrids = len(y_true)
-
-		num_no_bm_subgrids = 0 # 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-		for y_t in y_true:
-			if y_t == 0:
-				num_no_bm_subgrids += 1
-
-		no_bm_subgrids_rate = num_no_bm_subgrids / num_subgrids
-
-	pivot_value = np.percentile(y_pred, (no_bm_subgrids_rate * 100))
 	
 	round_y_pred = lambda y_p: 0 if (y_p <= pivot_value) else 1
 	y_pred_rounded = [round_y_pred(y_p) for y_p in y_pred]
@@ -221,7 +221,7 @@ if __name__ == "__main__":
 	print_loss_metric_functions(model, x, y_true)
 	print('')
 
-	conf_mat = confusion_matrix(y_true, y_pred, 0.5)
+	conf_mat = confusion_matrix(y_true, y_pred, pivot_value(y_pred, 0.5))
 	true_negatives, false_positives, false_negatives, true_positives = conf_mat
 	accuracy, recall, specificity = accuracy_recall_specificity(conf_mat)
 	print("Confusion matrix, accuracy, recall and specificity:")
