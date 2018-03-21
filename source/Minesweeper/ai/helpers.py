@@ -170,6 +170,21 @@ def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, 
 
 	return subgrids
 
+def compute_num_masked_tiles(subgrid):
+	"""
+	Compute the number of masked tiles of a subgrid.
+
+	:sugrid: The subgrid (a list of tile values, that is an one-dimensional grid).
+	:return: The number of masked tiles of the subgrid.
+	"""
+
+	num_masked_tiles = 0
+	for tile in subgrid:
+		if tile == MaskedTile.MASKED:
+			num_masked_tiles += 1
+
+	return num_masked_tiles
+
 def extract_subgrid(grid, i, j, radius):
 	"""
 	Extrat a subgrid from a grid and a position. The tile at this position is the center of the subgrid.
@@ -229,6 +244,7 @@ if __name__ == "__main__":
 	sg = extract_subgrid(g, 4, 4, radius)
 	sg2 = to_value_list(sg)
 	print(sg2)
+	print(compute_num_masked_tiles(sg2))
 	print_grid(sg2)
 
 
