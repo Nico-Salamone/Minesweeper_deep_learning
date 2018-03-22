@@ -6,7 +6,7 @@ import csv
 
 # There are two data sets. The first one contains subgrids whose the middle tile contain a bomb while the second one
 # contains subgrids whose the middle tile does not contain a bomb. They both have a size of 'SIZE'.
-SIZE = 100000 # Size of one data set.
+SIZE = 1000000 # Size of one data set.
 
 def generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid, size,
 	seed=None):

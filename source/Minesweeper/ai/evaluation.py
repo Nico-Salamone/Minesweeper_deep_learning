@@ -291,7 +291,7 @@ if __name__ == "__main__":
 
 	pivot = pivot_value(y_pred, 0.5)
 	conf_mat = confusion_matrix(y_true, y_pred, pivot)
-	conf_mat_names = ["True positives", "False positives", "False negatives", "True negatives"]
+	conf_mat_names = ["True negatives", "False positives", "False negatives", "True positives"]
 	accuracy, recall, specificity = accuracy_recall_specificity(conf_mat)
 	num_masked_tiles_conf_mat = num_masked_tiles_confusion_matrix(x, y_true, y_pred, pivot)
 	print("Confusion matrix, accuracy, recall and specificity:")
