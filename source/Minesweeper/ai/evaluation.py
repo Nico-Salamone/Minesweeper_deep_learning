@@ -25,12 +25,13 @@ def print_loss_metric_functions(model, x, y_true):
 def pivot_value(y_pred, no_bm_subgrids_rate):
 	"""
 	Compute the pivot value (used in the 'confusion_matrix' function). It is the value that separates 'y_pred' so that
-	'no_bm_subgrids_rate'% of 'y_pred' is lower than the pivot value (that is the percentile
-	'no_bm_subgrids_rate' * 100).
+	'no_bm_subgrids_rate' of 'y_pred' is lower than the pivot value (that is the percentile
+	'no_bm_subgrids_rate' * 100). These 'y_pred' are predictions that we consider to be subgrids where the middle tile
+	does not contain a bomb.
 
 	:y_pred: The outputs predicted by the neural network.
-	:no_bm_subgrids_rate: The rate (percentage) of subgrids whose the tile in the middfle does not contain a bomb of
-		the training set.
+	:no_bm_subgrids_rate: The rate (percentage, ratio) of subgrids whose the tile in the middfle does not contain a
+		bomb of the training set.
 	:return: The pivot value.
 	"""
 
@@ -244,8 +245,8 @@ if __name__ == "__main__":
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
-	num_no_bm_subgrids = int(ds.SIZE / 200)
-	num_bm_subgrids = int(ds.SIZE / 200)
+	num_no_bm_subgrids = 500
+	num_bm_subgrids = 500
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 20
 
@@ -288,11 +289,11 @@ if __name__ == "__main__":
 	print_loss_metric_functions(model, x, y_true)
 	print('')
 
-	pivot_value = pivot_value(y_pred, 0.5)
-	conf_mat = confusion_matrix(y_true, y_pred, pivot_value)
+	pivot = pivot_value(y_pred, 0.5)
+	conf_mat = confusion_matrix(y_true, y_pred, pivot)
 	conf_mat_names = ["True positives", "False positives", "False negatives", "True negatives"]
 	accuracy, recall, specificity = accuracy_recall_specificity(conf_mat)
-	num_masked_tiles_conf_mat = num_masked_tiles_confusion_matrix(x, y_true, y_pred, pivot_value)
+	num_masked_tiles_conf_mat = num_masked_tiles_confusion_matrix(x, y_true, y_pred, pivot)
 	print("Confusion matrix, accuracy, recall and specificity:")
 	for cf_name, cf_tile, ct_nmt_tile in zip(conf_mat_names, conf_mat, num_masked_tiles_conf_mat):
 		print("\t{}: {}\n\t\tNumber of masked tiles:\n\t\t\tMin: {}\n\t\t\tMax: {}\n\t\t\tPercentile 25: {}" \
@@ -300,10 +301,6 @@ if __name__ == "__main__":
 			min(ct_nmt_tile), max(ct_nmt_tile), np.percentile(ct_nmt_tile, 25), np.percentile(ct_nmt_tile, 50),
 			np.percentile(ct_nmt_tile, 75), np.mean(ct_nmt_tile)))
 	print("\tAccuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(accuracy, recall, specificity))
-	#print("\tTrue positives: {}\n\tFalse positives: {}\n\tFalse negatives: {}\n\tTrue negatives: {}\n\t" \
-	#	"Accuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(true_positives, false_positives, false_negatives,
-	#	true_negatives, accuracy, recall, specificity))
-
 
 	hist_perc = histogram_percentage(err, 10, (0.0, 1.0))
 	print_histogram_percentage(hist_perc)
