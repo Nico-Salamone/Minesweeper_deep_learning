@@ -66,8 +66,8 @@ def get_inputs_real_outputs(data_set):
 	"""
 
 	data_set_trans = np.transpose(data_set)
-	x = data_set_trans[0]
-	y_true = data_set_trans[1]
+	x = list(data_set_trans[0])
+	y_true = list(data_set_trans[1])
 
 	return x, y_true
 
