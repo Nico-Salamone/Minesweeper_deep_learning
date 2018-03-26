@@ -65,11 +65,9 @@ def get_inputs_real_outputs(data_set):
 	:return: The inputs and the real outputs of the neural network ('x' and 'y_true').
 	"""
 
-	x = []
-	y_true = []
-	for masked_subgrid, y_true_subgrid in data_set:
-		x.append(masked_subgrid)
-		y_true.append(y_true_subgrid)
+	data_set_trans = np.transpose(data_set)
+	x = data_set_trans[0]
+	y_true = data_set_trans[1]
 
 	return x, y_true
 
