@@ -30,6 +30,9 @@ class Tile(IntEnum):
 		
 		return super().__eq__(other)
 
+	def __hash__(self):
+		return hash(self.value)
+
 class Grid:
 	"""
 	Grid of a minesweeper game with walls.
@@ -177,6 +180,12 @@ class Grid:
 			str_grid.append('\n')
 
 		return ''.join(str_grid)
+
+	def __eq__(self, other):
+		return self._grid == other._grid
+
+	def __hash__(self):
+		return hash(tuple(map(tuple, self._grid)))
 
 	def tile_at(self, i, j):
 		"""

@@ -24,6 +24,9 @@ class MaskedTile(IntEnum):
 		
 		return Tile(self.value) == other
 
+	def __hash__(self):
+		return hash(self.value)
+
 assert MaskedTile.MASKED not in Tile.__members__.values()
 
 class MaskedGrid(Grid):
@@ -87,6 +90,12 @@ class MaskedGrid(Grid):
 	
 	def __str__(self):
 		return super().__str__()
+
+	def __eq__(self, other):
+		return self.grid == other.grid
+
+	def __hash__(self):
+		return hash(tuple(map(tuple, self.grid)))
 
 	def tile_at(self, i, j):
 		"""
