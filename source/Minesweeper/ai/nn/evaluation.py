@@ -245,10 +245,10 @@ if __name__ == "__main__":
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
-	num_no_bm_subgrids = 500
-	num_bm_subgrids = 500
+	num_no_bm_subgrids = 5000
+	num_bm_subgrids = 5000
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-	num_masked_subgrids = 20
+	num_masked_subgrids = 10
 
 	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, False)
 	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, True)
@@ -295,6 +295,7 @@ if __name__ == "__main__":
 	accuracy, recall, specificity = accuracy_recall_specificity(conf_mat)
 	num_masked_tiles_conf_mat = num_masked_tiles_confusion_matrix(x, y_true, y_pred, pivot)
 	print("Confusion matrix, accuracy, recall and specificity:")
+	print("\tPivot: {}".format(pivot))
 	for cf_name, cf_tile, ct_nmt_tile in zip(conf_mat_names, conf_mat, num_masked_tiles_conf_mat):
 		print("\t{}: {}\n\t\tNumber of masked tiles:\n\t\t\tMin: {}\n\t\t\tMax: {}\n\t\t\tPercentile 25: {}" \
 			"\n\t\t\tPercentile 50 (median): {}\n\t\t\tPercentile 75: {}\n\t\t\tMean: {:.3f}".format(cf_name, cf_tile,

@@ -80,8 +80,8 @@ if __name__ == "__main__":
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
-	num_no_bm_subgrids = 50000
-	num_bm_subgrids = 50000
+	num_no_bm_subgrids = 500000
+	num_bm_subgrids = 500000
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 10
 
