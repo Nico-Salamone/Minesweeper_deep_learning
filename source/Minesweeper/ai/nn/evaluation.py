@@ -1,6 +1,6 @@
 import ai.nn.data_set as ds
 from ai.nn.neural_network import format_data_set, get_inputs_real_outputs
-from ai.helpers import count_num_masked_tiles, print_grid
+from ai.helpers import count_num_masked_tiles, print_grid, data_set_file_path, model_file_path
 
 from keras.models import load_model
 import sklearn.metrics as skmet
@@ -250,10 +250,10 @@ if __name__ == "__main__":
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 20
 
-	ds_no_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, False)
-	ds_bm_file_name = ds.data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, True)
+	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, False)
+	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-	model_file_name = "model.h5"
+	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids)
 
 	random.seed(seed)
 

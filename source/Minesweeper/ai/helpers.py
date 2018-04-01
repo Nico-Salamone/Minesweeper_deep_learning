@@ -247,6 +247,42 @@ def print_grid(grid):
 		if (i > 0) and ((i + 1) % edge_size == 0):
 			print('')
 
+def data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, bomb_middle_tile,
+	without_duplicates=False, folder_path="ai/nn/data_sets/"):
+	"""
+	Get the path of the data set folling parameters.
+
+	:num_rows_grid: The number of rows of the original grid.
+	:num_columns_grid: The number of columns of the original grid.
+	:num_bombs_grid: The number of bombs of the grid.
+	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:bomb_middle_tile: If True, then the tile in the middle of the subgrids contains a bomb. If False, then this tile
+		does not contain a bomb.
+	:without_duplicates: If True, then the data set is without duplicates. If False, then it is with duplicates.
+	:folder_path: The path of the folder including the file.
+	:return: The path of the data set.
+	"""
+
+	without_duplicates_str = "_wod" if without_duplicates else ""
+
+	return folder_path + "data_set_{}ro_{}c_{}b_{}ra_{}bm{}.csv".format(num_rows_grid, num_columns_grid, num_bombs_grid,
+		radius_subgrids, bomb_middle_tile, without_duplicates_str)
+
+def model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, folder_path="ai/nn/models/"):
+	"""
+	Get the path of the model folling parameters.
+
+	:num_rows_grid: The number of rows of the original grid.
+	:num_columns_grid: The number of columns of the original grid.
+	:num_bombs_grid: The number of bombs of the grid.
+	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:folder_path: The path of the folder including the file.
+	:return: The path of the model.
+	"""
+
+	return folder_path + "data_set_{}ro_{}c_{}b_{}ra.h5".format(num_rows_grid, num_columns_grid, num_bombs_grid,
+		radius_subgrids)
+
 if __name__ == "__main__":
 	from minesweeper.masked_grid import MaskedGrid
 	bomb_position_list = [(5, 4), (4, 2), (2, 1), (4, 4)]
