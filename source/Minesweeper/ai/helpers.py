@@ -200,29 +200,32 @@ def count_num_empty_tiles_not_masked(subgrid):
 
 	return num_empty_tiles_not_masked
 
-def extract_subgrid(grid, i, j, radius):
+def extract_subgrid(grid, i, j, subgrid_radius):
 	"""
 	Extrat a subgrid from a grid and a position. The tile at this position is the center of the subgrid.
 
-	:grid: The grid.
+	:grid: The grid (a list of lists of tiles).
 	:i: The index of the row of the position.
 	:j: The index of the columns of the position.
-	:radius: The radius of the subgrid. For example, with a radius of 2, this function will return a 5 by 5 subgrid.
-	:return: The subgrid (a list of lists of tiles).
+	:subgrid_radius: The radius of the subgrid. For example, with a radius of 2, this function will return a 5 by 5
+		subgrid.
+	:return: The subgrid (a list of lists of tiles, that is an two-dimensional grid).
 	"""
 
-	num_rows = 1 + (2 * radius)
+	num_rows = 1 + (2 * subgrid_radius)
 	num_columns = num_rows
 
 	subgrid = [[MaskedTile.WALL for j in range(num_columns)] for i in range(num_rows)]
-	i_min = i - radius
-	j_min = j - radius
+	i_min = i - subgrid_radius
+	j_min = j - subgrid_radius
 	for i_subgrid in range(num_rows):
 		for j_subgrid in range(num_columns):
 			i_grid = i_min + i_subgrid
 			j_grid = j_min + j_subgrid
-			if grid.within_boundaries(i_grid, j_grid):
-				subgrid[i_subgrid][j_subgrid] = grid.tile_at(i_grid, j_grid)
+			try:
+				subgrid[i_subgrid][j_subgrid] = grid[i_grid][j_grid]
+			except IndexError:
+				pass
 
 	return subgrid
 
@@ -247,7 +250,7 @@ def print_grid(grid):
 		if (i > 0) and ((i + 1) % edge_size == 0):
 			print('')
 
-def data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, bomb_middle_tile,
+def data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, bomb_middle_tile,
 	without_duplicates=False, folder_path="ai/nn/data_sets/"):
 	"""
 	Get the path of the data set folling parameters.
@@ -255,7 +258,7 @@ def data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_s
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the grid.
-	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:subgrid_radius: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:bomb_middle_tile: If True, then the tile in the middle of the subgrids contains a bomb. If False, then this tile
 		does not contain a bomb.
 	:without_duplicates: If True, then the data set is without duplicates. If False, then it is with duplicates.
@@ -266,22 +269,22 @@ def data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_s
 	without_duplicates_str = "_wod" if without_duplicates else ""
 
 	return folder_path + "data_set_{}ro_{}c_{}b_{}ra_{}bm{}.csv".format(num_rows_grid, num_columns_grid, num_bombs_grid,
-		radius_subgrids, bomb_middle_tile, without_duplicates_str)
+		subgrid_radius, bomb_middle_tile, without_duplicates_str)
 
-def model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, folder_path="ai/nn/models/"):
+def model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, folder_path="ai/nn/models/"):
 	"""
 	Get the path of the model folling parameters.
 
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the grid.
-	:radius_subgrids: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:subgrid_radius: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:folder_path: The path of the folder including the file.
 	:return: The path of the model.
 	"""
 
 	return folder_path + "data_set_{}ro_{}c_{}b_{}ra.h5".format(num_rows_grid, num_columns_grid, num_bombs_grid,
-		radius_subgrids)
+		subgrid_radius)
 
 if __name__ == "__main__":
 	from minesweeper.masked_grid import MaskedGrid
@@ -292,10 +295,10 @@ if __name__ == "__main__":
 	print(g)
 
 	radius = 2
-	sg = extract_subgrid(g, 4, 4, radius)
+	sg = extract_subgrid(g.grid, 4, 4, radius)
 	sg2 = to_value_list(sg)
 	print(sg2)
-	print(compute_num_masked_tiles(sg2))
+	print(count_num_masked_tiles(sg2))
 	print_grid(sg2)
 
 

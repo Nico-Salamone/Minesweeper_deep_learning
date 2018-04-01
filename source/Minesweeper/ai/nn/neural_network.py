@@ -74,21 +74,21 @@ def get_inputs_real_outputs(data_set):
 if __name__ == "__main__":
 	seed = 42
 
-	radius_subgrids = 2
-	edge_size_subgrids = (radius_subgrids * 2) + 1
+	subgrid_radius = 2
+	edge_size_subgrids = (subgrid_radius * 2) + 1
 	num_tiles_subgrids = edge_size_subgrids ** 2
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
-	num_no_bm_subgrids = 500000
-	num_bm_subgrids = 500000
+	num_no_bm_subgrids = 50000
+	num_bm_subgrids = 50000
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 10
 
-	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, False)
-	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, True)
+	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, False)
+	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids)
+	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
 
 	random.seed(seed)
 	np.random.seed(int(seed)) # Makes Keras deterministic.

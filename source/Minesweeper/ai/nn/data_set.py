@@ -8,12 +8,12 @@ import csv
 # contains subgrids whose the middle tile does not contain a bomb. They both have a size of 'SIZE'.
 SIZE = 1000000 # Size of one data set.
 
-def generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid, size,
+def generate_data_set(subgrid_radius, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid, size,
 	seed=None):
 	"""
 	Generate a random data set of subgrids.
 
-	:radius_subgrids: The radius of the subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:subgrid_radius: The radius of the subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile
 	will not contain a bomb.
 	:num_rows_grid: The number of rows of the original grid.
@@ -26,15 +26,15 @@ def generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_colu
 
 	random.seed(seed)
 
-	return (generate_subgrid(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid)
+	return (generate_subgrid(subgrid_radius, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid)
 		for i in range(size))
 
-def generate_data_set_without_duplicates(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid,
+def generate_data_set_without_duplicates(subgrid_radius, bomb_middle_tile, num_rows_grid, num_columns_grid,
 	num_bombs_grid, size, seed=None, verbose=True):
 	"""
 	Generate a random data set of subgrids without duplicates.
 
-	:radius_subgrids: The radius of the subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:subgrid_radius: The radius of the subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile
 	will not contain a bomb.
 	:num_rows_grid: The number of rows of the original grid.
@@ -55,7 +55,7 @@ def generate_data_set_without_duplicates(radius_subgrids, bomb_middle_tile, num_
 
 	data_set = set()
 	while len(data_set) < size:
-		data_set.add(generate_subgrid(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid,
+		data_set.add(generate_subgrid(subgrid_radius, bomb_middle_tile, num_rows_grid, num_columns_grid,
 			num_bombs_grid))
 
 		if verbose:
@@ -99,7 +99,7 @@ def read_data_set(file_name):
 if __name__ == "__main__":
 	seed = 42
 
-	radius_subgrids = 2
+	subgrid_radius = 2
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
@@ -109,18 +109,18 @@ if __name__ == "__main__":
 	for bomb_middle_tile in bomb_middle_tile_list:
 		#"""
 		# With duplicates.
-		file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
+		file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
 			bomb_middle_tile)
-		data_set = generate_data_set(radius_subgrids, bomb_middle_tile, num_rows_grid, num_columns_grid,
-			num_bombs_grid, data_set_size, seed)
+		data_set = generate_data_set(subgrid_radius, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid,
+			data_set_size, seed)
 		#"""
 
 		"""
 		# Without duplicates.
-		file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids,
+		file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
 			bomb_middle_tile, True) # Without duplicates.
 		
-		data_set = generate_data_set_without_duplicates(radius_subgrids, bomb_middle_tile, num_rows_grid,
+		data_set = generate_data_set_without_duplicates(subgrid_radius, bomb_middle_tile, num_rows_grid,
 			num_columns_grid, num_bombs_grid, data_set_size, seed, True)
 		"""
 

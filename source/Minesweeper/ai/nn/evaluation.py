@@ -241,7 +241,7 @@ def print_x_y_true_y_pred_err(x, y_true, y_pred, err=None):
 if __name__ == "__main__":
 	seed = 42
 
-	radius_subgrids = 2
+	subgrid_radius = 2
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
@@ -250,10 +250,10 @@ if __name__ == "__main__":
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 10
 
-	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, False)
-	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids, True)
+	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, False)
+	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, radius_subgrids)
+	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
 
 	random.seed(seed)
 

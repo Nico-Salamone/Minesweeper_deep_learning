@@ -19,12 +19,12 @@ def generate_masked_grid(num_rows, num_columns, num_bombs):
 
 	return MaskedGrid(num_rows, num_columns, bomb_position_list)
 
-def generate_subgrid(radius_subgrid, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid):
+def generate_subgrid(subgrid_radius, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid):
 	"""
 	Generate a random subgrid. This function generates a "good" number of bombs and the "good" thickness of walls
 	("good" for realistic).
 
-	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:subgrid_radius: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:bomb_middle_tile: If True, then the tile in the middle of the grid will contain a bomb. If False, then this tile
 		will not contain a bomb.
 	:num_rows_grid: The number of rows of the original grid.
@@ -36,11 +36,11 @@ def generate_subgrid(radius_subgrid, bomb_middle_tile, num_rows_grid, num_column
 	# This funtion generates a (('num_rows_subgrid' + 2) x ('num_columns_subgrid' + 2)) subgrid ('larger_subgrid') and
 	# extract then the ('num_rows_subgrid' x 'num_columns_subgrid') subgrid ('subgrid').
 
-	num_rows_sg = 1 + (2 * radius_subgrid) # 'sg' for subgrid.
+	num_rows_sg = 1 + (2 * subgrid_radius) # 'sg' for subgrid.
 	num_columns_sg = num_rows_sg
 
 	# Larger subgrid.
-	radius_lg_sg = radius_subgrid + 1 # 'lg_sg' for larger subgrid.
+	radius_lg_sg = subgrid_radius + 1 # 'lg_sg' for larger subgrid.
 	num_rows_lg_sg = num_rows_sg + 2
 	num_columns_lg_sg = num_columns_sg + 2
 
@@ -101,11 +101,11 @@ def generate_subgrid(radius_subgrid, bomb_middle_tile, num_rows_grid, num_column
 
 	return subgrid
 
-def _compute_wall_thickness_subgrid(radius_subgrid, num_rows_grid, num_columns_grid):
+def _compute_wall_thickness_subgrid(subgrid_radius, num_rows_grid, num_columns_grid):
 	"""
 	Compute a random thickness of walls for the subgrids.
 
-	:radius_subgrid: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:subgrid_radius: The radius of the subgrid. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:return: A random thickness of the left, right, top and bottom walls.
@@ -116,22 +116,22 @@ def _compute_wall_thickness_subgrid(radius_subgrid, num_rows_grid, num_columns_g
 	top_wall = 0
 	bottom_wall = 0
 
-	prob_left_wall = radius_subgrid / num_columns_grid # Probability that there is a left wall.
+	prob_left_wall = subgrid_radius / num_columns_grid # Probability that there is a left wall.
 	prob_right_wall = prob_left_wall # Probability that there is a right wall.
-	prob_top_wall = radius_subgrid / num_rows_grid # Probability that there is a top wall.
+	prob_top_wall = subgrid_radius / num_rows_grid # Probability that there is a top wall.
 	prob_bottom_wall = prob_top_wall # Probability that there is a bottom wall.
 
 	random_num = random.random()
 	if random_num < prob_left_wall:
-		left_wall = random.randint(1, radius_subgrid)
+		left_wall = random.randint(1, subgrid_radius)
 	elif random_num < (prob_left_wall + prob_right_wall):
-		right_wall = random.randint(1, radius_subgrid)
+		right_wall = random.randint(1, subgrid_radius)
 
 	random_num = random.random()
 	if random_num < prob_top_wall:
-		top_wall = random.randint(1, radius_subgrid)
+		top_wall = random.randint(1, subgrid_radius)
 	elif random_num < (prob_top_wall + prob_bottom_wall):
-		bottom_wall = random.randint(1, radius_subgrid)
+		bottom_wall = random.randint(1, subgrid_radius)
 
 	return (left_wall, right_wall, top_wall, bottom_wall)
 

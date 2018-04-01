@@ -200,13 +200,13 @@ class Grid:
 
 		return self._grid[i][j]
 
-	def within_boundaries(self, i, j, include_walls = False):
+	def within_boundaries(self, i, j, include_walls=False):
 		"""
 		Test if a position is within the boundaries.
 
 		:i: The index of the row of the position.
 		:j: The index of the column of the position.
-		:include_walls: True if the walls are included, False otherwise.
+		:include_walls: True if the walls are included in the boundaries, False otherwise.
 		:return: True if the position is within the boundaries, False otherwise.
 		"""
 
