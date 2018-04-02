@@ -84,9 +84,9 @@ class Minesweeper:
 		return self._score
 
 	@property
-	def highest_possible_score(self):
+	def max_score(self):
 		"""
-		Highest possible score for this game.
+		Max score (highest possible score for this game).
 		"""
 
 		return (self.num_rows * self.num_columns) - self.num_bombs

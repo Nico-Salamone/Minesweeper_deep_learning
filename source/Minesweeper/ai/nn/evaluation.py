@@ -297,10 +297,10 @@ if __name__ == "__main__":
 	print("Confusion matrix, accuracy, recall and specificity:")
 	print("\tPivot: {}".format(pivot))
 	for cf_name, cf_tile, ct_nmt_tile in zip(conf_mat_names, conf_mat, num_masked_tiles_conf_mat):
-		print("\t{}: {}\n\t\tNumber of masked tiles:\n\t\t\tMin: {}\n\t\t\tMax: {}\n\t\t\tPercentile 25: {}" \
-			"\n\t\t\tPercentile 50 (median): {}\n\t\t\tPercentile 75: {}\n\t\t\tMean: {:.3f}".format(cf_name, cf_tile,
-			min(ct_nmt_tile), max(ct_nmt_tile), np.percentile(ct_nmt_tile, 25), np.percentile(ct_nmt_tile, 50),
-			np.percentile(ct_nmt_tile, 75), np.mean(ct_nmt_tile)))
+		print("\t{}: {}\n\t\tNumber of masked tiles:\n\t\t\tMin: {}\n\t\t\tMax: {}\n\t\t\tMean: {:.3f}" \
+			"\n\t\t\tPercentile 25: {}\n\t\t\tPercentile 50 (median): {}\n\t\t\tPercentile 75: {}".format(cf_name,
+				cf_tile, min(ct_nmt_tile), max(ct_nmt_tile), np.mean(ct_nmt_tile), np.percentile(ct_nmt_tile, 25),
+				np.percentile(ct_nmt_tile, 50), np.percentile(ct_nmt_tile, 75)))
 	print("\tAccuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(accuracy, recall, specificity))
 
 	hist_perc = histogram_percentage(err, 10, (0.0, 1.0))
