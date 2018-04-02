@@ -8,22 +8,23 @@ class AI():
 	Artificial intelligence.
 	"""
 
-	def __init__(self, model):
+	def __init__(self, model, subgrid_radius=2):
 		"""
 		Create an artificial intelligence.
 
 		:model: A model.
+		:subgrid_radius: The radius of subgrids with whom the neural network has trained.
 		"""
 
 		self.model = model
+		self.subgrid_radius = subgrid_radius
 
-	def best_tile_pos(self, grid, subgrid_radius=2):
+	def best_tile_pos(self, grid):
 		"""
 		Get the position of the "best" tile, that is the best position to play from the point of view of artificial
 		intelligence.
 
 		:grid: The grid (a list of lists of tile values, that is an two-dimensional grid).
-		:subgrid_radius: The radius of subgrids.
 		:return: The position of the "best" tile.
 		"""
 
@@ -32,7 +33,7 @@ class AI():
 		for i, row in enumerate(grid):
 			for j, tile in enumerate(row):
 				if tile == MaskedTile.MASKED:
-					subgrid = extract_subgrid(grid, i, j, subgrid_radius)
+					subgrid = extract_subgrid(grid, i, j, self.subgrid_radius)
 					y_pred = self.model.predict(np.array([to_value_list(subgrid)]))
 					y_pred = y_pred[0][0]
 
@@ -61,13 +62,13 @@ if __name__ == "__main__":
 	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
 	model = load_model(model_file_name)
 
-	ai = AI(model)
+	ai = AI(model, subgrid_radius)
 
 	ms = Minesweeper(num_rows_grid, num_columns_grid, num_bombs_grid)
 	print(ms)
 
 	while ms.state == State.CONTINUE:
-		pos = ai.best_tile_pos(ms.grid, subgrid_radius)
+		pos = ai.best_tile_pos(ms.grid)
 		ms.play_tile(pos[0], pos[1])
 
 		print(ms, "\n\n")
