@@ -49,11 +49,13 @@ if __name__ == "__main__":
 
 	random.seed(42)
 
-	num_games = 1000
 	num_rows_grid = 10
 	num_columns_grid = 10
 	num_bombs_grid = 10
 	subgrid_radius = 2
+
+	num_games = 1000
+	max_score = (num_rows_grid * num_columns_grid) - num_bombs_grid
 
 	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
 	model = load_model(model_file_name)
@@ -61,7 +63,10 @@ if __name__ == "__main__":
 	ai = AI(model, subgrid_radius)
 
 	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid, first_round_random=True)
+	num_win_games = score_list.count(max_score)
 
+	print("Number of games: {}\nNumber of games won: {}\nWin rate: {:.3f}".format(num_games, num_win_games,
+		(num_win_games / num_games)))
 	print("Min: {}\nMax: {}\nMean: {:.3f}\nPercentile 25: {}\nPercentile 50 (median): {}\nPercentile 75: {}".format(
 		min(score_list), max(score_list), np.mean(score_list), np.percentile(score_list, 25),
 		np.percentile(score_list, 50), np.percentile(score_list, 75)))
