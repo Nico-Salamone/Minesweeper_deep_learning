@@ -69,8 +69,9 @@ if __name__ == "__main__":
 
 	while ms.state == State.CONTINUE:
 		pos = ai.best_tile_pos(ms.grid)
-		ms.play_tile(pos[0], pos[1])
+		print("Position: {}".format(pos))
 
+		ms.play_tile(pos[0], pos[1])
 		print(ms, "\n\n")
 
 		input("Press Enter to continue...")
