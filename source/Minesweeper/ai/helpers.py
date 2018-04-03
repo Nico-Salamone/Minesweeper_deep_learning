@@ -222,10 +222,9 @@ def extract_subgrid(grid, i, j, subgrid_radius):
 		for j_subgrid in range(num_columns):
 			i_grid = i_min + i_subgrid
 			j_grid = j_min + j_subgrid
-			try:
+			
+			if (0 <= i_grid < len(grid)) and (0 <= j_grid < len(grid[0])):
 				subgrid[i_subgrid][j_subgrid] = grid[i_grid][j_grid]
-			except IndexError:
-				pass
 
 	return subgrid
 
