@@ -63,10 +63,18 @@ if __name__ == "__main__":
 	ai = AI(model, subgrid_radius)
 
 	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid, first_round_random=True)
+	bad_score_list = (filter(lambda score: score < max_score, score_list)) # Scores below the maximum score.
 	num_win_games = score_list.count(max_score)
 
-	print("Number of games: {}\nNumber of games won: {}\nWin rate: {:.3f}".format(num_games, num_win_games,
+	print("Number of games: {}\nNumber of games won: {}\nWin rate: {:.3f}\n".format(num_games, num_win_games,
 		(num_win_games / num_games)))
-	print("Min: {}\nMax: {}\nMean: {:.3f}\nPercentile 25: {}\nPercentile 50 (median): {}\nPercentile 75: {}".format(
+
+	print("Distribution of all scores:")
+	print("Min: {}\nMax: {}\nMean: {:.3f}\nPercentile 25: {}\nPercentile 50 (median): {}\nPercentile 75: {}\n".format(
 		min(score_list), max(score_list), np.mean(score_list), np.percentile(score_list, 25),
 		np.percentile(score_list, 50), np.percentile(score_list, 75)))
+
+	print("Distribution of scores below the maximum score (scores of losing games):")
+	print("Min: {}\nMax: {}\nMean: {:.3f}\nPercentile 25: {}\nPercentile 50 (median): {}\nPercentile 75: {}".format(
+		min(bad_score_list), max(bad_score_list), np.mean(bad_score_list), np.percentile(bad_score_list, 25),
+		np.percentile(bad_score_list, 50), np.percentile(bad_score_list, 75)))
