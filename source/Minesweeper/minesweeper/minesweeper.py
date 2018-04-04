@@ -135,15 +135,16 @@ class Minesweeper:
 
 		played_tiles = self._grid.unmask_tile(i, j)
 
-		# Updating of the score.
-		new_num_masked_tiles = self.num_masked_tiles
-		self._score += (old_num_masked_tiles - new_num_masked_tiles)
-
 		# Updating of the state.
 		if self.tile_at(i, j) == MaskedTile.BOMB:
 			self._state = State.LOSS
 		elif (self.num_masked_tiles - self.num_bombs) == 0:
 			self._state = State.WIN
+
+		# Updating of the score.
+		if self._state != State.LOSS:
+			new_num_masked_tiles = self.num_masked_tiles
+			self._score += (old_num_masked_tiles - new_num_masked_tiles)
 
 		return played_tiles
 
