@@ -27,18 +27,16 @@ class AI():
 		:grid: The grid (a list of lists of tile values, that is an two-dimensional grid).
 		:return: The position of the "best" tile.
 		"""
-
+		
+		subgrids = []
 		pos_list = []
-		y_pred_list = []
 		for i, row in enumerate(grid):
 			for j, tile in enumerate(row):
 				if tile == MaskedTile.MASKED:
-					subgrid = extract_subgrid(grid, i, j, self.subgrid_radius)
-					y_pred = self.model.predict(np.array([to_value_list(subgrid)]))
-					y_pred = y_pred[0][0]
-
+					subgrids.append(to_value_list(extract_subgrid(grid, i, j, self.subgrid_radius)))
 					pos_list.append((i, j))
-					y_pred_list.append(y_pred)
+
+		y_pred_list = [y_pred[0] for y_pred in self.model.predict(subgrids)]
 
 		i_min = np.argmin(y_pred_list)
 		best_pos = pos_list[i_min]
