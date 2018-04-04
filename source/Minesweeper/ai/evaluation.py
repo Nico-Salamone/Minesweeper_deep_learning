@@ -63,7 +63,7 @@ if __name__ == "__main__":
 	ai = AI(model, subgrid_radius)
 
 	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid, first_round_random=True)
-	bad_score_list = (filter(lambda score: score < max_score, score_list)) # Scores below the maximum score.
+	bad_score_list = list(filter(lambda score: score < max_score, score_list)) # Scores below the maximum score.
 	num_win_games = score_list.count(max_score)
 
 	print("Number of games: {}\nNumber of games won: {}\nWin rate: {:.3f}\n".format(num_games, num_win_games,
