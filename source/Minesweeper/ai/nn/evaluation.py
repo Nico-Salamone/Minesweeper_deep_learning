@@ -277,6 +277,9 @@ if __name__ == "__main__":
 
 	# Load the model.
 	model = load_model(model_file_name)
+	# If 'custom_mean_squared_error' custom loss is used:
+	#from ai.nn.neural_network import custom_mean_squared_error
+	#model = load_model(model_file_name, custom_objects={'custom_mean_squared_error': custom_mean_squared_error})
 
 	# Evaluation.
 	y_pred = model.predict(x)

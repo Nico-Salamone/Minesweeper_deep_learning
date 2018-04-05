@@ -59,6 +59,9 @@ if __name__ == "__main__":
 
 	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
 	model = load_model(model_file_name)
+	# If 'custom_mean_squared_error' custom loss is used:
+	#from ai.nn.neural_network import custom_mean_squared_error
+	#model = load_model(model_file_name, custom_objects={'custom_mean_squared_error': custom_mean_squared_error})
 
 	ai = AI(model, subgrid_radius)
 
