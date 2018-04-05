@@ -86,6 +86,9 @@ class MaskedGrid(Grid):
 
 	@property
 	def masked_tile_positions(self):
+		"""
+		Positions of masked tiles.
+		"""
 		return list(self._masked_tile_positions)
 	
 	def __str__(self):
@@ -159,8 +162,8 @@ class MaskedGrid(Grid):
 
 	def _unmask_tile(self, i, j):
 		"""
-		Unmask one tile at position 'i' and 'j'. It reveal the tile in this position and decrements by one the varaible
-		'num_masked_tiles'.
+		Unmask one tile at position 'i' and 'j'. It reveals the tile in this position and decrements by one the
+		variable 'num_masked_tiles'.
 
 		:i: The index of the row of the tile.
 		:j: The index of the column of the tile.
