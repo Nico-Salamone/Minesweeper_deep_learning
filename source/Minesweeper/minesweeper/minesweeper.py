@@ -60,6 +60,14 @@ class Minesweeper:
 		return self._grid.num_masked_tiles
 
 	@property
+	def masked_tile_positions(self):
+		"""
+		Positions of masked tiles.
+		"""
+		
+		return self._grid.masked_tile_positions
+
+	@property
 	def grid(self):
 		"""
 		Grid.

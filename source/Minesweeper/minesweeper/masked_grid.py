@@ -89,6 +89,7 @@ class MaskedGrid(Grid):
 		"""
 		Positions of masked tiles.
 		"""
+		
 		return list(self._masked_tile_positions)
 	
 	def __str__(self):
