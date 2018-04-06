@@ -4,9 +4,18 @@ from minesweeper.grid_generation import generate_masked_grid
 from enum import Enum
 
 class State(Enum):
-	WIN = 1
-	LOSS = 2
 	CONTINUE = 0 # Unfinished game.
+	FINISHED = 1 # Finished game.
+	WIN = 2
+	LOSS = 3
+
+	def __eq__(self, other):
+		#if (self is State.WIN) and (other is State.LOSS):
+		#	return False
+		if (self is State.FINISHED) and ((other is State.WIN) or (other is State.LOSS)):
+			return True
+		
+		return super().__eq__(other)
 
 class Minesweeper:
 	"""
@@ -136,7 +145,7 @@ class Minesweeper:
 		:return: A set of the position of played tiles.
 		"""
 
-		if self._state == State.LOSS:
+		if self.state == State.FINISHED:
 			return (self.state, self.score)
 
 		old_num_masked_tiles = self.num_masked_tiles
@@ -163,4 +172,5 @@ class Minesweeper:
 		"""
 
 		self._grid.unmask_all_tiles()
-		self._state = State.LOSS
+		if self._state == State.CONTINUE:
+			self._state = State.LOSS

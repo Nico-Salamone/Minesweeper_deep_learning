@@ -102,12 +102,14 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 
 	masked_subgrid = copy.copy(subgrid)
 
+	# Compute somes values about the subgrid.
 	num_tiles = len(masked_subgrid)
 	edge_size = int(math.sqrt(num_tiles))
 	radius = int(edge_size / 2)
 	middle_tile_pos = int(num_tiles / 2)
 	left_wall, right_wall, top_wall, bottom_wall = compute_walls(masked_subgrid) if (walls == None) else walls
 
+	# Positions to sample.
 	pos_to_sample = get_positions(edge_size, edge_size, left_wall, right_wall, top_wall, bottom_wall)
 	pos_to_sample = {((i * edge_size) + j) for (i, j) in pos_to_sample}
 
@@ -115,28 +117,36 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 	pos_to_remove = set()
 
 	if mask_middle_tile:
+		# Remove the middle position.
 		pos_to_remove.add(middle_tile_pos)
 		masked_tile_pos.append(middle_tile_pos)
 		num_masked_tiles -= 1
 
 	if mask_bomb_tiles:
+		# Remove the positions containing a bomb.
 		bomb_tile_pos = []
 		for i, tile in enumerate(subgrid):
 			if tile == Tile.BOMB:
-				if not((i == middle_tile_pos) and mask_middle_tile): # If not add above.
+				if not((i == middle_tile_pos) and mask_middle_tile):
+					# Do nothing if 'i' is the position of the tile in the middle of the subgrid and 'mask_middle_tile'
+					# is True.
 					pos_to_remove.add(i)
 					masked_tile_pos.append(i)
 					num_masked_tiles -= 1
 
+	# Remove the positions to remove.
 	pos_to_sample = pos_to_sample - pos_to_remove
 
+	# Adjust the number of tiles to mask.
 	if num_masked_tiles < 0:
 		num_masked_tiles = 0
 	if num_masked_tiles > len(pos_to_sample):
 		num_masked_tiles = len(pos_to_sample)
 
+	# Sample somes positions.
 	masked_tile_pos.extend(random.sample(pos_to_sample, num_masked_tiles))
 
+	# Mask the tiles.
 	for i in masked_tile_pos:
 		masked_subgrid[i] = MaskedTile.MASKED.value
 
@@ -153,7 +163,8 @@ def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, 
 	:mask_bomb_tiles: If True, then the tiles that contain a bomb will be masked.
 	:return: A list of subgrids with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
-
+ 
+ 	# Compute the thickness of the walls.
 	walls = compute_walls(subgrid)
 	left_wall, right_wall, top_wall, bottom_wall = walls
 
@@ -288,7 +299,7 @@ def model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_rad
 if __name__ == "__main__":
 	from minesweeper.masked_grid import MaskedGrid
 	bomb_position_list = [(5, 4), (4, 2), (2, 1), (4, 4)]
-	g = MaskedGrid(10, 5, bomb_position_list, 1, 0, 2, 3)
+	g = MaskedGrid(10, 5, bomb_position_list, left_wall=1, right_wall=0, top_wall=2, bottom_wall=3)
 	g.unmask_tile(2, 4)
 	g.unmask_tile(5, 3)
 	print(g)
@@ -310,9 +321,9 @@ if __name__ == "__main__":
 	sg2 = to_value_list(sg)
 	print(sg2)
 	print_grid(sg2)
-	print('')
+	print('\n')
 
-	msgs = generate_random_masks(sg2, 5, True, True)
+	msgs = generate_random_masks(sg2, 5, mask_middle_tile=True, mask_bomb_tiles=True)
 	for msg in msgs:
 		print_grid(msg)
 		print('')

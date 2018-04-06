@@ -2,7 +2,7 @@ from minesweeper.minesweeper import Minesweeper, State
 
 import random
 
-def scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid, first_round_random=False):
+def scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid):
 	"""
 	Get the scores of an artificial intelligence. This function creates 'num_games' games and the artificial
 	intelligence plays on them.
@@ -12,29 +12,22 @@ def scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid, first
 	:num_rows_grid: The number of rows of the original grid.
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the grid.
-	:first_round_random: If True, then the first round of each game is random. If False, then the first round of each
-		game is determined by the artificial intelligence.
 	:return: The scores of the artificial intelligence.
 	"""
 
 	score_list = []
 	for i in range(num_games):
-		# It is not possible to lose to the first round.
+		# It is not possible to lose to the first turn.
 		state = State.LOSS
 		while state == State.LOSS:
 			ms = Minesweeper(num_rows_grid, num_columns_grid, num_bombs_grid)
+			ai.minesweeper = ms
 
-			if first_round_random:
-				pos = (random.randint(0, (num_rows_grid - 1)), random.randint(0, (num_columns_grid - 1)))
-			else:
-				pos = ai.best_tile_pos(ms.grid)
-
-			ms.play_tile(pos[0], pos[1])
+			ai.play_turn()
 			state = ms.state
 
 		while ms.state == State.CONTINUE:
-			pos = ai.best_tile_pos(ms.grid)
-			ms.play_tile(pos[0], pos[1])
+			ai.play_turn()
 
 		score_list.append(ms.score)
 
@@ -42,6 +35,7 @@ def scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid, first
 
 if __name__ == "__main__":
 	from ai.ai import AI
+	from ai.random_ai import RandomAI
 	from ai.helpers import model_file_path
 
 	from keras.models import load_model
@@ -63,9 +57,9 @@ if __name__ == "__main__":
 	#from ai.nn.neural_network import custom_mean_squared_error
 	#model = load_model(model_file_name, custom_objects={'custom_mean_squared_error': custom_mean_squared_error})
 
-	ai = AI(model, subgrid_radius)
+	ai = AI(model, subgrid_radius=subgrid_radius)
 
-	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid, first_round_random=True)
+	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid)
 	bad_score_list = list(filter(lambda score: score < max_score, score_list)) # Scores below the maximum score.
 	num_win_games = score_list.count(max_score)
 

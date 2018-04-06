@@ -1,33 +1,79 @@
+from minesweeper.minesweeper import State
 from minesweeper.masked_grid import MaskedTile
 from ai.helpers import to_value_list, extract_subgrid
 
 import numpy as np
+import random
 
 class AI():
 	"""
 	Artificial intelligence.
 	"""
 
-	def __init__(self, model, subgrid_radius=2):
+	def __init__(self, model, minesweeper=None, subgrid_radius=2):
 		"""
 		Create an artificial intelligence.
 
 		:model: A model.
+		:minesweeper: A minesweeper game.
 		:subgrid_radius: The radius of subgrids with whom the neural network has trained.
 		"""
 
 		self.model = model
+		self.minesweeper = minesweeper
 		self.subgrid_radius = subgrid_radius
 
-	def best_tile_pos(self, grid):
+	def play_turn(self):
 		"""
-		Get the position of the "best" tile, that is the best position to play from the point of view of artificial
-		intelligence.
+		Play a turn. The first turn is random.
 
-		:grid: The grid (a list of lists of tile values, that is an two-dimensional grid).
-		:return: The position of the "best" tile.
+		:return: The played position and the list of tiles that have been unmasked during this turn if the game is not
+			finished. If so, then return State.FINISHED. If there is no minesweeper, then return None.
 		"""
-		
+
+		if not self.minesweeper:
+			return None
+
+		if self.minesweeper.state == State.FINISHED:
+			return State.FINISHED
+
+		if self.minesweeper.num_masked_tiles == (self.minesweeper.num_rows * self.minesweeper.num_columns):
+			# If this is the fist turn.
+			return self._play_first_turn()
+
+		pos_list, subgrids = self._compute_subgrids()
+
+		y_pred_list = [y_pred[0] for y_pred in self.model.predict(np.array(subgrids))]
+		played_pos = pos_list[np.argmin(y_pred_list)]
+
+		unmasked_tiles = self.minesweeper.play_tile(played_pos[0], played_pos[1])
+
+		return played_pos, unmasked_tiles
+
+	def _play_first_turn(self):
+		"""
+		Play the first turn (it is random).
+
+		:return: The played position and the list of tiles that have been unmasked during this turn.
+		"""
+
+		pos_i = random.randint(0, (self.minesweeper.num_rows - 1))
+		pos_j = random.randint(0, (self.minesweeper.num_columns - 1))
+		played_pos = (pos_i, pos_j)
+
+		unmasked_tiles = self.minesweeper.play_tile(played_pos[0], played_pos[1])
+
+		return played_pos, unmasked_tiles
+
+	def _compute_subgrids(self):
+		"""
+		Compute the subgrids where the tile in the middle is a masked tile.
+
+		:return: The positions of the tile in the middle and the corresponding subgrids.
+		"""
+
+		grid = self.minesweeper.grid
+
 		subgrids = []
 		pos_list = []
 		for i, row in enumerate(grid):
@@ -36,21 +82,15 @@ class AI():
 					subgrids.append(to_value_list(extract_subgrid(grid, i, j, self.subgrid_radius)))
 					pos_list.append((i, j))
 
-		y_pred_list = [y_pred[0] for y_pred in self.model.predict(subgrids)]
-
-		i_min = np.argmin(y_pred_list)
-		best_pos = pos_list[i_min]
-
-		return best_pos
+		return pos_list, subgrids
 
 if __name__ == "__main__":
-	from minesweeper.minesweeper import Minesweeper, State
+	from minesweeper.minesweeper import Minesweeper
 	from ai.helpers import model_file_path
 
 	from keras.models import load_model
-	import random
 
-	random.seed(42)
+	random.seed(40)
 
 	num_rows_grid = 10
 	num_columns_grid = 10
@@ -60,19 +100,17 @@ if __name__ == "__main__":
 	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
 	model = load_model(model_file_name)
 
-	ai = AI(model, subgrid_radius)
-
 	ms = Minesweeper(num_rows_grid, num_columns_grid, num_bombs_grid)
-	print(ms)
+	ai = AI(model, minesweeper=ms, subgrid_radius=subgrid_radius)
 
+	print(ms, "\n\n")
 	while ms.state == State.CONTINUE:
-		pos = ai.best_tile_pos(ms.grid)
-		print("Position: {}".format(pos))
+		input("Press Enter to play the next turn.")
 
-		ms.play_tile(pos[0], pos[1])
+		played_pos, _ = ai.play_turn()
+
+		print("Played position: {}.".format(played_pos))
 		print(ms, "\n\n")
-
-		input("Press Enter to continue...")
 
 	if ms.state == State.LOSS:
 		print("Lost!")

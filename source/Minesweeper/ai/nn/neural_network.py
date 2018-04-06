@@ -92,7 +92,8 @@ def format_data_set(data_set, num_masked_subgrids):
 		mid_tile = subgrid[mid_tile_pos]
 		y_true_subgrid = 1 if (mid_tile == Tile.BOMB) else 0
 
-		masked_subgrids = generate_random_masks(subgrid, num_masked_subgrids, True, True)
+		masked_subgrids = generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=True,
+			mask_bomb_tiles=True)
 		formatted_data_set.extend([(msg, y_true_subgrid) for msg in masked_subgrids])
 
 	return formatted_data_set
