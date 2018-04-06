@@ -72,13 +72,14 @@ def create_model_2(num_tiles_subgrids):
 
 	return model
 
-def format_data_set(data_set, num_masked_subgrids):
+def format_data_set(data_set, num_masked_subgrids, with_flags=False):
 	"""
 	Format the data set for the neural network. For each subgrid of the data set, this function generates
 	'num_masked_subgrids' subgrids with a random mask.
 
 	:data_set: The data set.
 	:num_masked_subgrids: The number of subgrids with a mask to generate for each subgrid of the data set.
+	:with_flags: If True, then the tiles of masked subgrids containing a bomb will contain a flag.
 	:return: the formatted data set.
 	"""
 
@@ -93,7 +94,7 @@ def format_data_set(data_set, num_masked_subgrids):
 		y_true_subgrid = 1 if (mid_tile == Tile.BOMB) else 0
 
 		masked_subgrids = generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=True,
-			mask_bomb_tiles=True)
+			mask_bomb_tiles=True, flag_bomb_tiles=with_flags)
 		formatted_data_set.extend([(msg, y_true_subgrid) for msg in masked_subgrids])
 
 	return formatted_data_set
@@ -125,11 +126,13 @@ if __name__ == "__main__":
 	num_bm_subgrids = 500000
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 10
+	with_flags = True
 
 	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, False)
 	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
+	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
+		with_flags=with_flags)
 
 	random.seed(seed)
 	np.random.seed(int(seed)) # Makes Keras deterministic.
@@ -144,7 +147,7 @@ if __name__ == "__main__":
 	print("Data set loaded.")
 
 	# Format the data set.
-	data_set = format_data_set(data_set, num_masked_subgrids)
+	data_set = format_data_set(data_set, num_masked_subgrids, with_flags=with_flags)
 	print("Data set formatted.")
 
 	# Shuffle the data set.

@@ -77,13 +77,14 @@ def compute_walls(grid):
 
 	return (left_wall, right_wall, top_wall, bottom_wall)
 
-def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask_bomb_tiles=False, walls=None):
+def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask_bomb_tiles=False,
+	flag_bomb_tiles=False, walls=None):
 	"""
 	Generate a subgrid with a random mask with 'num_masked_tiles' masked tiles.
 	If 'num_masked_tiles' is greater than the number of "available" tiles (tiles that can be masked), then
 	'num_masked_tiles' is replaced by this number.
 	If 'mask_bomb_tile' is True and if the number of the bombs within 'subgrid' is greater than 'num_masked_tiles',
-	then only the tiles containing a bomb will be masked.
+	then only the tiles containing a bomb will be masked. The same thing happens if 'flag_bomb_tiles' is True.
 	The wall tiles are not masked.
 
 	:subgrid: The subgrid (a list of tile values, that is an one-dimensional grid).
@@ -91,6 +92,8 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked (therefore
 		'num_masked_tiles' - 1 others tiles will then be masked).
 	:mask_bomb_tiles: If True, then the tiles that contain a bomb will be masked.
+	:flag_bomb_tiles: If True, then the tiles that contain a bomb will be replaced by a flag tile ('mask_bomb_tiles'
+		is therefore ignored). The tile in the middle of 'subgrid' will not be replaced if 'mask_middle_tile' is True.
 	:walls: A tuple of four integers. The first one for the thickness of the left wall, the second for the right wall,
 		the third for the top wall and the fourth the bottom wall. If None, then the thicknesses will be computed
 		(lower performance).
@@ -114,6 +117,7 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 	pos_to_sample = {((i * edge_size) + j) for (i, j) in pos_to_sample}
 
 	masked_tile_pos = []
+	flag_tile_pos = []
 	pos_to_remove = set()
 
 	if mask_middle_tile:
@@ -122,7 +126,7 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 		masked_tile_pos.append(middle_tile_pos)
 		num_masked_tiles -= 1
 
-	if mask_bomb_tiles:
+	if mask_bomb_tiles or flag_bomb_tiles:
 		# Remove the positions containing a bomb.
 		bomb_tile_pos = []
 		for i, tile in enumerate(subgrid):
@@ -131,7 +135,12 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 					# Do nothing if 'i' is the position of the tile in the middle of the subgrid and 'mask_middle_tile'
 					# is True.
 					pos_to_remove.add(i)
-					masked_tile_pos.append(i)
+					if flag_bomb_tiles:
+						# 'mask_bomb_tiles' is ignored if 'flag_bomb_tiles' is True.
+						flag_tile_pos.append(i)
+					else:
+						# 'mask_bomb_tiles' is True.
+						masked_tile_pos.append(i)
 					num_masked_tiles -= 1
 
 	# Remove the positions to remove.
@@ -150,9 +159,14 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 	for i in masked_tile_pos:
 		masked_subgrid[i] = MaskedTile.MASKED.value
 
+	# Insert the flags.
+	for i in flag_tile_pos:
+		masked_subgrid[i] = MaskedTile.FLAG.value
+
 	return masked_subgrid
 
-def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, mask_bomb_tiles=False):
+def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, mask_bomb_tiles=False,
+	flag_bomb_tiles=False):
 	"""
 	Generate a list of subgrids with a random mask. For each one, between 1 and ('num_available_tiles' - 1) tiles are
 	masked, where 'num_available_tiles' is the number of "available" tiles (tiles that can be masked).
@@ -161,6 +175,8 @@ def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, 
 	:num_masked_subgrids: The number of subgrids with a random mask to generate.
 	:mask_middle_tile: If True, then the tile in the middle of 'subgrid' will be masked.
 	:mask_bomb_tiles: If True, then the tiles that contain a bomb will be masked.
+	:flag_bomb_tiles: If True, then the tiles that contain a bomb will be replaced by a flag tile ('mask_bomb_tiles'
+		is therefore ignored). The tile in the middle of 'subgrid' will not be replaced if 'mask_middle_tile' is True.
 	:return: A list of subgrids with a random mask (a list of tile values, that is an one-dimensional grid).
 	"""
  
@@ -176,7 +192,8 @@ def generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=False, 
 	subgrids = []
 	for i in range(num_masked_subgrids):
 		num_masked_tiles = random.randint(1, (num_available_tiles - 1))
-		masked_grid = generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile, mask_bomb_tiles, walls)
+		masked_grid = generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile, mask_bomb_tiles,
+			flag_bomb_tiles, walls)
 		subgrids.append(masked_grid)
 
 	return subgrids
@@ -191,7 +208,7 @@ def count_num_masked_tiles(subgrid):
 
 	num_masked_tiles = 0
 	for tile in subgrid:
-		if tile == MaskedTile.MASKED:
+		if (tile == MaskedTile.MASKED) or (tile == MaskedTile.FLAG):
 			num_masked_tiles += 1
 
 	return num_masked_tiles
@@ -281,7 +298,8 @@ def data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_
 	return folder_path + "data_set_{}ro_{}c_{}b_{}ra_{}bm{}.csv".format(num_rows_grid, num_columns_grid, num_bombs_grid,
 		subgrid_radius, bomb_middle_tile, without_duplicates_str)
 
-def model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, folder_path="ai/nn/models/"):
+def model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, with_flags=False,
+	folder_path="ai/nn/models/"):
 	"""
 	Get the path of the model folling parameters.
 
@@ -289,12 +307,15 @@ def model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_rad
 	:num_columns_grid: The number of columns of the original grid.
 	:num_bombs_grid: The number of bombs of the grid.
 	:subgrid_radius: The radius of subgrids. For example, with a radius of 2, the subgrid is a 5 by 5 subgrid.
+	:with_flags: If True, then the tiles of masked subgrids containing a bomb will contain a flag.
 	:folder_path: The path of the folder including the file.
 	:return: The path of the model.
 	"""
 
-	return folder_path + "data_set_{}ro_{}c_{}b_{}ra.h5".format(num_rows_grid, num_columns_grid, num_bombs_grid,
-		subgrid_radius)
+	with_flags_str = "_wf" if with_flags else ""
+
+	return folder_path + "data_set_{}ro_{}c_{}b_{}ra{}.h5".format(num_rows_grid, num_columns_grid, num_bombs_grid,
+		subgrid_radius, with_flags_str)
 
 if __name__ == "__main__":
 	from minesweeper.masked_grid import MaskedGrid
@@ -302,6 +323,7 @@ if __name__ == "__main__":
 	g = MaskedGrid(10, 5, bomb_position_list, left_wall=1, right_wall=0, top_wall=2, bottom_wall=3)
 	g.unmask_tile(2, 4)
 	g.unmask_tile(5, 3)
+	g.insert_flag(4, 2)
 	print(g)
 
 	radius = 2
@@ -324,6 +346,13 @@ if __name__ == "__main__":
 	print('\n')
 
 	msgs = generate_random_masks(sg2, 5, mask_middle_tile=True, mask_bomb_tiles=True)
+	for msg in msgs:
+		print_grid(msg)
+		print('')
+
+	print('')
+
+	msgs = generate_random_masks(sg2, 5, mask_middle_tile=True, mask_bomb_tiles=True, flag_bomb_tiles=True)
 	for msg in msgs:
 		print_grid(msg)
 		print('')

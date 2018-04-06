@@ -249,11 +249,13 @@ if __name__ == "__main__":
 	num_bm_subgrids = 5000
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 10
+	with_flags = True
 
 	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, False)
 	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, True)
 	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
-	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
+	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
+		with_flags=with_flags)
 
 	random.seed(seed)
 
@@ -268,7 +270,7 @@ if __name__ == "__main__":
 	print("Data set loaded.")
 
 	# Format the data set.
-	data_set = format_data_set(data_set, num_masked_subgrids)
+	data_set = format_data_set(data_set, num_masked_subgrids, with_flags=with_flags)
 	print("Data set formatted.")
 
 	# Get the 'x' and 'y_true' vectors.

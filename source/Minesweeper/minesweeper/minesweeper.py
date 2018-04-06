@@ -77,6 +77,22 @@ class Minesweeper:
 		return self._grid.masked_tile_positions
 
 	@property
+	def num_flag_tiles(self):
+		"""
+		Number of flag tiles.
+		"""
+
+		return self._grid.num_flag_tiles
+
+	@property
+	def flag_tile_positions(self):
+		"""
+		Positions of flag tiles.
+		"""
+		
+		return self._grid.flag_tile_positions
+
+	@property
 	def grid(self):
 		"""
 		Grid.
@@ -174,3 +190,45 @@ class Minesweeper:
 		self._grid.unmask_all_tiles()
 		if self._state == State.CONTINUE:
 			self._state = State.LOSS
+
+	def insert_flag(self, i, j):
+		"""
+		Insert a flag at position 'i' and 'j'.
+		The tile at this position must be masked. If it is not, then this function returns False.
+
+		:i: The index of the row of the tile.
+		:j: The index of the column of the tile.
+		:return: True if the flag was added, False otherwise.
+		"""
+
+		return self._grid.insert_flag(i, j)
+
+	def remove_flag(self, i, j):
+		"""
+		Remove a flag at position 'i' and 'j'.
+		The tile at this position must contain a flag. If it is not, then this function returns False.
+
+		:i: The index of the row of the tile.
+		:j: The index of the column of the tile.
+		:return: True if the flag was removed, False otherwise.
+		"""
+
+		return self._grid.remove_flag(i, j)
+
+	def insert_flags(self, position_list):
+		"""
+		Insert a flag for position 'i' and 'j' of 'position_list'.
+		The tiles at these positions must be masked. If it is not, then this function returns False.
+
+		:position_list: The list of positions of flags.
+		:return: True if the all flags were added, False otherwise (some flags were not added).
+		"""
+
+		return self._grid.insert_flags(position_list)
+
+	def remove_all_flags(self):
+		"""
+		Remove all flags.
+		"""
+
+		self._grid.remove_all_flags()

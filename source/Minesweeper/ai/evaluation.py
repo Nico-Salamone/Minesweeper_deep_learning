@@ -36,6 +36,7 @@ def scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid):
 if __name__ == "__main__":
 	from ai.ai import AI
 	from ai.random_ai import RandomAI
+	from ai.ai_with_flags import AIWithFlags
 	from ai.helpers import model_file_path
 
 	from keras.models import load_model
@@ -47,17 +48,22 @@ if __name__ == "__main__":
 	num_columns_grid = 10
 	num_bombs_grid = 10
 	subgrid_radius = 2
+	with_flags = True
 
 	num_games = 1000
 	max_score = (num_rows_grid * num_columns_grid) - num_bombs_grid
 
-	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius)
+	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
+		with_flags=with_flags)
 	model = load_model(model_file_name)
 	# If 'custom_mean_squared_error' custom loss is used:
 	#from ai.nn.neural_network import custom_mean_squared_error
 	#model = load_model(model_file_name, custom_objects={'custom_mean_squared_error': custom_mean_squared_error})
 
-	ai = AI(model, subgrid_radius=subgrid_radius)
+	if not with_flags:
+		ai = AI(model, subgrid_radius=subgrid_radius)
+	else:
+		ai = AIWithFlags(model, subgrid_radius=subgrid_radius)
 
 	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid)
 	bad_score_list = list(filter(lambda score: score < max_score, score_list)) # Scores below the maximum score.
