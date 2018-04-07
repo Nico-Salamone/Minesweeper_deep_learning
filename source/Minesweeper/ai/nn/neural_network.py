@@ -83,6 +83,11 @@ def format_data_set(data_set, num_masked_subgrids, with_flags=False):
 	:return: the formatted data set.
 	"""
 
+	if with_flags:
+		mask_bomb_tiles = False
+	else:
+		mask_bomb_tiles = True
+
 	num_tiles = len(data_set[0])
 	edge_size = int(math.sqrt(num_tiles))
 	radius = int(edge_size / 2)
@@ -94,7 +99,7 @@ def format_data_set(data_set, num_masked_subgrids, with_flags=False):
 		y_true_subgrid = 1 if (mid_tile == Tile.BOMB) else 0
 
 		masked_subgrids = generate_random_masks(subgrid, num_masked_subgrids, mask_middle_tile=True,
-			mask_bomb_tiles=True, flag_bomb_tiles=with_flags)
+			mask_bomb_tiles=mask_bomb_tiles, flag_bomb_tiles=with_flags)
 		formatted_data_set.extend([(msg, y_true_subgrid) for msg in masked_subgrids])
 
 	return formatted_data_set
