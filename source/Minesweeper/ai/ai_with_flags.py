@@ -137,7 +137,10 @@ if __name__ == "__main__":
 		
 		played_pos, _ = ai.play_turn()
 
-		print("Played position: {}.".format(played_pos))
+		insert_flag_str = ""
+		if ms.tile_at(played_pos[0], played_pos[1]) == MaskedTile.FLAG:
+			insert_flag_str = " (insert a flag)"
+		print("Played position: {}{}.".format(played_pos, insert_flag_str))
 		print(ms, "\n\n")
 
 	if ms.state == State.LOSS:
