@@ -161,7 +161,7 @@ if __name__ == "__main__":
 	num_columns = 10
 	num_bombs = 10
 
-	g = generate_grid(num_rows, num_columns, num_bombs, 2, 1, 0, 3)
+	g = generate_masked_grid(num_rows, num_columns, num_bombs)
 	print(g)
 
 	g = generate_subgrid(2, False, num_rows, num_columns, num_bombs)
