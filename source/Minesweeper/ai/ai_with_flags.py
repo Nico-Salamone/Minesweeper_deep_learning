@@ -44,7 +44,7 @@ class AIWithFlags():
 
 		only_flags = False
 		if self.minesweeper.num_masked_tiles == self.minesweeper.num_flag_tiles:
-			# All masked subgrids contain a flag.
+			# All masked tiles contain a flag.
 			flag_tile_pos = self.minesweeper.flag_tile_positions
 			self.minesweeper.remove_all_flags()
 
@@ -56,15 +56,18 @@ class AIWithFlags():
 
 		i_min = np.argmin(y_pred_list)
 		i_max = np.argmax(y_pred_list)
-		if only_flags or (y_pred_list[i_min] < (1 - y_pred_list[i_max])): # The 'y_pred' closest to 0 or 1.
-			# All masked subgrids contain a flag or 'y_pred' is closest to 0.
-			# Play on a masked tile.
+		if only_flags or (y_pred_list[i_min] < (1 - y_pred_list[i_max])) or (y_pred_list[i_max] < 0.975):
+			# If all masked tiles contain a flag, or
+			# 'min(y_pred_list)' is closest to 0 than 'max(y_pred_list)' is closest to 1, or
+			# 'max(y_pred_list)' is less than 0.975, then
+			# play on a masked tile.
 
 			played_pos = pos_list[i_min]
 			unmasked_tiles = self.minesweeper.play_tile(played_pos[0], played_pos[1])
 		else:
-			# 'y_pred' is closest to 1.
-			# Insert a flag.
+			# If 'max(y_pred_list)' is closest to 1 than 'min(y_pred_list)' is closest to 0, and
+			# 'max(y_pred_list)' is greater than 0.975, then
+			# insert a flag.
 
 			played_pos = pos_list[i_max]
 			unmasked_tiles = []
