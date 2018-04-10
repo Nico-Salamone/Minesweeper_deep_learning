@@ -13,25 +13,9 @@ def to_value_list(grid):
 	:return: The list of values of each tile.
 	"""
 
-	if isinstance(grid, Grid):
-		grid_object = True
-
-		num_rows = grid.num_rows
-		num_columns = grid.num_columns
-	else:
-		grid_object = False
-
-		num_rows = len(grid)
-		num_columns = len(grid[0])
-
 	value_list = []
-	for i in range(num_rows):
-		for j in range(num_columns):
-			if grid_object:
-				tile = grid.tile_at(i, j)
-			else:
-				tile = grid[i][j]
-
+	for row in grid:
+		for tile in row:
 			try: # If tile is an empty (and has 0 as value), a bomb, a wall or a masked tile.
 				tile = tile.value
 			except AttributeError: # If tile is an integer (empty tile).
