@@ -187,6 +187,13 @@ class Grid:
 	def __hash__(self):
 		return hash(tuple(map(tuple, self._grid)))
 
+	def __iter__(self):
+		"""
+		Iterate on rows of the grid.
+		"""
+
+		return (row for row in self.grid)
+
 	def tile_at(self, i, j):
 		"""
 		Get tile at a position. The returned value is either Tile.WALL, Tile.BOMB or the number of adjacent bombs.
