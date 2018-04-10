@@ -246,16 +246,23 @@ def extract_subgrid(grid, i, j, subgrid_radius):
 	num_rows = 1 + (2 * subgrid_radius)
 	num_columns = num_rows
 
-	subgrid = [[MaskedTile.WALL for j in range(num_columns)] for i in range(num_rows)]
+	subgrid = []
 	i_min = i - subgrid_radius
 	j_min = j - subgrid_radius
 	for i_subgrid in range(num_rows):
+		row = []
 		for j_subgrid in range(num_columns):
 			i_grid = i_min + i_subgrid
 			j_grid = j_min + j_subgrid
 			
 			if (0 <= i_grid < len(grid)) and (0 <= j_grid < len(grid[0])):
-				subgrid[i_subgrid][j_subgrid] = grid[i_grid][j_grid]
+				tile = grid[i_grid][j_grid]
+			else:
+				tile = MaskedTile.WALL
+
+			row.append(tile)
+
+		subgrid.append(row)
 
 	return subgrid
 
