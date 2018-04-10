@@ -63,7 +63,7 @@ if __name__ == "__main__":
 	if not with_flags:
 		ai = AI(model, subgrid_radius=subgrid_radius)
 	else:
-		ai = AIWithFlags(model, subgrid_radius=subgrid_radius, masked_tile_sensitivity_level=1, flag_threshold=0.975)
+		ai = AIWithFlags(model, subgrid_radius=subgrid_radius, playful_level=1, flag_threshold=0.975)
 
 	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid)
 	bad_score_list = list(filter(lambda score: score < max_score, score_list)) # Scores below the maximum score.

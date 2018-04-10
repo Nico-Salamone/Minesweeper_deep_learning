@@ -10,19 +10,19 @@ class AIWithFlags():
 	Artificial intelligence using flags.
 	"""
 
-	def __init__(self, model, minesweeper=None, subgrid_radius=2, masked_tile_sensitivity_level=1, flag_threshold=0.9):
+	def __init__(self, model, minesweeper=None, subgrid_radius=2, playful_level=1, flag_threshold=0.9):
 		"""
 		Create an artificial intelligence using flags.
 
 		:model: A model (trained with flags).
 		:minesweeper: A minesweeper game.
 		:subgrid_radius: The radius of subgrids with whom the neural network has trained.
-		:masked_tile_sensitivity_level: The sensitivity level to play on a masked tile. The higher this value is and
-			the more artificial intelligence will prefer to play on a masked tile rather than insert a flag. Conversely,
-			the lower this value is, the less artificial intelligence will prefer to play on a tile rather than insert
-			a flag (flags will be used more often). The neural value is 1 (the artificial intelligence has no preference
-			between playing on a tile and inserting a flag). The minimum value for this parameter is 0 (the artificial
-			intelligence will always insert flags) and the maximum value is 2 (no flags will be used).
+		:playful_level: The playful level. The higher this value is and the more artificial intelligence will prefer to
+			play on a masked tile rather than insert a flag. Conversely, the lower this value is, the less artificial
+			intelligence will prefer to play on a tile rather than insert a flag (flags will be used more often). The
+			neural value is 1 (the artificial intelligence has no preference between playing on a tile and inserting a
+			flag). The minimum value for this parameter is 0 (the artificial intelligence will always insert flags) and
+			the maximum value is 2 (no flags will be used).
 		:flag_threshold: The minimal threshold to insert a flag. For each tile, the artificial intelligence compute a
 			particular value which is interpreted as the probability that this tile contains a bomb. If this value is
 			less than 'flag_threshold', then the artificial intelligence will not insert a flag on this tile. The
@@ -33,7 +33,7 @@ class AIWithFlags():
 		self.model = model
 		self.minesweeper = minesweeper
 		self.subgrid_radius = subgrid_radius
-		self.masked_tile_sensitivity_level = masked_tile_sensitivity_level
+		self.playful_level = playful_level
 		self.flag_threshold = flag_threshold
 
 	def play_turn(self):
@@ -69,19 +69,19 @@ class AIWithFlags():
 		
 		i_min = np.argmin(y_pred_list)
 		i_max = np.argmax(y_pred_list)
-		if only_flags or (y_pred_list[i_min] < (self.masked_tile_sensitivity_level - y_pred_list[i_max])) or \
+		if only_flags or (y_pred_list[i_min] < (self.playful_level - y_pred_list[i_max])) or \
 			(y_pred_list[i_max] <= self.flag_threshold):
 			# If all masked tiles contain a flag, or
-			# 'min(y_pred_list)' is less than 'self.masked_tile_sensitivity_level' minus 'max(y_pred_list)' (the
-			# artificial intelligence prefers to play on a masked tile), or
+			# 'min(y_pred_list)' is less than 'self.playful_level' minus 'max(y_pred_list)' (the artificial
+			# intelligence prefers to play on a masked tile), or
 			# 'max(y_pred_list)' is less than 'self.flag_threshold', then
 			# play on a masked tile.
 
 			played_pos = pos_list[i_min]
 			unmasked_tiles = self.minesweeper.play_tile(played_pos[0], played_pos[1])
 		else:
-			# If 'min(y_pred_list)' is greater than 'self.masked_tile_sensitivity_level' minus 'max(y_pred_list)' (the
-			# artificial intelligence prefers to insert a flag), and
+			# If 'min(y_pred_list)' is greater than 'self.playful_level' minus 'max(y_pred_list)' (the artificial
+			# intelligence prefers to insert a flag), and
 			# 'max(y_pred_list)' is greater than 'self.flag_threshold', then
 			# insert a flag.
 
