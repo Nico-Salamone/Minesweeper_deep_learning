@@ -247,13 +247,13 @@ if __name__ == "__main__":
 	num_bombs_grid = 10
 	num_no_bm_subgrids = 5000
 	num_bm_subgrids = 5000
-	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
+	# 'bm' means that the tile in the middle of the subgrids contains a bomb.
 	num_masked_subgrids = 10
 	with_flags = True
 
 	ds_no_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, False)
 	ds_bm_file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius, True)
-	# 'bm' for means that the tile in the middle of the subgrids contains a bomb.
+	# 'bm' means that the tile in the middle of the subgrids contains a bomb.
 	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
 		with_flags=with_flags)
 
