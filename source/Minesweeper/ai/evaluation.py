@@ -34,9 +34,10 @@ def scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid):
 	return score_list
 
 if __name__ == "__main__":
-	from ai.ai import AI
 	from ai.random_ai import RandomAI
+	from ai.ai_without_flags import AIWithoutFlags
 	from ai.ai_with_flags import AIWithFlags
+	from ai.ai_with_flags2 import AIWithFlags2
 	from ai.helpers import model_file_path
 
 	from keras.models import load_model
@@ -61,7 +62,7 @@ if __name__ == "__main__":
 	#model = load_model(model_file_name, custom_objects={'custom_mean_squared_error': custom_mean_squared_error})
 
 	if not with_flags:
-		ai = AI(model, subgrid_radius=subgrid_radius)
+		ai = AIWithoutFlags(model, subgrid_radius=subgrid_radius)
 	else:
 		ai = AIWithFlags(model, subgrid_radius=subgrid_radius, playful_level=1, flag_threshold=0.975)
 
