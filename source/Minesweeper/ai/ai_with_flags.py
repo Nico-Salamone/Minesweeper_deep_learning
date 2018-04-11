@@ -1,18 +1,16 @@
+from ai.ai_nn import AINN
 from minesweeper.minesweeper import State
-from minesweeper.masked_grid import MaskedTile
-from ai.helpers import to_value_list, extract_subgrid
 
 import numpy as np
-import random
 
-class AIWithFlags():
+class AIWithFlags(AINN):
 	"""
-	Artificial intelligence using flags.
+	Artificial intelligence using a neural network and using flags.
 	"""
 
 	def __init__(self, model, minesweeper=None, subgrid_radius=2, playful_level=1, flag_threshold=0.9):
 		"""
-		Create an artificial intelligence using flags.
+		Create an artificial intelligence using a neural network and using flags.
 
 		:model: A model (trained with flags).
 		:minesweeper: A minesweeper game.
@@ -30,9 +28,7 @@ class AIWithFlags():
 			maximum value is 1 (no flags will be used).
 		"""
 
-		self.model = model
-		self.minesweeper = minesweeper
-		self.subgrid_radius = subgrid_radius
+		super().__init__(model, minesweeper=minesweeper, subgrid_radius=subgrid_radius)
 		self.playful_level = playful_level
 		self.flag_threshold = flag_threshold
 
@@ -53,7 +49,7 @@ class AIWithFlags():
 
 		if self.minesweeper.num_masked_tiles == (self.minesweeper.num_rows * self.minesweeper.num_columns):
 			# If this is the fist turn.
-			return self._play_first_turn()
+			return self._play_random_turn()
 
 		only_flags = False
 		if self.minesweeper.num_masked_tiles == self.minesweeper.num_flag_tiles:
@@ -95,45 +91,13 @@ class AIWithFlags():
 
 		return played_pos, unmasked_tiles
 
-	def _play_first_turn(self):
-		"""
-		Play the first turn (it is random).
-
-		:return: The played position and the list of tiles that have been unmasked during this turn.
-		"""
-
-		pos_i = random.randint(0, (self.minesweeper.num_rows - 1))
-		pos_j = random.randint(0, (self.minesweeper.num_columns - 1))
-		played_pos = (pos_i, pos_j)
-
-		unmasked_tiles = self.minesweeper.play_tile(played_pos[0], played_pos[1])
-
-		return played_pos, unmasked_tiles
-
-	def _compute_subgrids(self):
-		"""
-		Compute the subgrids where the tile in the middle is a masked tile.
-
-		:return: The positions of the tile in the middle and the corresponding subgrids.
-		"""
-
-		grid = self.minesweeper.grid
-
-		subgrids = []
-		pos_list = []
-		for i, row in enumerate(grid):
-			for j, tile in enumerate(row):
-				if tile == MaskedTile.MASKED: # If 'tile' contains a flag, do nothing.
-					subgrids.append(to_value_list(extract_subgrid(grid, i, j, self.subgrid_radius)))
-					pos_list.append((i, j))
-
-		return pos_list, subgrids
-
 if __name__ == "__main__":
 	from minesweeper.minesweeper import Minesweeper
+	from minesweeper.masked_grid import MaskedTile
 	from ai.helpers import model_file_path
 
 	from keras.models import load_model
+	import random
 
 	random.seed(40)
 

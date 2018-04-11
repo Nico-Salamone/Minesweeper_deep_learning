@@ -1,9 +1,7 @@
+from ai.ai import AI
 from minesweeper.minesweeper import State
 
-import numpy as np
-import random
-
-class RandomAI():
+class RandomAI(AI):
 	"""
 	Random artificial intelligence.
 	"""
@@ -31,13 +29,12 @@ class RandomAI():
 		if self.minesweeper.state == State.FINISHED:
 			return State.FINISHED
 
-		played_pos = random.choice(self.minesweeper.masked_tile_positions)
-		unmasked_tiles = self.minesweeper.play_tile(played_pos[0], played_pos[1])
-
-		return played_pos, unmasked_tiles
+		return self._play_random_turn()
 
 if __name__ == "__main__":
 	from minesweeper.minesweeper import Minesweeper
+
+	import random
 
 	random.seed(40)
 
