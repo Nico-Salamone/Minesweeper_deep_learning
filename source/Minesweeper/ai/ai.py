@@ -24,7 +24,7 @@ class AI(metaclass=ABCMeta):
 			finished. If so, then return State.FINISHED. If there is no minesweeper, then return None.
 		"""
 
-		pass
+		raise NotImplementedError("Error: the 'play_trun()' method is not implemented!")
 
 	def _play_random_turn(self):
 		"""
