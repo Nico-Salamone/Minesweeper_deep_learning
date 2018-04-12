@@ -3,6 +3,7 @@ from minesweeper.masked_grid import MaskedTile
 from ai.helpers import to_value_list, extract_subgrid
 
 from abc import ABCMeta, abstractmethod
+import numpy as np
 
 class AINN(AI, metaclass=ABCMeta):
 	"""
@@ -21,6 +22,7 @@ class AINN(AI, metaclass=ABCMeta):
 		super().__init__(minesweeper=minesweeper)
 		self.model = model
 		self.subgrid_radius = subgrid_radius
+		self._evaluated_subgrid_cache = {}
 
 	def _compute_subgrids(self):
 		"""
@@ -40,3 +42,24 @@ class AINN(AI, metaclass=ABCMeta):
 					pos_list.append((i, j))
 
 		return pos_list, subgrids
+
+	def _evaluate_subgrids(self, subgrids):
+		"""
+		Evaluate subgrids.
+
+		:subgrids: The subgrids.
+		:return: The evaluation of each subgrid, that is the predicted values by the neural network for theses subgrids.
+		"""
+
+		subgrids = [tuple(subgrid) for subgrid in subgrids] # It makes the subgrids hashable.
+
+		# Add the subgrids that are not in the cache ('self._evaluated_subgrid_cache').
+		is_not_in_cache = lambda subgrid: not subgrid in self._evaluated_subgrid_cache
+		subgrids_to_evaluate = list(filter(is_not_in_cache, subgrids))
+
+		if subgrids_to_evaluate: # If 'subgrids_to_evaluate' is not empty.
+			y_pred_list = self.model.predict(np.array(subgrids_to_evaluate)).flatten()
+			self._evaluated_subgrid_cache.update(dict(zip(subgrids_to_evaluate, y_pred_list)))
+
+		# Evaluate the subgrids.
+		return [self._evaluated_subgrid_cache[subgrid] for subgrid in subgrids]

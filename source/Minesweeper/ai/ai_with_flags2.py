@@ -49,7 +49,7 @@ class AIWithFlags2(AINN):
 			only_flags = True
 
 		pos_list, subgrids = self._compute_subgrids()
-		y_pred_list = [y_pred[0] for y_pred in self.model.predict(np.array(subgrids))]
+		y_pred_list = self._evaluate_subgrids(subgrids)
 
 		played_pos = pos_list[np.argmin(y_pred_list)]
 		unmasked_tiles = self.minesweeper.play_tile(played_pos[0], played_pos[1])

@@ -61,7 +61,7 @@ class AIWithFlags(AINN):
 
 		pos_list, subgrids = self._compute_subgrids()
 
-		y_pred_list = self.model.predict(np.array(subgrids)).flatten()
+		y_pred_list = self._evaluate_subgrids(subgrids)
 		
 		i_min = np.argmin(y_pred_list)
 		i_max = np.argmax(y_pred_list)
