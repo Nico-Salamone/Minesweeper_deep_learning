@@ -67,7 +67,8 @@ if __name__ == "__main__":
 		ai = AIWithFlags(model, subgrid_radius=subgrid_radius, playful_level=1, flag_threshold=0.975)
 
 	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid)
-	bad_score_list = list(filter(lambda score: score < max_score, score_list)) # Scores below the maximum score.
+	losing_games_score_list = list(filter(lambda score: score < max_score, score_list))
+	# List of scores of losing games (scores below the maximum score).
 	num_win_games = score_list.count(max_score)
 
 	print("Number of games: {}\nNumber of games won: {}\nWin rate: {:.3f}\n".format(num_games, num_win_games,
@@ -80,5 +81,6 @@ if __name__ == "__main__":
 
 	print("Distribution of scores below the maximum score (scores of losing games):")
 	print("Min: {}\nMax: {}\nMean: {:.3f}\nPercentile 25: {}\nPercentile 50 (median): {}\nPercentile 75: {}".format(
-		min(bad_score_list), max(bad_score_list), np.mean(bad_score_list), np.percentile(bad_score_list, 25),
-		np.percentile(bad_score_list, 50), np.percentile(bad_score_list, 75)))
+		min(losing_games_score_list), max(losing_games_score_list), np.mean(losing_games_score_list),
+		np.percentile(losing_games_score_list, 25), np.percentile(losing_games_score_list, 50),
+		np.percentile(losing_games_score_list, 75)))

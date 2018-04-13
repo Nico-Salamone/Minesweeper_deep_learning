@@ -54,8 +54,10 @@ class AINN(AI, metaclass=ABCMeta):
 		subgrids = [tuple(subgrid) for subgrid in subgrids] # It makes the subgrids hashable.
 
 		# Add the subgrids that are not in the cache ('self._evaluated_subgrid_cache').
-		is_not_in_cache = lambda subgrid: not subgrid in self._evaluated_subgrid_cache
-		subgrids_to_evaluate = list(filter(is_not_in_cache, subgrids))
+		subgrids_to_evaluate = [
+			subgrid for subgrid in set(subgrids)
+			if subgrid not in self._evaluated_subgrid_cache
+		]
 
 		if subgrids_to_evaluate: # If 'subgrids_to_evaluate' is not empty.
 			y_pred_list = self.model.predict(np.array(subgrids_to_evaluate)).flatten()
