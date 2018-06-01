@@ -143,7 +143,7 @@ def generate_random_mask(subgrid, num_masked_tiles, mask_middle_tile=False, mask
 	# Insert the flags.
 	if flag_bomb_tiles:
 		for i, tile in enumerate(masked_subgrid):
-			if tile == Tile.BOMB:
+			if tile == Tile.BOMB: # 'tile' is not masked and contains a bomb.
 				if not((i == middle_tile_pos) and mask_middle_tile):
 					# Do nothing if 'i' is the position of the tile in the middle of the subgrid and 'mask_middle_tile'
 					# is True.
@@ -316,6 +316,7 @@ if __name__ == "__main__":
 
 	random.seed(42)
 
+	# Test the 'extract_subgrid', 'to_value_list', 'count_num_masked_tiles' and 'print_grid' functions.
 	bomb_position_list = [(5, 4), (4, 2), (2, 1), (4, 4)]
 	g = MaskedGrid(10, 5, bomb_position_list, left_wall=1, right_wall=0, top_wall=2, bottom_wall=3)
 	g.unmask_tile(2, 4)
@@ -329,10 +330,9 @@ if __name__ == "__main__":
 	print(sg2)
 	print(count_num_masked_tiles(sg2))
 	print_grid(sg2)
-
-
-
 	print('\n\n')
+
+	# Test the 'generate_random_masks' function.
 	from minesweeper.grid_generation import generate_subgrid
 	radius = 2
 

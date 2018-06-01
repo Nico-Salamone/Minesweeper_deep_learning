@@ -57,28 +57,31 @@ if __name__ == "__main__":
 	model_file_name = model_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
 		with_flags=with_flags)
 	model = load_model(model_file_name)
-	# If 'custom_mean_squared_error' custom loss is used:
+	# If 'custom_mean_squared_error' custom loss is used.
 	#from ai.nn.neural_network import custom_mean_squared_error
 	#model = load_model(model_file_name, custom_objects={'custom_mean_squared_error': custom_mean_squared_error})
 
 	if not with_flags:
 		ai = AIWithoutFlags(model, subgrid_radius=subgrid_radius)
 	else:
-		ai = AIWithFlags(model, subgrid_radius=subgrid_radius, playful_level=1, flag_threshold=0.975)
+		ai = AIWithFlags(model, subgrid_radius=subgrid_radius, playful_level=1.15, flag_threshold=0.96)
 
 	score_list = scores(ai, num_games, num_rows_grid, num_columns_grid, num_bombs_grid)
 	losing_games_score_list = list(filter(lambda score: score < max_score, score_list))
 	# List of scores of losing games (scores below the maximum score).
 	num_win_games = score_list.count(max_score)
 
+	# Print the number of games, the number of games won and the win rate.
 	print("Number of games: {}\nNumber of games won: {}\nWin rate: {:.3f}\n".format(num_games, num_win_games,
 		(num_win_games / num_games)))
 
+	# Print the distribution of all scores.
 	print("Distribution of all scores:")
 	print("Min: {}\nMax: {}\nMean: {:.3f}\nPercentile 25: {}\nPercentile 50 (median): {}\nPercentile 75: {}\n".format(
 		min(score_list), max(score_list), np.mean(score_list), np.percentile(score_list, 25),
 		np.percentile(score_list, 50), np.percentile(score_list, 75)))
 
+	# Print the distribution of scores below the maximum score (scores of losing games).
 	print("Distribution of scores below the maximum score (scores of losing games):")
 	print("Min: {}\nMax: {}\nMean: {:.3f}\nPercentile 25: {}\nPercentile 50 (median): {}\nPercentile 75: {}".format(
 		min(losing_games_score_list), max(losing_games_score_list), np.mean(losing_games_score_list),

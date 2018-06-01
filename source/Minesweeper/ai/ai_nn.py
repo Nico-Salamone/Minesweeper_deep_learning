@@ -45,7 +45,7 @@ class AINN(AI, metaclass=ABCMeta):
 
 	def _evaluate_subgrids(self, subgrids):
 		"""
-		Evaluate subgrids.
+		Evaluate subgrids. This function uses a cache to get better performance.
 
 		:subgrids: The subgrids.
 		:return: The evaluation of each subgrid, that is the predicted values by the neural network for theses subgrids.

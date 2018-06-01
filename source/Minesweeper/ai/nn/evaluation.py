@@ -159,7 +159,7 @@ def errors(y_true, y_pred, error_func):
 
 def histogram_percentage(err, num_bins=10, error_range=None):
 	"""
-	Compute the percentage of counts of the histogram of the errors.
+	Compute the percentage of counts of the histogram of the errors (error distribution).
 
 	:err: The errors.
 	:num_bins: The number of bins.
@@ -279,7 +279,7 @@ if __name__ == "__main__":
 
 	# Load the model.
 	model = load_model(model_file_name)
-	# If 'custom_mean_squared_error' custom loss is used:
+	# If 'custom_mean_squared_error' custom loss is used.
 	#from ai.nn.neural_network import custom_mean_squared_error
 	#model = load_model(model_file_name, custom_objects={'custom_mean_squared_error': custom_mean_squared_error})
 
@@ -291,9 +291,11 @@ if __name__ == "__main__":
 	err = errors(y_true, y_pred, error_func)
 	print("Errors computed.\n\n\n")
 
+	# Print the results of Keras metrics.
 	print_loss_metric_functions(model, x, y_true)
 	print('')
 
+	# Print the confusion matrix and the results of related metrics.
 	pivot = pivot_value(y_pred, 0.5)
 	conf_mat = confusion_matrix(y_true, y_pred, pivot)
 	conf_mat_names = ["True negatives", "False positives", "False negatives", "True positives"]
@@ -308,12 +310,16 @@ if __name__ == "__main__":
 				np.percentile(ct_nmt_tile, 50), np.percentile(ct_nmt_tile, 75)))
 	print("\tAccuracy: {}\n\tRecall: {}\n\tSpecificity: {}\n".format(accuracy, recall, specificity))
 
+	# Print the error distribution.
 	hist_perc = histogram_percentage(err, 10, (0.0, 1.0))
 	print_histogram_percentage(hist_perc)
 	print('')
 
+	# Print for each input the real output, the output predicted by the neural network and the error.
 	#print_x_y_true_y_pred_err(x, y_true, y_pred)
 
+	# Among the bad predictions, print for each one the input, the real output, the output predicted by the neural
+	# network and the error.
 	data_within_range = extrat_data_error_range(x, y_true, y_pred, err, (0.6, 1.0))
 	data_within_range_trans = np.transpose(data_within_range).tolist()
 	# 'data_within_range_trans[0]' corresponds to 'x'.

@@ -79,7 +79,7 @@ def format_data_set(data_set, num_masked_subgrids, with_flags=False):
 
 	:data_set: The data set.
 	:num_masked_subgrids: The number of subgrids with a mask to generate for each subgrid of the data set.
-	:with_flags: If True, then the tiles of masked subgrids containing a bomb will contain a flag.
+	:with_flags: If True, then some tiles of masked subgrids containing a bomb will contain a flag.
 	:return: the formatted data set.
 	"""
 
@@ -104,17 +104,17 @@ def format_data_set(data_set, num_masked_subgrids, with_flags=False):
 
 	return formatted_data_set
 
-def get_inputs_real_outputs(data_set):
+def get_inputs_real_outputs(training_set):
 	"""
 	Get the inputs and the real outputs of the neural network ('x' and 'y_true').
 
-	:data_set: The formatted data set.
+	:data_set: The training set (formatted data set).
 	:return: The inputs and the real outputs of the neural network ('x' and 'y_true').
 	"""
 
-	data_set_trans = np.transpose(data_set)
-	x = list(data_set_trans[0])
-	y_true = list(data_set_trans[1])
+	training_set_trans = np.transpose(training_set)
+	x = list(training_set_trans[0])
+	y_true = list(training_set_trans[1])
 
 	return x, y_true
 
@@ -152,23 +152,22 @@ if __name__ == "__main__":
 	print("Data set loaded.")
 
 	# Format the data set.
-	data_set = format_data_set(data_set, num_masked_subgrids, with_flags=with_flags)
+	training_set = format_data_set(data_set, num_masked_subgrids, with_flags=with_flags)
 	print("Data set formatted.")
 
-	# Shuffle the data set.
-	#random.shuffle(data_set)
-	#print("Data set shuffled.")
+	# Shuffle the training set.
+	#random.shuffle(training_set)
+	#print("Training set shuffled.")
 
 	# Get the 'x' and 'y_true' vectors.
-	x, y_true = get_inputs_real_outputs(data_set)
+	x, y_true = get_inputs_real_outputs(training_set)
 	print("Inputs and real outputs extracted.")
 
 	# Create the model.
-	model = create_model_2(num_tiles_subgrids) # The more complex model.
+	model = create_model_1(num_tiles_subgrids)
 
 	# Train the model.
-	#model.fit(x, y_true, epochs=1, batch_size=10)
-	model.fit(x, y_true, epochs=5, batch_size=2000)
+	model.fit(x, y_true, epochs=6, batch_size=2000)
 	print("Neural network trained.")
 
 	# Save the model.

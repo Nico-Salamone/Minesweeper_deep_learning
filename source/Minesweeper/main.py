@@ -16,8 +16,8 @@ NUM_COLUMNS_GRID = 10
 NUM_BOMBS_GRID = 10
 SUBGRID_RADIUS = 2
 
-AI_WITH_FLAGS_PLAYFUL_LEVEL = 1
-AI_WITH_FLAGS_FLAG_THREASHOLD = 0.975
+AI_WITH_FLAGS_PLAYFUL_LEVEL = 1.15
+AI_WITH_FLAGS_FLAG_THREASHOLD = 0.96
 
 class Mode(Enum):
 	PLAYER = 1
@@ -63,9 +63,9 @@ def print_welcome():
 
 	print("Welcome to the minesweeper game!")
 	print("This game is composed of five modes:\n- 1. Player: it's the classic mode of the minesweeper with a human" \
-		" as player\n- 2. Random artificial intelligence: a random AI plays the game.\n- 3. Artificial intelligence" \
+		" as player.\n- 2. Random artificial intelligence: a random AI plays the game.\n- 3. Artificial intelligence" \
 		" without flags: an AI plays the game and uses no flags.\n- 4. Artificial intelligence with flags: an AI" \
-		" plays the game and uses flags\n- 5. Artificial intelligence with flags 2: a variant of the \"Artificial" \
+		" plays the game and uses flags.\n- 5. Artificial intelligence with flags 2: a variant of the \"Artificial" \
 		" intelligence with flags\" mode.")
 
 def select_mode():

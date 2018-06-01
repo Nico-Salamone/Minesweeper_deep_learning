@@ -24,8 +24,8 @@ class AIWithFlags(AINN):
 		:flag_threshold: The minimal threshold to insert a flag. For each tile, the artificial intelligence compute a
 			particular value which is interpreted as the probability that this tile contains a bomb. If this value is
 			less than 'flag_threshold', then the artificial intelligence will not insert a flag on this tile. The
-			minimum value for this parameter is 0 (the artificial intelligence will always insert flags) and the
-			maximum value is 1 (no flags will be used).
+			minimum value for this parameter is 0 (the artificial intelligence will always be allowed to insert flags)
+			and the maximum value is 1 (no flags will be used).
 		"""
 
 		super().__init__(model, minesweeper=minesweeper, subgrid_radius=subgrid_radius)
@@ -87,7 +87,8 @@ class AIWithFlags(AINN):
 
 		if only_flags:
 			self.minesweeper.insert_flags(flag_tile_pos)
-			# It returns False because some flags were not inserted (these are the unmasked tiles in 'unmasked_tiles').
+			# This method returns False because some flags were not inserted (these are the unmasked tiles in
+			# 'unmasked_tiles').
 
 		return played_pos, unmasked_tiles
 

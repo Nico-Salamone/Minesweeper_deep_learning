@@ -107,26 +107,27 @@ if __name__ == "__main__":
 
 	bomb_middle_tile_list = [False, True]
 	for bomb_middle_tile in bomb_middle_tile_list:
-		#"""
+		"""
 		# With duplicates.
 		file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
 			bomb_middle_tile)
 		data_set = generate_data_set(subgrid_radius, bomb_middle_tile, num_rows_grid, num_columns_grid, num_bombs_grid,
 			data_set_size, seed)
-		#"""
-
 		"""
+
+		#"""
 		# Without duplicates.
 		file_name = data_set_file_path(num_rows_grid, num_columns_grid, num_bombs_grid, subgrid_radius,
-			bomb_middle_tile, True) # Without duplicates.
+			bomb_middle_tile, True)
 		
 		data_set = generate_data_set_without_duplicates(subgrid_radius, bomb_middle_tile, num_rows_grid,
 			num_columns_grid, num_bombs_grid, data_set_size, seed, True)
-		"""
+		#"""
 
 		write_data_set(data_set, file_name)
 
 		"""
+		# Print the data set.
 		data_set = read_data_set(file_name)
 
 		from helpers import print_grid
