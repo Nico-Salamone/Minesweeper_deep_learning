@@ -1,503 +1,503 @@
-Masked tile sensitivity level: 0.5
+Playful level: 0.5
 	Flag threshold: 0.5
-		Win rate: 0.148
+		Win rate: 0.124
 	Flag threshold: 0.55
-		Win rate: 0.172
+		Win rate: 0.205
 	Flag threshold: 0.6
-		Win rate: 0.248
+		Win rate: 0.273
 	Flag threshold: 0.65
-		Win rate: 0.299
+		Win rate: 0.296
 	Flag threshold: 0.7
-		Win rate: 0.328
+		Win rate: 0.315
 	Flag threshold: 0.75
-		Win rate: 0.362
+		Win rate: 0.359
 	Flag threshold: 0.8
-		Win rate: 0.391
-	Flag threshold: 0.85
 		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.55
-	Flag threshold: 0.5
-		Win rate: 0.172
-	Flag threshold: 0.55
-		Win rate: 0.172
-	Flag threshold: 0.6
-		Win rate: 0.248
-	Flag threshold: 0.65
-		Win rate: 0.299
-	Flag threshold: 0.7
-		Win rate: 0.328
-	Flag threshold: 0.75
-		Win rate: 0.362
-	Flag threshold: 0.8
-		Win rate: 0.391
 	Flag threshold: 0.85
-		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.6
-	Flag threshold: 0.5
-		Win rate: 0.247
-	Flag threshold: 0.55
-		Win rate: 0.247
-	Flag threshold: 0.6
-		Win rate: 0.248
-	Flag threshold: 0.65
-		Win rate: 0.299
-	Flag threshold: 0.7
-		Win rate: 0.328
-	Flag threshold: 0.75
-		Win rate: 0.362
-	Flag threshold: 0.8
-		Win rate: 0.391
-	Flag threshold: 0.85
-		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.65
-	Flag threshold: 0.5
-		Win rate: 0.298
-	Flag threshold: 0.55
-		Win rate: 0.298
-	Flag threshold: 0.6
-		Win rate: 0.299
-	Flag threshold: 0.65
-		Win rate: 0.299
-	Flag threshold: 0.7
-		Win rate: 0.328
-	Flag threshold: 0.75
-		Win rate: 0.362
-	Flag threshold: 0.8
-		Win rate: 0.391
-	Flag threshold: 0.85
-		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.7
-	Flag threshold: 0.5
-		Win rate: 0.308
-	Flag threshold: 0.55
-		Win rate: 0.308
-	Flag threshold: 0.6
-		Win rate: 0.309
-	Flag threshold: 0.65
-		Win rate: 0.31
-	Flag threshold: 0.7
-		Win rate: 0.328
-	Flag threshold: 0.75
-		Win rate: 0.362
-	Flag threshold: 0.8
-		Win rate: 0.391
-	Flag threshold: 0.85
-		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.75
-	Flag threshold: 0.5
-		Win rate: 0.327
-	Flag threshold: 0.55
-		Win rate: 0.327
-	Flag threshold: 0.6
-		Win rate: 0.327
-	Flag threshold: 0.65
-		Win rate: 0.327
-	Flag threshold: 0.7
-		Win rate: 0.346
-	Flag threshold: 0.75
-		Win rate: 0.362
-	Flag threshold: 0.8
-		Win rate: 0.391
-	Flag threshold: 0.85
-		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.8
-	Flag threshold: 0.5
-		Win rate: 0.335
-	Flag threshold: 0.55
-		Win rate: 0.335
-	Flag threshold: 0.6
-		Win rate: 0.335
-	Flag threshold: 0.65
-		Win rate: 0.335
-	Flag threshold: 0.7
-		Win rate: 0.355
-	Flag threshold: 0.75
-		Win rate: 0.37
-	Flag threshold: 0.8
-		Win rate: 0.391
-	Flag threshold: 0.85
-		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.85
-	Flag threshold: 0.5
-		Win rate: 0.364
-	Flag threshold: 0.55
-		Win rate: 0.364
-	Flag threshold: 0.6
-		Win rate: 0.363
-	Flag threshold: 0.65
-		Win rate: 0.364
-	Flag threshold: 0.7
-		Win rate: 0.381
-	Flag threshold: 0.75
-		Win rate: 0.394
-	Flag threshold: 0.8
-		Win rate: 0.417
-	Flag threshold: 0.85
-		Win rate: 0.424
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.9
-	Flag threshold: 0.5
-		Win rate: 0.396
-	Flag threshold: 0.55
-		Win rate: 0.396
-	Flag threshold: 0.6
-		Win rate: 0.396
-	Flag threshold: 0.65
-		Win rate: 0.395
-	Flag threshold: 0.7
-		Win rate: 0.417
-	Flag threshold: 0.75
-		Win rate: 0.44
-	Flag threshold: 0.8
-		Win rate: 0.466
-	Flag threshold: 0.85
-		Win rate: 0.476
-	Flag threshold: 0.9
-		Win rate: 0.483
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 0.95
-	Flag threshold: 0.5
-		Win rate: 0.455
-	Flag threshold: 0.55
-		Win rate: 0.455
-	Flag threshold: 0.6
-		Win rate: 0.454
-	Flag threshold: 0.65
-		Win rate: 0.452
-	Flag threshold: 0.7
-		Win rate: 0.481
-	Flag threshold: 0.75
-		Win rate: 0.508
-	Flag threshold: 0.8
-		Win rate: 0.539
-	Flag threshold: 0.85
-		Win rate: 0.553
+		Win rate: 0.479
 	Flag threshold: 0.9
 		Win rate: 0.569
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
-Masked tile sensitivity level: 1.0
+Playful level: 0.55
 	Flag threshold: 0.5
-		Win rate: 0.56
+		Win rate: 0.192
 	Flag threshold: 0.55
-		Win rate: 0.56
+		Win rate: 0.205
 	Flag threshold: 0.6
-		Win rate: 0.559
+		Win rate: 0.273
 	Flag threshold: 0.65
-		Win rate: 0.559
+		Win rate: 0.296
 	Flag threshold: 0.7
-		Win rate: 0.6
+		Win rate: 0.315
 	Flag threshold: 0.75
-		Win rate: 0.633
+		Win rate: 0.359
 	Flag threshold: 0.8
-		Win rate: 0.677
+		Win rate: 0.424
 	Flag threshold: 0.85
-		Win rate: 0.699
+		Win rate: 0.479
 	Flag threshold: 0.9
-		Win rate: 0.723
+		Win rate: 0.569
 	Flag threshold: 0.95
-		Win rate: 0.75
+		Win rate: 0.727
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
-Masked tile sensitivity level: 1.05
+Playful level: 0.6
 	Flag threshold: 0.5
-		Win rate: 0.559
+		Win rate: 0.22
 	Flag threshold: 0.55
-		Win rate: 0.559
+		Win rate: 0.236
 	Flag threshold: 0.6
-		Win rate: 0.559
+		Win rate: 0.273
 	Flag threshold: 0.65
-		Win rate: 0.559
+		Win rate: 0.296
 	Flag threshold: 0.7
-		Win rate: 0.597
+		Win rate: 0.315
 	Flag threshold: 0.75
-		Win rate: 0.631
+		Win rate: 0.359
+	Flag threshold: 0.8
+		Win rate: 0.424
+	Flag threshold: 0.85
+		Win rate: 0.479
+	Flag threshold: 0.9
+		Win rate: 0.569
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 0.65
+	Flag threshold: 0.5
+		Win rate: 0.232
+	Flag threshold: 0.55
+		Win rate: 0.245
+	Flag threshold: 0.6
+		Win rate: 0.283
+	Flag threshold: 0.65
+		Win rate: 0.296
+	Flag threshold: 0.7
+		Win rate: 0.315
+	Flag threshold: 0.75
+		Win rate: 0.359
+	Flag threshold: 0.8
+		Win rate: 0.424
+	Flag threshold: 0.85
+		Win rate: 0.479
+	Flag threshold: 0.9
+		Win rate: 0.569
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 0.7
+	Flag threshold: 0.5
+		Win rate: 0.232
+	Flag threshold: 0.55
+		Win rate: 0.247
+	Flag threshold: 0.6
+		Win rate: 0.291
+	Flag threshold: 0.65
+		Win rate: 0.305
+	Flag threshold: 0.7
+		Win rate: 0.315
+	Flag threshold: 0.75
+		Win rate: 0.359
+	Flag threshold: 0.8
+		Win rate: 0.424
+	Flag threshold: 0.85
+		Win rate: 0.479
+	Flag threshold: 0.9
+		Win rate: 0.569
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 0.75
+	Flag threshold: 0.5
+		Win rate: 0.249
+	Flag threshold: 0.55
+		Win rate: 0.266
+	Flag threshold: 0.6
+		Win rate: 0.315
+	Flag threshold: 0.65
+		Win rate: 0.328
+	Flag threshold: 0.7
+		Win rate: 0.338
+	Flag threshold: 0.75
+		Win rate: 0.359
+	Flag threshold: 0.8
+		Win rate: 0.424
+	Flag threshold: 0.85
+		Win rate: 0.479
+	Flag threshold: 0.9
+		Win rate: 0.569
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 0.8
+	Flag threshold: 0.5
+		Win rate: 0.271
+	Flag threshold: 0.55
+		Win rate: 0.289
+	Flag threshold: 0.6
+		Win rate: 0.336
+	Flag threshold: 0.65
+		Win rate: 0.352
+	Flag threshold: 0.7
+		Win rate: 0.365
+	Flag threshold: 0.75
+		Win rate: 0.392
+	Flag threshold: 0.8
+		Win rate: 0.424
+	Flag threshold: 0.85
+		Win rate: 0.479
+	Flag threshold: 0.9
+		Win rate: 0.569
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 0.85
+	Flag threshold: 0.5
+		Win rate: 0.317
+	Flag threshold: 0.55
+		Win rate: 0.326
+	Flag threshold: 0.6
+		Win rate: 0.377
+	Flag threshold: 0.65
+		Win rate: 0.394
+	Flag threshold: 0.7
+		Win rate: 0.408
+	Flag threshold: 0.75
+		Win rate: 0.436
+	Flag threshold: 0.8
+		Win rate: 0.472
+	Flag threshold: 0.85
+		Win rate: 0.479
+	Flag threshold: 0.9
+		Win rate: 0.569
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 0.9
+	Flag threshold: 0.5
+		Win rate: 0.378
+	Flag threshold: 0.55
+		Win rate: 0.384
+	Flag threshold: 0.6
+		Win rate: 0.437
+	Flag threshold: 0.65
+		Win rate: 0.459
+	Flag threshold: 0.7
+		Win rate: 0.477
+	Flag threshold: 0.75
+		Win rate: 0.511
+	Flag threshold: 0.8
+		Win rate: 0.549
+	Flag threshold: 0.85
+		Win rate: 0.561
+	Flag threshold: 0.9
+		Win rate: 0.569
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 0.95
+	Flag threshold: 0.5
+		Win rate: 0.508
+	Flag threshold: 0.55
+		Win rate: 0.508
+	Flag threshold: 0.6
+		Win rate: 0.566
+	Flag threshold: 0.65
+		Win rate: 0.587
+	Flag threshold: 0.7
+		Win rate: 0.606
+	Flag threshold: 0.75
+		Win rate: 0.644
 	Flag threshold: 0.8
 		Win rate: 0.688
 	Flag threshold: 0.85
-		Win rate: 0.709
-	Flag threshold: 0.9
-		Win rate: 0.73
-	Flag threshold: 0.95
-		Win rate: 0.755
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 1.1
-	Flag threshold: 0.5
-		Win rate: 0.555
-	Flag threshold: 0.55
-		Win rate: 0.555
-	Flag threshold: 0.6
-		Win rate: 0.555
-	Flag threshold: 0.65
-		Win rate: 0.555
-	Flag threshold: 0.7
-		Win rate: 0.586
-	Flag threshold: 0.75
-		Win rate: 0.621
-	Flag threshold: 0.8
-		Win rate: 0.675
-	Flag threshold: 0.85
-		Win rate: 0.694
-	Flag threshold: 0.9
-		Win rate: 0.719
-	Flag threshold: 0.95
-		Win rate: 0.746
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 1.15
-	Flag threshold: 0.5
-		Win rate: 0.594
-	Flag threshold: 0.55
-		Win rate: 0.594
-	Flag threshold: 0.6
-		Win rate: 0.594
-	Flag threshold: 0.65
-		Win rate: 0.594
-	Flag threshold: 0.7
-		Win rate: 0.599
-	Flag threshold: 0.75
-		Win rate: 0.63
-	Flag threshold: 0.8
-		Win rate: 0.678
-	Flag threshold: 0.85
-		Win rate: 0.694
-	Flag threshold: 0.9
-		Win rate: 0.716
-	Flag threshold: 0.95
-		Win rate: 0.744
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 1.2
-	Flag threshold: 0.5
-		Win rate: 0.645
-	Flag threshold: 0.55
-		Win rate: 0.645
-	Flag threshold: 0.6
-		Win rate: 0.645
-	Flag threshold: 0.65
-		Win rate: 0.645
-	Flag threshold: 0.7
-		Win rate: 0.645
-	Flag threshold: 0.75
-		Win rate: 0.657
-	Flag threshold: 0.8
-		Win rate: 0.684
-	Flag threshold: 0.85
 		Win rate: 0.7
 	Flag threshold: 0.9
-		Win rate: 0.72
+		Win rate: 0.711
 	Flag threshold: 0.95
-		Win rate: 0.74
+		Win rate: 0.727
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
-Masked tile sensitivity level: 1.25
+Playful level: 1.0
 	Flag threshold: 0.5
-		Win rate: 0.669
+		Win rate: 0.67
 	Flag threshold: 0.55
-		Win rate: 0.669
+		Win rate: 0.67
 	Flag threshold: 0.6
-		Win rate: 0.669
+		Win rate: 0.673
 	Flag threshold: 0.65
-		Win rate: 0.669
+		Win rate: 0.695
 	Flag threshold: 0.7
-		Win rate: 0.669
+		Win rate: 0.718
 	Flag threshold: 0.75
-		Win rate: 0.669
+		Win rate: 0.758
 	Flag threshold: 0.8
-		Win rate: 0.678
+		Win rate: 0.81
 	Flag threshold: 0.85
-		Win rate: 0.687
+		Win rate: 0.826
 	Flag threshold: 0.9
-		Win rate: 0.703
+		Win rate: 0.843
 	Flag threshold: 0.95
+		Win rate: 0.863
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 1.05
+	Flag threshold: 0.5
+		Win rate: 0.707
+	Flag threshold: 0.55
+		Win rate: 0.707
+	Flag threshold: 0.6
+		Win rate: 0.707
+	Flag threshold: 0.65
+		Win rate: 0.709
+	Flag threshold: 0.7
+		Win rate: 0.726
+	Flag threshold: 0.75
+		Win rate: 0.762
+	Flag threshold: 0.8
+		Win rate: 0.811
+	Flag threshold: 0.85
+		Win rate: 0.827
+	Flag threshold: 0.9
+		Win rate: 0.843
+	Flag threshold: 0.95
+		Win rate: 0.862
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 1.1
+	Flag threshold: 0.5
 		Win rate: 0.722
-	Flag threshold: 1.0
-		Win rate: 0.402
-
-Masked tile sensitivity level: 1.3
-	Flag threshold: 0.5
-		Win rate: 0.682
 	Flag threshold: 0.55
-		Win rate: 0.682
+		Win rate: 0.722
 	Flag threshold: 0.6
-		Win rate: 0.682
+		Win rate: 0.722
 	Flag threshold: 0.65
-		Win rate: 0.682
+		Win rate: 0.722
 	Flag threshold: 0.7
-		Win rate: 0.682
+		Win rate: 0.733
 	Flag threshold: 0.75
-		Win rate: 0.682
+		Win rate: 0.765
 	Flag threshold: 0.8
-		Win rate: 0.682
+		Win rate: 0.813
 	Flag threshold: 0.85
-		Win rate: 0.69
+		Win rate: 0.829
 	Flag threshold: 0.9
-		Win rate: 0.702
+		Win rate: 0.844
 	Flag threshold: 0.95
-		Win rate: 0.714
+		Win rate: 0.862
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
-Masked tile sensitivity level: 1.35
+Playful level: 1.15
 	Flag threshold: 0.5
-		Win rate: 0.679
+		Win rate: 0.755
 	Flag threshold: 0.55
-		Win rate: 0.679
+		Win rate: 0.755
 	Flag threshold: 0.6
-		Win rate: 0.679
+		Win rate: 0.755
 	Flag threshold: 0.65
-		Win rate: 0.679
+		Win rate: 0.755
 	Flag threshold: 0.7
-		Win rate: 0.679
+		Win rate: 0.755
 	Flag threshold: 0.75
-		Win rate: 0.679
+		Win rate: 0.772
 	Flag threshold: 0.8
-		Win rate: 0.679
+		Win rate: 0.818
 	Flag threshold: 0.85
-		Win rate: 0.679
+		Win rate: 0.833
 	Flag threshold: 0.9
-		Win rate: 0.681
+		Win rate: 0.847
 	Flag threshold: 0.95
-		Win rate: 0.684
+		Win rate: 0.864
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
-Masked tile sensitivity level: 1.4
+Playful level: 1.2
 	Flag threshold: 0.5
-		Win rate: 0.642
+		Win rate: 0.82
 	Flag threshold: 0.55
-		Win rate: 0.642
+		Win rate: 0.82
 	Flag threshold: 0.6
-		Win rate: 0.642
+		Win rate: 0.82
 	Flag threshold: 0.65
-		Win rate: 0.642
+		Win rate: 0.82
 	Flag threshold: 0.7
-		Win rate: 0.642
+		Win rate: 0.82
 	Flag threshold: 0.75
-		Win rate: 0.642
+		Win rate: 0.82
 	Flag threshold: 0.8
-		Win rate: 0.642
+		Win rate: 0.821
 	Flag threshold: 0.85
-		Win rate: 0.642
+		Win rate: 0.835
 	Flag threshold: 0.9
-		Win rate: 0.642
+		Win rate: 0.848
 	Flag threshold: 0.95
-		Win rate: 0.642
+		Win rate: 0.864
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
-Masked tile sensitivity level: 1.45
+Playful level: 1.25
 	Flag threshold: 0.5
-		Win rate: 0.605
+		Win rate: 0.827
 	Flag threshold: 0.55
-		Win rate: 0.605
+		Win rate: 0.827
 	Flag threshold: 0.6
-		Win rate: 0.605
+		Win rate: 0.827
 	Flag threshold: 0.65
-		Win rate: 0.605
+		Win rate: 0.827
 	Flag threshold: 0.7
-		Win rate: 0.605
+		Win rate: 0.827
 	Flag threshold: 0.75
-		Win rate: 0.605
+		Win rate: 0.827
 	Flag threshold: 0.8
-		Win rate: 0.605
+		Win rate: 0.827
 	Flag threshold: 0.85
-		Win rate: 0.605
+		Win rate: 0.828
 	Flag threshold: 0.9
-		Win rate: 0.605
+		Win rate: 0.84
 	Flag threshold: 0.95
-		Win rate: 0.605
+		Win rate: 0.852
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
-Masked tile sensitivity level: 1.5
+Playful level: 1.3
 	Flag threshold: 0.5
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.55
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.6
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.65
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.7
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.75
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.8
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.85
-		Win rate: 0.586
+		Win rate: 0.831
 	Flag threshold: 0.9
-		Win rate: 0.586
+		Win rate: 0.83
 	Flag threshold: 0.95
-		Win rate: 0.586
+		Win rate: 0.836
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
+
+Playful level: 1.35
+	Flag threshold: 0.5
+		Win rate: 0.805
+	Flag threshold: 0.55
+		Win rate: 0.805
+	Flag threshold: 0.6
+		Win rate: 0.805
+	Flag threshold: 0.65
+		Win rate: 0.805
+	Flag threshold: 0.7
+		Win rate: 0.805
+	Flag threshold: 0.75
+		Win rate: 0.805
+	Flag threshold: 0.8
+		Win rate: 0.805
+	Flag threshold: 0.85
+		Win rate: 0.805
+	Flag threshold: 0.9
+		Win rate: 0.805
+	Flag threshold: 0.95
+		Win rate: 0.807
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 1.4
+	Flag threshold: 0.5
+		Win rate: 0.765
+	Flag threshold: 0.55
+		Win rate: 0.765
+	Flag threshold: 0.6
+		Win rate: 0.765
+	Flag threshold: 0.65
+		Win rate: 0.765
+	Flag threshold: 0.7
+		Win rate: 0.765
+	Flag threshold: 0.75
+		Win rate: 0.765
+	Flag threshold: 0.8
+		Win rate: 0.765
+	Flag threshold: 0.85
+		Win rate: 0.765
+	Flag threshold: 0.9
+		Win rate: 0.765
+	Flag threshold: 0.95
+		Win rate: 0.765
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 1.45
+	Flag threshold: 0.5
+		Win rate: 0.694
+	Flag threshold: 0.55
+		Win rate: 0.694
+	Flag threshold: 0.6
+		Win rate: 0.694
+	Flag threshold: 0.65
+		Win rate: 0.694
+	Flag threshold: 0.7
+		Win rate: 0.694
+	Flag threshold: 0.75
+		Win rate: 0.694
+	Flag threshold: 0.8
+		Win rate: 0.694
+	Flag threshold: 0.85
+		Win rate: 0.694
+	Flag threshold: 0.9
+		Win rate: 0.694
+	Flag threshold: 0.95
+		Win rate: 0.694
+	Flag threshold: 1.0
+		Win rate: 0.34
+
+Playful level: 1.5
+	Flag threshold: 0.5
+		Win rate: 0.652
+	Flag threshold: 0.55
+		Win rate: 0.652
+	Flag threshold: 0.6
+		Win rate: 0.652
+	Flag threshold: 0.65
+		Win rate: 0.652
+	Flag threshold: 0.7
+		Win rate: 0.652
+	Flag threshold: 0.75
+		Win rate: 0.652
+	Flag threshold: 0.8
+		Win rate: 0.652
+	Flag threshold: 0.85
+		Win rate: 0.652
+	Flag threshold: 0.9
+		Win rate: 0.652
+	Flag threshold: 0.95
+		Win rate: 0.651
+	Flag threshold: 1.0
+		Win rate: 0.34

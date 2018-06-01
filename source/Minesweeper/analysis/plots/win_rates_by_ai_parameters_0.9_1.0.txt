@@ -1,503 +1,503 @@
 Playful level: 0.5
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.55
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.6
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.65
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.7
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.75
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.8
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.85
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.9
 	Flag threshold: 0.9
-		Win rate: 0.483
+		Win rate: 0.569
 	Flag threshold: 0.91
-		Win rate: 0.495
+		Win rate: 0.592
 	Flag threshold: 0.92
-		Win rate: 0.519
+		Win rate: 0.619
 	Flag threshold: 0.93
-		Win rate: 0.541
+		Win rate: 0.653
 	Flag threshold: 0.94
-		Win rate: 0.566
+		Win rate: 0.687
 	Flag threshold: 0.95
-		Win rate: 0.591
+		Win rate: 0.727
 	Flag threshold: 0.96
-		Win rate: 0.618
+		Win rate: 0.752
 	Flag threshold: 0.97
-		Win rate: 0.639
+		Win rate: 0.788
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.821
 	Flag threshold: 0.99
-		Win rate: 0.713
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 0.95
 	Flag threshold: 0.9
-		Win rate: 0.569
+		Win rate: 0.711
 	Flag threshold: 0.91
-		Win rate: 0.574
-	Flag threshold: 0.92
-		Win rate: 0.581
-	Flag threshold: 0.93
-		Win rate: 0.582
-	Flag threshold: 0.94
-		Win rate: 0.589
-	Flag threshold: 0.95
-		Win rate: 0.591
-	Flag threshold: 0.96
-		Win rate: 0.618
-	Flag threshold: 0.97
-		Win rate: 0.639
-	Flag threshold: 0.98
-		Win rate: 0.685
-	Flag threshold: 0.99
 		Win rate: 0.713
+	Flag threshold: 0.92
+		Win rate: 0.715
+	Flag threshold: 0.93
+		Win rate: 0.719
+	Flag threshold: 0.94
+		Win rate: 0.723
+	Flag threshold: 0.95
+		Win rate: 0.727
+	Flag threshold: 0.96
+		Win rate: 0.752
+	Flag threshold: 0.97
+		Win rate: 0.788
+	Flag threshold: 0.98
+		Win rate: 0.821
+	Flag threshold: 0.99
+		Win rate: 0.845
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.0
 	Flag threshold: 0.9
-		Win rate: 0.723
+		Win rate: 0.843
 	Flag threshold: 0.91
-		Win rate: 0.73
+		Win rate: 0.851
 	Flag threshold: 0.92
-		Win rate: 0.74
+		Win rate: 0.854
 	Flag threshold: 0.93
-		Win rate: 0.74
+		Win rate: 0.859
 	Flag threshold: 0.94
-		Win rate: 0.746
+		Win rate: 0.86
 	Flag threshold: 0.95
-		Win rate: 0.75
+		Win rate: 0.863
 	Flag threshold: 0.96
-		Win rate: 0.753
+		Win rate: 0.864
 	Flag threshold: 0.97
-		Win rate: 0.754
+		Win rate: 0.862
 	Flag threshold: 0.98
-		Win rate: 0.756
+		Win rate: 0.863
 	Flag threshold: 0.99
-		Win rate: 0.752
+		Win rate: 0.853
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.05
 	Flag threshold: 0.9
-		Win rate: 0.73
+		Win rate: 0.843
 	Flag threshold: 0.91
-		Win rate: 0.738
+		Win rate: 0.85
 	Flag threshold: 0.92
-		Win rate: 0.748
+		Win rate: 0.853
 	Flag threshold: 0.93
-		Win rate: 0.749
+		Win rate: 0.858
 	Flag threshold: 0.94
-		Win rate: 0.753
+		Win rate: 0.859
 	Flag threshold: 0.95
-		Win rate: 0.755
+		Win rate: 0.862
 	Flag threshold: 0.96
-		Win rate: 0.759
+		Win rate: 0.863
 	Flag threshold: 0.97
-		Win rate: 0.757
+		Win rate: 0.861
 	Flag threshold: 0.98
-		Win rate: 0.758
+		Win rate: 0.861
 	Flag threshold: 0.99
-		Win rate: 0.756
+		Win rate: 0.85
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.1
 	Flag threshold: 0.9
-		Win rate: 0.719
+		Win rate: 0.844
 	Flag threshold: 0.91
-		Win rate: 0.727
+		Win rate: 0.851
 	Flag threshold: 0.92
-		Win rate: 0.739
+		Win rate: 0.855
 	Flag threshold: 0.93
-		Win rate: 0.741
+		Win rate: 0.858
 	Flag threshold: 0.94
-		Win rate: 0.746
+		Win rate: 0.859
 	Flag threshold: 0.95
-		Win rate: 0.746
+		Win rate: 0.862
 	Flag threshold: 0.96
-		Win rate: 0.749
+		Win rate: 0.863
 	Flag threshold: 0.97
-		Win rate: 0.744
+		Win rate: 0.86
 	Flag threshold: 0.98
-		Win rate: 0.747
+		Win rate: 0.86
 	Flag threshold: 0.99
-		Win rate: 0.744
+		Win rate: 0.848
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.15
 	Flag threshold: 0.9
-		Win rate: 0.716
+		Win rate: 0.847
 	Flag threshold: 0.91
-		Win rate: 0.724
+		Win rate: 0.854
 	Flag threshold: 0.92
-		Win rate: 0.737
+		Win rate: 0.858
 	Flag threshold: 0.93
-		Win rate: 0.739
+		Win rate: 0.861
 	Flag threshold: 0.94
-		Win rate: 0.744
+		Win rate: 0.862
 	Flag threshold: 0.95
-		Win rate: 0.744
+		Win rate: 0.864
 	Flag threshold: 0.96
-		Win rate: 0.746
+		Win rate: 0.866
 	Flag threshold: 0.97
-		Win rate: 0.743
+		Win rate: 0.86
 	Flag threshold: 0.98
-		Win rate: 0.745
+		Win rate: 0.86
 	Flag threshold: 0.99
-		Win rate: 0.744
+		Win rate: 0.848
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.2
 	Flag threshold: 0.9
-		Win rate: 0.72
+		Win rate: 0.848
 	Flag threshold: 0.91
-		Win rate: 0.725
+		Win rate: 0.855
 	Flag threshold: 0.92
-		Win rate: 0.737
+		Win rate: 0.858
 	Flag threshold: 0.93
-		Win rate: 0.737
+		Win rate: 0.861
 	Flag threshold: 0.94
-		Win rate: 0.739
+		Win rate: 0.862
 	Flag threshold: 0.95
-		Win rate: 0.74
+		Win rate: 0.864
 	Flag threshold: 0.96
-		Win rate: 0.743
+		Win rate: 0.867
 	Flag threshold: 0.97
-		Win rate: 0.74
+		Win rate: 0.861
 	Flag threshold: 0.98
-		Win rate: 0.743
+		Win rate: 0.858
 	Flag threshold: 0.99
-		Win rate: 0.74
+		Win rate: 0.842
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.25
 	Flag threshold: 0.9
-		Win rate: 0.703
+		Win rate: 0.84
 	Flag threshold: 0.91
-		Win rate: 0.71
+		Win rate: 0.845
 	Flag threshold: 0.92
-		Win rate: 0.719
+		Win rate: 0.846
 	Flag threshold: 0.93
-		Win rate: 0.719
+		Win rate: 0.849
 	Flag threshold: 0.94
-		Win rate: 0.719
+		Win rate: 0.849
 	Flag threshold: 0.95
-		Win rate: 0.722
+		Win rate: 0.852
 	Flag threshold: 0.96
-		Win rate: 0.725
+		Win rate: 0.854
 	Flag threshold: 0.97
-		Win rate: 0.724
+		Win rate: 0.85
 	Flag threshold: 0.98
-		Win rate: 0.725
+		Win rate: 0.849
 	Flag threshold: 0.99
-		Win rate: 0.722
+		Win rate: 0.835
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.3
 	Flag threshold: 0.9
-		Win rate: 0.702
+		Win rate: 0.83
 	Flag threshold: 0.91
-		Win rate: 0.704
+		Win rate: 0.834
 	Flag threshold: 0.92
-		Win rate: 0.711
+		Win rate: 0.834
 	Flag threshold: 0.93
-		Win rate: 0.711
+		Win rate: 0.833
 	Flag threshold: 0.94
-		Win rate: 0.712
+		Win rate: 0.834
 	Flag threshold: 0.95
-		Win rate: 0.714
+		Win rate: 0.836
 	Flag threshold: 0.96
-		Win rate: 0.717
+		Win rate: 0.837
 	Flag threshold: 0.97
-		Win rate: 0.719
+		Win rate: 0.834
 	Flag threshold: 0.98
-		Win rate: 0.72
+		Win rate: 0.833
 	Flag threshold: 0.99
-		Win rate: 0.715
+		Win rate: 0.819
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.35
 	Flag threshold: 0.9
-		Win rate: 0.681
+		Win rate: 0.805
 	Flag threshold: 0.91
-		Win rate: 0.682
+		Win rate: 0.805
 	Flag threshold: 0.92
-		Win rate: 0.684
+		Win rate: 0.805
 	Flag threshold: 0.93
-		Win rate: 0.684
+		Win rate: 0.805
 	Flag threshold: 0.94
-		Win rate: 0.684
+		Win rate: 0.805
 	Flag threshold: 0.95
-		Win rate: 0.684
+		Win rate: 0.807
 	Flag threshold: 0.96
-		Win rate: 0.685
+		Win rate: 0.807
 	Flag threshold: 0.97
-		Win rate: 0.686
+		Win rate: 0.802
 	Flag threshold: 0.98
-		Win rate: 0.685
+		Win rate: 0.801
 	Flag threshold: 0.99
-		Win rate: 0.68
+		Win rate: 0.789
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.4
 	Flag threshold: 0.9
-		Win rate: 0.642
+		Win rate: 0.765
 	Flag threshold: 0.91
-		Win rate: 0.642
+		Win rate: 0.765
 	Flag threshold: 0.92
-		Win rate: 0.642
+		Win rate: 0.765
 	Flag threshold: 0.93
-		Win rate: 0.642
+		Win rate: 0.765
 	Flag threshold: 0.94
-		Win rate: 0.642
+		Win rate: 0.765
 	Flag threshold: 0.95
-		Win rate: 0.642
+		Win rate: 0.765
 	Flag threshold: 0.96
-		Win rate: 0.642
+		Win rate: 0.765
 	Flag threshold: 0.97
-		Win rate: 0.64
+		Win rate: 0.763
 	Flag threshold: 0.98
-		Win rate: 0.64
+		Win rate: 0.759
 	Flag threshold: 0.99
-		Win rate: 0.641
+		Win rate: 0.747
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.45
 	Flag threshold: 0.9
-		Win rate: 0.605
+		Win rate: 0.694
 	Flag threshold: 0.91
-		Win rate: 0.605
+		Win rate: 0.694
 	Flag threshold: 0.92
-		Win rate: 0.605
+		Win rate: 0.694
 	Flag threshold: 0.93
-		Win rate: 0.605
+		Win rate: 0.694
 	Flag threshold: 0.94
-		Win rate: 0.605
+		Win rate: 0.694
 	Flag threshold: 0.95
-		Win rate: 0.605
+		Win rate: 0.694
 	Flag threshold: 0.96
-		Win rate: 0.605
+		Win rate: 0.694
 	Flag threshold: 0.97
-		Win rate: 0.604
+		Win rate: 0.692
 	Flag threshold: 0.98
-		Win rate: 0.604
+		Win rate: 0.689
 	Flag threshold: 0.99
-		Win rate: 0.603
+		Win rate: 0.682
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
 
 Playful level: 1.5
 	Flag threshold: 0.9
-		Win rate: 0.586
+		Win rate: 0.652
 	Flag threshold: 0.91
-		Win rate: 0.586
+		Win rate: 0.652
 	Flag threshold: 0.92
-		Win rate: 0.586
+		Win rate: 0.652
 	Flag threshold: 0.93
-		Win rate: 0.586
+		Win rate: 0.652
 	Flag threshold: 0.94
-		Win rate: 0.586
+		Win rate: 0.652
 	Flag threshold: 0.95
-		Win rate: 0.586
+		Win rate: 0.651
 	Flag threshold: 0.96
-		Win rate: 0.586
+		Win rate: 0.651
 	Flag threshold: 0.97
-		Win rate: 0.586
+		Win rate: 0.649
 	Flag threshold: 0.98
-		Win rate: 0.585
+		Win rate: 0.647
 	Flag threshold: 0.99
-		Win rate: 0.585
+		Win rate: 0.643
 	Flag threshold: 1.0
-		Win rate: 0.402
+		Win rate: 0.34
